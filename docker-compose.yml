@@ -1,0 +1,8 @@
+version: '3.4'
+
+services:
+  godzilla.demowebapp:
+    image: ${DOCKER_REGISTRY-}godzillademowebapp
+    build:
+      context: .
+      dockerfile: test/Godzilla.DemoWebApp/Dockerfile

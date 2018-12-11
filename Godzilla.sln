@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Godzilla.Mongo", "src\Godzi
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Godzilla.DemoWebApp", "test\Godzilla.DemoWebApp\Godzilla.DemoWebApp.csproj", "{68983350-DCC1-47E2-B3A4-A35C90FADF1E}"
 EndProject
+Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{189265E5-1747-44FB-93BA-898EAFBB82A1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -31,6 +33,10 @@ Global
 		{68983350-DCC1-47E2-B3A4-A35C90FADF1E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{68983350-DCC1-47E2-B3A4-A35C90FADF1E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{68983350-DCC1-47E2-B3A4-A35C90FADF1E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{189265E5-1747-44FB-93BA-898EAFBB82A1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{189265E5-1747-44FB-93BA-898EAFBB82A1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{189265E5-1747-44FB-93BA-898EAFBB82A1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{189265E5-1747-44FB-93BA-898EAFBB82A1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
