@@ -3,9 +3,42 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28307.136
 MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{AD4A47B1-5344-438B-B384-C4B178772580}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Godzilla", "src\Godzilla\Godzilla.csproj", "{33B4FF62-7A71-4184-B89E-99D9B0376E52}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{1A084685-A7A1-4867-A443-BA2A38C4E96B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Godzilla.Mongo", "src\Godzilla.Mongo\Godzilla.Mongo.csproj", "{F628E2A7-D4AF-4FA3-ADDE-E98151218FA6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Godzilla.DemoWebApp", "test\Godzilla.DemoWebApp\Godzilla.DemoWebApp.csproj", "{68983350-DCC1-47E2-B3A4-A35C90FADF1E}"
+EndProject
 Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{33B4FF62-7A71-4184-B89E-99D9B0376E52}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{33B4FF62-7A71-4184-B89E-99D9B0376E52}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{33B4FF62-7A71-4184-B89E-99D9B0376E52}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{33B4FF62-7A71-4184-B89E-99D9B0376E52}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F628E2A7-D4AF-4FA3-ADDE-E98151218FA6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F628E2A7-D4AF-4FA3-ADDE-E98151218FA6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F628E2A7-D4AF-4FA3-ADDE-E98151218FA6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F628E2A7-D4AF-4FA3-ADDE-E98151218FA6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{68983350-DCC1-47E2-B3A4-A35C90FADF1E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{68983350-DCC1-47E2-B3A4-A35C90FADF1E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{68983350-DCC1-47E2-B3A4-A35C90FADF1E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{68983350-DCC1-47E2-B3A4-A35C90FADF1E}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{33B4FF62-7A71-4184-B89E-99D9B0376E52} = {AD4A47B1-5344-438B-B384-C4B178772580}
+		{F628E2A7-D4AF-4FA3-ADDE-E98151218FA6} = {AD4A47B1-5344-438B-B384-C4B178772580}
+		{68983350-DCC1-47E2-B3A4-A35C90FADF1E} = {1A084685-A7A1-4867-A443-BA2A38C4E96B}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {1F514669-3A1F-46A9-86D8-604DB0B72E86}
