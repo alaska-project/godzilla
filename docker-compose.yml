@@ -5,4 +5,4 @@ services:
     image: ${DOCKER_REGISTRY-}godzillademowebapp
     build:
       context: .
-      dockerfile: test/Godzilla.DemoWebApp/Dockerfile
+      dockerfile: src/web/Godzilla.DemoWebApp/Dockerfile

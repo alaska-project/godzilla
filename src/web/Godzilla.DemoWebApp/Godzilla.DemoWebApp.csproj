@@ -3,8 +3,8 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp2.1</TargetFramework>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
-    <UserSecretsId>24670e0f-a316-40f8-99d6-76969d553fbb</UserSecretsId>
-    <DockerComposeProjectPath>..\..\docker-compose.dcproj</DockerComposeProjectPath>
+    <UserSecretsId>6c9c3357-ed7a-4dc1-89a6-68f7e06350a5</UserSecretsId>
+    <DockerComposeProjectPath>..\..\..\docker-compose.dcproj</DockerComposeProjectPath>
   </PropertyGroup>
 
   <ItemGroup>
@@ -14,8 +14,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Godzilla.Mongo\Godzilla.Mongo.csproj" />
-    <ProjectReference Include="..\..\src\Godzilla\Godzilla.csproj" />
+    <ProjectReference Include="..\..\common\Godzilla\Godzilla.csproj" />
+    <ProjectReference Include="..\..\providers\Godzilla.Mongo\Godzilla.Mongo.csproj" />
   </ItemGroup>
 
 </Project>

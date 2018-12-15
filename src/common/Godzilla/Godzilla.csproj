@@ -5,7 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Godzilla\Godzilla.csproj" />
+    <Folder Include="Abstractions\" />
   </ItemGroup>
 
 </Project>

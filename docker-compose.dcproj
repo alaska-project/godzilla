@@ -3,7 +3,7 @@
   <PropertyGroup Label="Globals">
     <ProjectVersion>2.1</ProjectVersion>
     <DockerTargetOS>Linux</DockerTargetOS>
-    <ProjectGuid>189265e5-1747-44fb-93ba-898eafbb82a1</ProjectGuid>
+    <ProjectGuid>54fad63a-b872-4640-88b8-f103d57eb38f</ProjectGuid>
     <DockerLaunchAction>LaunchBrowser</DockerLaunchAction>
     <DockerServiceUrl>{Scheme}://localhost:{ServicePort}</DockerServiceUrl>
     <DockerServiceName>godzilla.demowebapp</DockerServiceName>

@@ -5,12 +5,10 @@ EXPOSE 443
 
 FROM microsoft/dotnet:2.1-sdk AS build
 WORKDIR /src
-COPY test/Godzilla.DemoWebApp/Godzilla.DemoWebApp.csproj test/Godzilla.DemoWebApp/
-COPY src/Godzilla/Godzilla.csproj src/Godzilla/
-COPY src/Godzilla.Mongo/Godzilla.Mongo.csproj src/Godzilla.Mongo/
-RUN dotnet restore test/Godzilla.DemoWebApp/Godzilla.DemoWebApp.csproj
+COPY src/web/Godzilla.DemoWebApp/Godzilla.DemoWebApp.csproj src/web/Godzilla.DemoWebApp/
+RUN dotnet restore src/web/Godzilla.DemoWebApp/Godzilla.DemoWebApp.csproj
 COPY . .
-WORKDIR /src/test/Godzilla.DemoWebApp
+WORKDIR /src/src/web/Godzilla.DemoWebApp
 RUN dotnet build Godzilla.DemoWebApp.csproj -c Release -o /app
 
 FROM build AS publish
