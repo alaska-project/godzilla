@@ -27,7 +27,7 @@ namespace Godzilla.Services
                 () => GetIdProperty(entity));
 
             var value = (Guid)idProperty.GetValue(entity);
-            if (value == Guid.Empty)
+            if (value == Guid.Empty && generateIfEmpty)
             {
                 value = Guid.NewGuid();
                 idProperty.SetValue(entity, value);
@@ -42,9 +42,20 @@ namespace Godzilla.Services
                 entity.GetType(),
                 () => GetNameProperty(entity));
 
-            return nameProperty?.GetValue(entity)?
-                .ToString()
-                .Trim();
+            if (nameProperty != null)
+            {
+                var name = nameProperty.GetValue(entity)?
+                    .ToString()
+                    .Trim();
+                if (!string.IsNullOrEmpty(name))
+                    return name;
+            }
+
+            var id = GetEntityId(entity);
+            if (id == Guid.Empty)
+                throw new MissingIdException();
+
+            return id.ToString();
         }
 
         private PropertyInfo GetIdProperty(object entity)

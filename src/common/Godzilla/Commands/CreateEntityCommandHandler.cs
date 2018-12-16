@@ -56,10 +56,7 @@ namespace Godzilla.Commands
 
         private string GetEntityName(object entity)
         {
-            var name = _propertyResolver.GetEntityName(entity);
-            return !string.IsNullOrWhiteSpace(name) ?
-                name.Trim() :
-                GetEntityId(entity).ToString();
+            return _propertyResolver.GetEntityName(entity);
         }
     }
 }
