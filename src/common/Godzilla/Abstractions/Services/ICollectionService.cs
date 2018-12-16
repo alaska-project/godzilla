@@ -5,9 +5,10 @@ using System.Text;
 
 namespace Godzilla.Abstractions.Services
 {
-    public interface ICollectionService<TContext>
+    internal interface ICollectionService<TContext>
         where TContext : EntityContext
     {
-        IDatabaseCollection<TEntity> GetCollection<TEntity>();
+        IGodzillaCollection<TItem> GetCollection<TItem>();
+        TCollection GetCollection<TItem, TCollection>() where TCollection : IGodzillaCollection<TItem>;
     }
 }

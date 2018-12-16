@@ -10,6 +10,6 @@ namespace Godzilla.Abstractions.Infrastructure
         void StartTransaction();
         void CommitTransaction();
         void AbortTransaction();
-        IDatabaseCollection<TEntity> GetCollection<TEntity>(string collectionId);
+        IDatabaseCollection<TItem> GetCollection<TItem>(string collectionId);
     }
 }

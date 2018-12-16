@@ -2,6 +2,7 @@
 using Godzilla.Abstractions.Services;
 using Godzilla.Attributes;
 using Godzilla.Exceptions;
+using Godzilla.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,7 +15,7 @@ namespace Godzilla.Services
         ICollectionResolver<TContext>
         where TContext : EntityContext
     {
-        private readonly Dictionary<Type, ICollectionInfo> _collectionMap = new Dictionary<Type, ICollectionInfo>();
+        private readonly SafeDictionary<Type, ICollectionInfo> _collectionMap = new SafeDictionary<Type, ICollectionInfo>();
         private readonly IDatabaseCollectionProvider<TContext> _collectionProvider;
 
         public CollectionResolver(IDatabaseCollectionProvider<TContext> collectionProvider)
@@ -22,35 +23,29 @@ namespace Godzilla.Services
             _collectionProvider = collectionProvider ?? throw new ArgumentNullException(nameof(collectionProvider));
         }
 
-        public ICollectionInfo GetCollectionInfo<TEntity>()
+        public ICollectionInfo GetCollectionInfo<TItem>()
         {
-            var collectionType = typeof(TEntity);
-            if (_collectionMap.ContainsKey(collectionType))
-                return _collectionMap[collectionType];
+            var collectionType = typeof(TItem);
 
-            lock (this)
-            {
-                //check if it has been initialized by any other process in the meanwhile
-                if (_collectionMap.ContainsKey(collectionType))
-                    return _collectionMap[collectionType];
-
-                var collectionId = BuildCollectionId<TEntity>();
-                var overlappedCollection = _collectionMap.Values
-                    .FirstOrDefault(x => x.CollectionId.Equals(collectionId));
-                if (overlappedCollection != null)
+            return _collectionMap.Retreive(
+                collectionType, 
+                () => 
                 {
-                    throw new DuplicateCollectionIdException($"Collection {collectionId} already used by {overlappedCollection.CollectionItemType.FullName}");
-                }
+                    var collectionId = BuildCollectionId<TItem>();
+                    var overlappedCollection = _collectionMap.Values
+                        .FirstOrDefault(x => x.CollectionId.Equals(collectionId));
+                    if (overlappedCollection != null)
+                    {
+                        throw new DuplicateCollectionIdException($"Collection {collectionId} already used by {overlappedCollection.CollectionItemType.FullName}");
+                    }
 
-                var collectionInfo = new CollectionInfo(collectionType, collectionId);
-                _collectionMap.Add(collectionType, collectionInfo);
-                return collectionInfo;
-            }
+                    return new CollectionInfo(collectionType, collectionId);
+                });
         }
 
-        private string BuildCollectionId<TEntity>()
+        private string BuildCollectionId<TItem>()
         {
-            return typeof(TEntity).Name;
+            return typeof(TItem).Name;
         }
 
         private CollectionAttribute GetCollectionAttribute(Type type)

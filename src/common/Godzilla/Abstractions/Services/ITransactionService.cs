@@ -5,13 +5,14 @@ using System.Text;
 
 namespace Godzilla.Abstractions.Services
 {
-    public interface ITransactionService<TContext>
+    internal interface ITransactionService<TContext>
         where TContext : EntityContext
     {
         void StartTransaction();
         void CommitTransaction();
         void AbortTransaction();
 
-        IDatabaseCollection<TEntity> GetCollection<TEntity>();
+        IGodzillaCollection<TItem> GetCollection<TItem>();
+        TCollection GetCollection<TItem, TCollection>() where TCollection : IGodzillaCollection<TItem>;
     }
 }

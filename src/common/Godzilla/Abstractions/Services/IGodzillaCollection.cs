@@ -1,17 +1,18 @@
-﻿using System;
+﻿using Godzilla.Abstractions.Infrastructure;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Godzilla.Abstractions.Infrastructure
+namespace Godzilla.Abstractions.Services
 {
-    public interface IDatabaseCollection<TItem>
+    internal interface IGodzillaCollection<TItem>
     {
         IQueryable<TItem> AsQueryable();
         IQueryable<TDerived> AsQueryable<TDerived>() where TDerived : TItem;
 
         void Add(TItem entity);
-        void Add<TDerived>(TDerived entity) where TDerived: TItem;
+        void Add<TDerived>(TDerived entity) where TDerived : TItem;
 
         void Update(TItem entity);
         void Update<TDerived>(TDerived entity) where TDerived : TItem;

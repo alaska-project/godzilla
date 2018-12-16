@@ -1,8 +1,10 @@
 ﻿using Godzilla.Abstractions.Services;
+using Godzilla.DomainModels;
 using Godzilla.Exceptions;
 using MediatR;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -13,11 +15,14 @@ namespace Godzilla.Commands
         where TContext : EntityContext
     {
         private readonly ITransactionService<TContext> _transactionService;
+        private readonly IEntityPropertyResolver<TContext> _propertyResolver;
 
-        public CreateEntityCommandHandler(
-            ITransactionService<TContext> transactionService)
+        internal CreateEntityCommandHandler(
+            ITransactionService<TContext> transactionService,
+            IEntityPropertyResolver<TContext> propertyResolver)
         {
             _transactionService = transactionService ?? throw new ArgumentNullException(nameof(transactionService));
+            _propertyResolver = propertyResolver ?? throw new ArgumentNullException(nameof(propertyResolver));
         }
 
         public Task<bool> Handle(CreateEntityCommand<TContext> request, CancellationToken cancellationToken)
@@ -25,6 +30,13 @@ namespace Godzilla.Commands
             try
             {
                 _transactionService.StartTransaction();
+
+                var entityId = GetEntityId(request.Entity);
+
+                var edgesCollection = _transactionService.GetCollection<TreeEdge>();
+                if (edgesCollection.AsQueryable()
+                    .Any(x => x.NodeId == entityId))
+
 
                 _transactionService.CommitTransaction();
 
@@ -35,6 +47,19 @@ namespace Godzilla.Commands
                 _transactionService.AbortTransaction();
                 throw new EntityCreationException("Entity creation failed", e);
             }
+        }
+
+        private Guid GetEntityId(object entity)
+        {
+            return _propertyResolver.GetEntityId(entity, true);
+        }
+
+        private string GetEntityName(object entity)
+        {
+            var name = _propertyResolver.GetEntityName(entity);
+            return !string.IsNullOrWhiteSpace(name) ?
+                name.Trim() :
+                GetEntityId(entity).ToString();
         }
     }
 }

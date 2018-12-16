@@ -8,6 +8,6 @@ namespace Godzilla.Abstractions.Services
     public interface ICollectionResolver<TContext>
         where TContext : EntityContext
     {
-        ICollectionInfo GetCollectionInfo<TEntity>();
+        ICollectionInfo GetCollectionInfo<TItem>();
     }
 }
