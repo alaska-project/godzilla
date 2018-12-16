@@ -9,7 +9,7 @@ namespace Godzilla.Collections.Internal
 {
     internal class GodzillaCollection<TItem> : IGodzillaCollection<TItem>
     {
-        private readonly IDatabaseCollection<TItem> _collection;
+        protected readonly IDatabaseCollection<TItem> _collection;
 
         public GodzillaCollection(IDatabaseCollection<TItem> collection)
         {

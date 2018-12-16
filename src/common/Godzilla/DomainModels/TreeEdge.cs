@@ -6,6 +6,7 @@ namespace Godzilla.DomainModels
 {
     internal class TreeEdge
     {
+        public Guid Id { get; set; }
         public Guid ParentId { get; set; }
         public Guid NodeId { get; set; }
         public string NodeName { get; set; }

@@ -1,4 +1,5 @@
 ﻿using Godzilla.Abstractions.Services;
+using Godzilla.Collections.Internal;
 using Godzilla.DomainModels;
 using Godzilla.Exceptions;
 using MediatR;
@@ -33,10 +34,11 @@ namespace Godzilla.Commands
 
                 var entityId = GetEntityId(request.Entity);
 
-                var edgesCollection = _transactionService.GetCollection<TreeEdge>();
-                if (edgesCollection.AsQueryable()
-                    .Any(x => x.NodeId == entityId))
+                var edgesCollection = _transactionService.GetCollection<TreeEdge, TreeEdgesCollection>();
+                if (edgesCollection.NodeExists(entityId))
+                    throw new NodeAlreadyExistsException($"Node {entityId} already exists");
 
+                
 
                 _transactionService.CommitTransaction();
 
