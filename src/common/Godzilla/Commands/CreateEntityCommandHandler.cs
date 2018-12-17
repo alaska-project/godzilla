@@ -32,13 +32,21 @@ namespace Godzilla.Commands
             {
                 _transactionService.StartTransaction();
 
-                var entityId = GetEntityId(request.Entity);
+                var entityId = _propertyResolver.GetEntityId(request.Entity, true);
+                var entityName = _propertyResolver.GetEntityName(request.Entity);
 
                 var edgesCollection = _transactionService.GetCollection<TreeEdge, TreeEdgesCollection>();
                 if (edgesCollection.NodeExists(entityId))
                     throw new NodeAlreadyExistsException($"Node {entityId} already exists");
 
-                
+                edgesCollection.Add(new TreeEdge
+                {
+                    Id = Guid.NewGuid(),
+                    NodeId = entityId,
+                    NodeName = entityName,
+                    ParentId = request.ParentId,
+                });
+
 
                 _transactionService.CommitTransaction();
 
@@ -49,16 +57,6 @@ namespace Godzilla.Commands
                 _transactionService.AbortTransaction();
                 throw new EntityCreationException("Entity creation failed", e);
             }
-        }
-
-        private Guid GetEntityId(object entity)
-        {
-            return _propertyResolver.GetEntityId(entity, true);
-        }
-
-        private string GetEntityName(object entity)
-        {
-            return _propertyResolver.GetEntityName(entity);
         }
     }
 }

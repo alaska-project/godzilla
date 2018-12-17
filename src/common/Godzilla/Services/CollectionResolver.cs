@@ -15,42 +15,63 @@ namespace Godzilla.Services
         ICollectionResolver<TContext>
         where TContext : EntityContext
     {
+        private readonly SafeDictionary<Type, Type> _baseTypesMap = new SafeDictionary<Type, Type>();
         private readonly SafeDictionary<Type, ICollectionInfo> _collectionMap = new SafeDictionary<Type, ICollectionInfo>();
-        private readonly IDatabaseCollectionProvider<TContext> _collectionProvider;
-
-        public CollectionResolver(IDatabaseCollectionProvider<TContext> collectionProvider)
-        {
-            _collectionProvider = collectionProvider ?? throw new ArgumentNullException(nameof(collectionProvider));
-        }
-
+        
         public ICollectionInfo GetCollectionInfo<TItem>()
         {
             var collectionType = typeof(TItem);
+            return GetCollectionInfo(collectionType);
+        }
 
+        public ICollectionInfo GetCollectionInfo(Type itemType)
+        {
             return _collectionMap.Retreive(
-                collectionType, 
-                () => 
+                itemType,
+                () =>
                 {
-                    var collectionId = BuildCollectionId<TItem>();
-                    var overlappedCollection = _collectionMap.Values
+                    var collectionBaseType = GetRootCollectionType(itemType);
+
+                    var collectionId = BuildCollectionId(collectionBaseType);
+                    
+                    var overlappingCollection = _collectionMap.Values
                         .FirstOrDefault(x => x.CollectionId.Equals(collectionId));
-                    if (overlappedCollection != null)
+
+                    if (overlappingCollection != null)
                     {
-                        throw new DuplicateCollectionIdException($"Collection {collectionId} already used by {overlappedCollection.CollectionItemType.FullName}");
+                        throw new DuplicateCollectionIdException($"Collection {collectionId} already used by {overlappingCollection.CollectionItemType.FullName}");
                     }
 
-                    return new CollectionInfo(collectionType, collectionId);
+                    return new CollectionInfo(collectionBaseType, collectionId);
                 });
         }
 
-        private string BuildCollectionId<TItem>()
+        private string BuildCollectionId(Type itemType)
         {
-            return typeof(TItem).Name;
+            var collectionAttribute = GetCollectionAttribute(itemType);
+            return !string.IsNullOrEmpty(collectionAttribute?.CollectionId) ?
+                collectionAttribute.CollectionId :
+                itemType.Name;
+        }
+
+        private Type GetRootCollectionType(Type itemType)
+        {
+            return _baseTypesMap.Retreive(itemType, () =>
+            {
+                var baseTypes = ReflectionUtil.GetBaseTypesAndSelf(itemType);
+                return baseTypes.FirstOrDefault(HasCollectionAttribute) ??
+                    baseTypes.Last();
+            });
+        }
+
+        private bool HasCollectionAttribute(Type type)
+        {
+            return GetCollectionAttribute(type) != null;
         }
 
         private CollectionAttribute GetCollectionAttribute(Type type)
         {
-            return type.GetCustomAttribute<CollectionAttribute>(true);
+            return type.GetCustomAttribute<CollectionAttribute>(false);
         }
     }
 

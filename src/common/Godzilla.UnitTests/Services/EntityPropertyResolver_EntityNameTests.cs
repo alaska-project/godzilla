@@ -61,16 +61,16 @@ namespace Godzilla.UnitTests.Services
 
             Assert.Equal(entityId.ToString(), entityName);
         }
-    }
 
-    public class EntityWithoutName
-    {
-        public Guid Id { get; set; }
-    }
+        public class EntityWithoutName
+        {
+            public Guid Id { get; set; }
+        }
 
-    public class EntityWithStringName
-    {
-        public Guid Id { get; set; }
-        public string Name { get; set; }
+        public class EntityWithStringName
+        {
+            public Guid Id { get; set; }
+            public string Name { get; set; }
+        }
     }
 }

@@ -6,6 +6,9 @@ namespace Godzilla.Attributes
 {
     public class CollectionAttribute : Attribute
     {
+        public CollectionAttribute()
+        { }
+
         public CollectionAttribute(string collectionId)
         {
             CollectionId = collectionId;

@@ -8,11 +8,13 @@ namespace Godzilla.Commands
     public class CreateEntityCommand<TContext> : IRequest<bool>
         where TContext : EntityContext
     {
-        public CreateEntityCommand(object entity)
+        public CreateEntityCommand(Guid parentId, object entity)
         {
+            ParentId = parentId;
             Entity = entity;
         }
 
+        public Guid ParentId { get; }
         public object Entity { get; }
     }
 }

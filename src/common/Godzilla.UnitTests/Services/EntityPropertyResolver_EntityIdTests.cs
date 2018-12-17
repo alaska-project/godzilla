@@ -53,21 +53,19 @@ namespace Godzilla.UnitTests.Services
             Assert.Equal(id, entityId);
         }
 
+        public class EntityWithoutIdProperty
+        {
+            public string Idd { get; set; }
+        }
 
-    }
+        public class EntityWithWrongIdType
+        {
+            public string Id { get; set; }
+        }
 
-    public class EntityWithoutIdProperty
-    {
-        public string Idd { get; set; }
-    }
-
-    public class EntityWithWrongIdType
-    {
-        public string Id { get; set; } 
-    }
-
-    public class EntityWithCorrectIdType
-    {
-        public Guid Id { get; set; }
+        public class EntityWithCorrectIdType
+        {
+            public Guid Id { get; set; }
+        }
     }
 }
