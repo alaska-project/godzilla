@@ -7,6 +7,6 @@ namespace Godzilla.Abstractions.Infrastructure
     public interface IDatabaseCollectionProvider<TContext>
         where TContext : EntityContext
     {
-        IDatabaseCollection<TItem> GetCollection<TItem>(string collectionId);
+        IDatabaseCollection<TItem> GetCollection<TItem, TBaseItem>(string collectionId) where TItem : TBaseItem;
     }
 }

@@ -4,12 +4,11 @@ using System.Text;
 
 namespace Godzilla.Abstractions.Infrastructure
 {
-    public interface IDatabaseTransactionManager<TContext>
+    public interface IDatabaseTransactionManager<TContext> : IDatabaseCollectionProvider<TContext>
         where TContext : EntityContext
     {
         void StartTransaction();
         void CommitTransaction();
         void AbortTransaction();
-        IDatabaseCollection<TItem> GetCollection<TItem>(string collectionId);
     }
 }

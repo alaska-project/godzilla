@@ -28,15 +28,13 @@ namespace Godzilla.Services
 
         public IGodzillaCollection<TItem> GetCollection<TItem>()
         {
-            var collectionInfo = _resolver.GetCollectionInfo<TItem>();
-            var collection = _provider.GetCollection<TItem>(collectionInfo.CollectionId);
+            var collection = _resolver.GetCollection<TItem>(_provider);
             return _initializer.CreateCollection(collection);
         }
 
         public TCollection GetCollection<TItem, TCollection>() where TCollection : IGodzillaCollection<TItem>
         {
-            var collectionInfo = _resolver.GetCollectionInfo<TItem>();
-            var collection = _provider.GetCollection<TItem>(collectionInfo.CollectionId);
+            var collection = _resolver.GetCollection<TItem>(_provider);
             return _initializer.CreateCollection<TItem, TCollection>(collection);
         }
     }

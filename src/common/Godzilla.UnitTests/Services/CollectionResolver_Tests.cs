@@ -1,6 +1,8 @@
-﻿using Godzilla.Attributes;
+﻿using Godzilla.Abstractions.Infrastructure;
+using Godzilla.Attributes;
 using Godzilla.Exceptions;
 using Godzilla.Services;
+using Moq;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -11,6 +13,19 @@ namespace Godzilla.UnitTests.Services
     public class CollectionResolver_Tests
     {
         private CollectionResolver<FakeEntityContext> _resolver = new CollectionResolver<FakeEntityContext>();
+        private Mock<IDatabaseCollectionProvider<FakeEntityContext>> _collectionProvider = new Mock<IDatabaseCollectionProvider<FakeEntityContext>>();
+
+        [Fact]
+        public void Resolve_base_type_collection()
+        {
+            _resolver.GetCollection<RootType>(_collectionProvider.Object);
+        }
+
+        [Fact]
+        public void Resolve_derived_collection()
+        {
+            _resolver.GetCollection<MiddleType>(_collectionProvider.Object);
+        }
 
         [Fact]
         public void Resolve_base_type_from_self()

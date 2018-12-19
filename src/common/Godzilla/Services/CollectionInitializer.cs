@@ -9,6 +9,9 @@ namespace Godzilla.Services
 {
     internal class CollectionInitializer
     {
+
+
+
         public GodzillaCollection<TItem> CreateCollection<TItem>(IDatabaseCollection<TItem> collection)
         {
             return new GodzillaCollection<TItem>(collection);

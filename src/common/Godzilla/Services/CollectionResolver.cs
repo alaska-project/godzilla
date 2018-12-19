@@ -17,7 +17,26 @@ namespace Godzilla.Services
     {
         private readonly SafeDictionary<Type, Type> _baseTypesMap = new SafeDictionary<Type, Type>();
         private readonly SafeDictionary<Type, ICollectionInfo> _collectionMap = new SafeDictionary<Type, ICollectionInfo>();
-        
+
+        public CollectionResolver()
+        {
+        }
+
+        public IDatabaseCollection<TItem> GetCollection<TItem>(IDatabaseCollectionProvider<TContext> collectionProvider)
+        {
+            var collectionInfo = GetCollectionInfo<TItem>();
+
+            //collection item type and actual requested item type is the same
+            if (collectionInfo.CollectionItemType == typeof(TItem))
+                return collectionProvider.GetCollection<TItem, TItem>(collectionInfo.CollectionId);
+
+            //requested item type is derived from collection item type
+            //TODO: cache
+            var getCollectionMethod = ReflectionUtil.GetGenericMethod(collectionProvider.GetType(), "GetCollection", BindingFlags.Instance | BindingFlags.Public);
+            var genericGetCollectionMethod = getCollectionMethod.MakeGenericMethod(typeof(TItem), collectionInfo.CollectionItemType);
+            return (IDatabaseCollection<TItem>)genericGetCollectionMethod.Invoke(collectionProvider, new object[] { collectionInfo.CollectionId });
+        }
+
         public ICollectionInfo GetCollectionInfo<TItem>()
         {
             var collectionType = typeof(TItem);
