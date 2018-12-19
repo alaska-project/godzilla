@@ -12,6 +12,7 @@ namespace Godzilla.Abstractions.Services
         void CommitTransaction();
         void AbortTransaction();
 
+        IGodzillaCollection GetCollection(Type itemType);
         IGodzillaCollection<TItem> GetCollection<TItem>();
         TCollection GetCollection<TItem, TCollection>() where TCollection : IGodzillaCollection<TItem>;
     }

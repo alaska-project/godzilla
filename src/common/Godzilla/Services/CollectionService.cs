@@ -2,8 +2,10 @@
 using Godzilla.Abstractions.Infrastructure;
 using Godzilla.Abstractions.Services;
 using Godzilla.Collections.Internal;
+using Godzilla.Utils;
 using System;
 using System.Collections.Generic;
+using System.Reflection;
 using System.Text;
 
 namespace Godzilla.Services
@@ -24,6 +26,13 @@ namespace Godzilla.Services
             _initializer = initializer ?? throw new ArgumentNullException(nameof(initializer));
             _resolver = resolver ?? throw new ArgumentNullException(nameof(resolver));
             _provider = provider ?? throw new ArgumentNullException(nameof(provider));
+        }
+
+        public IGodzillaCollection GetCollection(Type itemType)
+        {
+            var getCollectionMethod = ReflectionUtil.GetGenericMethod(this.GetType(), "GetCollection", BindingFlags.Instance | BindingFlags.Public);
+            var specificGetCollectionMethod = getCollectionMethod.MakeGenericMethod(itemType);
+            return (IGodzillaCollection)specificGetCollectionMethod.Invoke(this, new object[0]);
         }
 
         public IGodzillaCollection<TItem> GetCollection<TItem>()

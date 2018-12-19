@@ -20,4 +20,7 @@ namespace Godzilla.Abstractions.Services
         void Delete(TItem entity);
         void Delete<TDerived>(TItem entity) where TDerived : TItem;
     }
+
+    internal interface IGodzillaCollection
+    { }
 }

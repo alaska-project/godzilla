@@ -7,7 +7,9 @@ using System.Text;
 
 namespace Godzilla.Collections.Internal
 {
-    internal class GodzillaCollection<TItem> : IGodzillaCollection<TItem>
+    internal class GodzillaCollection<TItem> :
+        IGodzillaCollection,
+        IGodzillaCollection<TItem>
     {
         protected readonly IDatabaseCollection<TItem> _collection;
 

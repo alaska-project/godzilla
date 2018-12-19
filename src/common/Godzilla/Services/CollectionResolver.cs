@@ -32,7 +32,7 @@ namespace Godzilla.Services
 
             //requested item type is derived from collection item type
             //TODO: cache
-            var getCollectionMethod = ReflectionUtil.GetGenericMethod(collectionProvider.GetType(), "GetCollection", BindingFlags.Instance | BindingFlags.Public);
+            var getCollectionMethod = ReflectionUtil.GetGenericMethod(collectionProvider.GetType(), "GetCollection", BindingFlags.Instance | BindingFlags.Public, 2);
             var genericGetCollectionMethod = getCollectionMethod.MakeGenericMethod(typeof(TItem), collectionInfo.CollectionItemType);
             return (IDatabaseCollection<TItem>)genericGetCollectionMethod.Invoke(collectionProvider, new object[] { collectionInfo.CollectionId });
         }

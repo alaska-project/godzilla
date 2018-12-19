@@ -46,11 +46,11 @@ namespace Godzilla.Commands
                     NodeName = entityName,
                     ParentId = request.ParentId,
                 });
-
+                
+                
 
                 _transactionService.CommitTransaction();
-
-                throw new NotImplementedException();
+                return Task.FromResult(true);
             }
             catch (Exception e)
             {

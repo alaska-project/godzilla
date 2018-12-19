@@ -1,8 +1,10 @@
 ﻿using Godzilla.Abstractions.Infrastructure;
 using Godzilla.Abstractions.Services;
 using Godzilla.Collections.Internal;
+using Godzilla.Utils;
 using System;
 using System.Collections.Generic;
+using System.Reflection;
 using System.Text;
 
 namespace Godzilla.Services
@@ -39,7 +41,14 @@ namespace Godzilla.Services
         {
             _transactionManager.CommitTransaction();
         }
-        
+
+        public IGodzillaCollection GetCollection(Type itemType)
+        {
+            var getCollectionMethod = ReflectionUtil.GetGenericMethod(this.GetType(), "GetCollection", BindingFlags.Instance | BindingFlags.Public);
+            var specificGetCollectionMethod = getCollectionMethod.MakeGenericMethod(itemType);
+            return (IGodzillaCollection)specificGetCollectionMethod.Invoke(this, new object[0]);
+        }
+
         public IGodzillaCollection<TItem> GetCollection<TItem>()
         {
             var collection = _resolver.GetCollection<TItem>(_transactionManager);
