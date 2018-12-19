@@ -59,5 +59,20 @@ namespace Godzilla.Collections.Internal
         {
             _collection.Update(entity);
         }
+
+        void IGodzillaCollection.Add(object entity)
+        {
+            Add((TItem)entity);
+        }
+
+        void IGodzillaCollection.Update(object entity)
+        {
+            Update((TItem)entity);
+        }
+
+        void IGodzillaCollection.Delete(object entity)
+        {
+            Delete((TItem)entity);
+        }
     }
 }

@@ -46,8 +46,9 @@ namespace Godzilla.Commands
                     NodeName = entityName,
                     ParentId = request.ParentId,
                 });
-                
-                
+
+                var entityCollection = _transactionService.GetCollection(request.Entity.GetType());
+                entityCollection.Add(request.Entity);
 
                 _transactionService.CommitTransaction();
                 return Task.FromResult(true);

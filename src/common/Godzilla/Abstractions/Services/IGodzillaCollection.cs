@@ -22,5 +22,9 @@ namespace Godzilla.Abstractions.Services
     }
 
     internal interface IGodzillaCollection
-    { }
+    {
+        void Add(object entity);
+        void Update(object entity);
+        void Delete(object entity);
+    }
 }
