@@ -45,6 +45,57 @@ namespace Godzilla.UnitTests.Commands
         }
 
         [Fact]
+        public async Task Create_derived_entity_ok()
+        {
+            //setup
+            var entityId = Guid.NewGuid();
+            var request = FakeCreateDerivedEntityCommand(Guid.NewGuid(), entityId);
+            var handler = new CreateEntityCommandHandler<FakeEntityContext>(_transactionService.Object, _propertyResolver.Object);
+
+            _treeEdgesCollection
+                .Setup(x => x.NodeExists(It.IsAny<Guid>()))
+                .Returns(false);
+
+            //act
+            await handler.Handle(request, default(CancellationToken));
+
+            _transactionService.Verify(x => x.StartTransaction(), Times.Once());
+            _transactionService.Verify(x => x.CommitTransaction(), Times.Once());
+            _transactionService.Verify(x => x.AbortTransaction(), Times.Never());
+
+            _treeEdgesCollection.Verify(x => x.Add(It.Is<TreeEdge>(t =>
+                t.ParentId == request.ParentId &&
+                t.NodeId == entityId)), Times.Once());
+            _entityCollection.Verify(x => x.Add(It.IsAny<object>()), Times.Never());
+            _derivedEntityCollection.Verify(x => x.Add(request.Entity), Times.Once());
+        }
+
+        [Fact]
+        public async Task Create_duplicate_derived_entity()
+        {
+            //setup
+            var entityId = Guid.NewGuid();
+            var request = FakeCreateDerivedEntityCommand(Guid.NewGuid(), entityId);
+            var handler = new CreateEntityCommandHandler<FakeEntityContext>(_transactionService.Object, _propertyResolver.Object);
+
+            _treeEdgesCollection
+                .Setup(x => x.NodeExists(It.IsAny<Guid>()))
+                .Returns(true);
+
+            //act
+            await Assert.ThrowsAsync<EntityCreationException>(() => handler.Handle(request, default(CancellationToken)));
+
+            //verify
+            _transactionService.Verify(x => x.StartTransaction(), Times.Once());
+            _transactionService.Verify(x => x.CommitTransaction(), Times.Never());
+            _transactionService.Verify(x => x.AbortTransaction(), Times.Once());
+
+            _treeEdgesCollection.Verify(x => x.Add(It.IsAny<TreeEdge>()), Times.Never());
+            _derivedEntityCollection.Verify(x => x.Add(It.IsAny<object>()), Times.Never());
+            _entityCollection.Verify(x => x.Add(It.IsAny<object>()), Times.Never());
+        }
+
+        [Fact]
         public async Task Create_duplicate_entity()
         {
             //setup
@@ -91,6 +142,14 @@ namespace Godzilla.UnitTests.Commands
                 t.ParentId == request.ParentId &&
                 t.NodeId == entityId)), Times.Once());
             _entityCollection.Verify(x => x.Add(request.Entity), Times.Once());
+        }
+
+        private CreateEntityCommand<FakeEntityContext> FakeCreateDerivedEntityCommand(Guid parentId, Guid entityId)
+        {
+            return new Godzilla.Commands.CreateEntityCommand<FakeEntityContext>(parentId, new FakeDerivedEntity
+            {
+                Id = entityId,
+            });
         }
 
         private CreateEntityCommand<FakeEntityContext> FakeCreateEntityCommand(Guid parentId, Guid entityId)
