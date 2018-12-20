@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Godzilla.Mongo.Extensions
+namespace Godzilla.Mongo
 {
     public static class MongoEntityContextOptionsBuilderExtensions
     {
