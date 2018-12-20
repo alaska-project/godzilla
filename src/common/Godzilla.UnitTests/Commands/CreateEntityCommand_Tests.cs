@@ -144,6 +144,31 @@ namespace Godzilla.UnitTests.Commands
             _entityCollection.Verify(x => x.Add(request.Entity), Times.Once());
         }
 
+        [Fact]
+        public async Task Create_entity_ok_with_empty_enityId()
+        {
+            //setup
+            var entityId = Guid.Empty;
+            var request = FakeCreateEntityCommand(Guid.NewGuid(), entityId);
+            var handler = new CreateEntityCommandHandler<FakeEntityContext>(_transactionService.Object, _propertyResolver.Object);
+
+            _treeEdgesCollection
+                .Setup(x => x.NodeExists(It.IsAny<Guid>()))
+                .Returns(false);
+
+            //act
+            await handler.Handle(request, default(CancellationToken));
+
+            _transactionService.Verify(x => x.StartTransaction(), Times.Once());
+            _transactionService.Verify(x => x.CommitTransaction(), Times.Once());
+            _transactionService.Verify(x => x.AbortTransaction(), Times.Never());
+
+            _treeEdgesCollection.Verify(x => x.Add(It.Is<TreeEdge>(t =>
+                t.ParentId == request.ParentId &&
+                t.NodeId != Guid.Empty)), Times.Once());
+            _entityCollection.Verify(x => x.Add(request.Entity), Times.Once());
+        }
+
         private CreateEntityCommand<FakeEntityContext> FakeCreateDerivedEntityCommand(Guid parentId, Guid entityId)
         {
             return new Godzilla.Commands.CreateEntityCommand<FakeEntityContext>(parentId, new FakeDerivedEntity
