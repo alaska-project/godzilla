@@ -30,13 +30,13 @@ namespace Godzilla.Collections.Internal
 
         public virtual void Add(TItem entity)
         {
-            _collection.Add(entity);
+            _collection.Add(entity).ConfigureAwait(false);
         }
 
         public virtual void Add<TDerived>(TDerived entity) 
             where TDerived : TItem
         {
-            _collection.Add(entity);
+            _collection.Add(entity).ConfigureAwait(false);
         }
         
         public virtual void Delete(TItem entity)

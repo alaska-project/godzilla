@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Godzilla.Collections.Infrastructure
 {
@@ -18,7 +19,7 @@ namespace Godzilla.Collections.Infrastructure
             _propertyResolver = propertyResolver ?? throw new ArgumentNullException(nameof(propertyResolver));
         }
 
-        public void Add(TItem entity)
+        public Task Add(TItem entity)
         {
             var id = _propertyResolver.GetEntityId(entity);
 
@@ -28,10 +29,11 @@ namespace Godzilla.Collections.Infrastructure
                     throw new InvalidOperationException($"Element {id} already present");
 
                 _innerDict.Add(id, entity);
+                return Task.FromResult(true);
             }
         }
 
-        public void Add<TDerived>(TDerived entity) where TDerived : TItem
+        public Task Add<TDerived>(TDerived entity) where TDerived : TItem
         {
             var id = _propertyResolver.GetEntityId(entity);
 
@@ -41,6 +43,7 @@ namespace Godzilla.Collections.Infrastructure
                     throw new InvalidOperationException($"Element {id} already present");
 
                 _innerDict.Add(id, entity);
+                return Task.FromResult(true);
             }
         }
 

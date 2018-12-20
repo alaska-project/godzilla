@@ -5,9 +5,9 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Godzilla.Extensions
+namespace Godzilla
 {
-    public static class StartupExtensions
+    public static class GodzillaStartupExtensions
     {
         public static IServiceCollection AddEntityContext<TContext>(this IServiceCollection services, Action<EntityContextOptionsBuilder> optionsBuilder = null)
             where TContext : EntityContext
