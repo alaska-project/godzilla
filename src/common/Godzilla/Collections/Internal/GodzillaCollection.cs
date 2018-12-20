@@ -18,44 +18,44 @@ namespace Godzilla.Collections.Internal
             _collection = collection;
         }
 
-        public IQueryable<TItem> AsQueryable()
+        public virtual IQueryable<TItem> AsQueryable()
         {
             return _collection.AsQueryable();
         }
 
-        public IQueryable<TDerived> AsQueryable<TDerived>() where TDerived : TItem
+        public virtual IQueryable<TDerived> AsQueryable<TDerived>() where TDerived : TItem
         {
             return _collection.AsQueryable<TDerived>();
         }
 
-        public void Add(TItem entity)
+        public virtual void Add(TItem entity)
         {
             _collection.Add(entity);
         }
 
-        public void Add<TDerived>(TDerived entity) 
+        public virtual void Add<TDerived>(TDerived entity) 
             where TDerived : TItem
         {
             _collection.Add(entity);
         }
         
-        public void Delete(TItem entity)
+        public virtual void Delete(TItem entity)
         {
             _collection.Delete(entity);
         }
 
-        public void Delete<TDerived>(TItem entity) 
+        public virtual void Delete<TDerived>(TItem entity) 
             where TDerived : TItem
         {
             _collection.Delete(entity);
         }
 
-        public void Update(TItem entity)
+        public virtual void Update(TItem entity)
         {
             _collection.Update(entity);
         }
 
-        public void Update<TDerived>(TDerived entity) where TDerived : TItem
+        public virtual void Update<TDerived>(TDerived entity) where TDerived : TItem
         {
             _collection.Update(entity);
         }
