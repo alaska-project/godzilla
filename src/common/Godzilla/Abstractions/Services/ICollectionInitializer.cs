@@ -9,6 +9,6 @@ namespace Godzilla.Abstractions.Services
     internal interface ICollectionInitializer
     {
         GodzillaCollection<TItem> CreateCollection<TItem>(IDatabaseCollection<TItem> collection);
-        TCollection CreateCollection<TItem, TCollection>(IDatabaseCollection<TItem> collection);
+        TCollection CreateCollection<TItem, TCollection>(IDatabaseCollection<TItem> collection) where TCollection : IGodzillaCollection<TItem>;
     }
 }

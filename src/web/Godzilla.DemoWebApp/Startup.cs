@@ -27,7 +27,6 @@ namespace Godzilla.DemoWebApp
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
-
             services.AddMvc()
                 .AddJsonOptions(options =>
                 {
