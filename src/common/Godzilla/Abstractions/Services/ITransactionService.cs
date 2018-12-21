@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Godzilla.Abstractions.Services
 {
-    internal interface ITransactionService<TContext>
+    public interface ITransactionService<TContext>
         where TContext : EntityContext
     {
         void StartTransaction();

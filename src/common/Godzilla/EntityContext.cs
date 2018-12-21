@@ -8,6 +8,8 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
+[assembly: InternalsVisibleTo("MediatR")]
+[assembly: InternalsVisibleTo("MediatR.Extensions.Microsoft.DependencyInjection")]
 [assembly: InternalsVisibleTo("DynamicProxyGenAssembly2")]
 [assembly: InternalsVisibleTo("Godzilla.UnitTests")]
 namespace Godzilla

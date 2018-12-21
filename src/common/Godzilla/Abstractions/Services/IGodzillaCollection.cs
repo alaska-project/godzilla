@@ -6,7 +6,7 @@ using System.Text;
 
 namespace Godzilla.Abstractions.Services
 {
-    internal interface IGodzillaCollection<TItem>
+    public interface IGodzillaCollection<TItem>
     {
         IQueryable<TItem> AsQueryable();
         IQueryable<TDerived> AsQueryable<TDerived>() where TDerived : TItem;
@@ -21,7 +21,7 @@ namespace Godzilla.Abstractions.Services
         void Delete<TDerived>(TItem entity) where TDerived : TItem;
     }
 
-    internal interface IGodzillaCollection
+    public interface IGodzillaCollection
     {
         void Add(object entity);
         void Update(object entity);

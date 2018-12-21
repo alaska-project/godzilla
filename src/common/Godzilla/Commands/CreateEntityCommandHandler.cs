@@ -18,7 +18,7 @@ namespace Godzilla.Commands
         private readonly ITransactionService<TContext> _transactionService;
         private readonly IEntityPropertyResolver<TContext> _propertyResolver;
 
-        internal CreateEntityCommandHandler(
+        public CreateEntityCommandHandler(
             ITransactionService<TContext> transactionService,
             IEntityPropertyResolver<TContext> propertyResolver)
         {

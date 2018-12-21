@@ -1,4 +1,5 @@
 ﻿using Godzilla.Abstractions.Services;
+using Godzilla.Commands;
 using Godzilla.Services;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
@@ -23,7 +24,8 @@ namespace Godzilla
                 .AddScoped<ICollectionService<TContext>, CollectionService<TContext>>()
                 .AddScoped<IEntityPropertyResolver<TContext>, EntityPropertyResolver<TContext>>()
                 .AddScoped<ITransactionService<TContext>, TransactionService<TContext>>()
-                .AddScoped<TContext>();
+                .AddScoped<TContext>()
+                .AddTransient<IRequestHandler<CreateEntityCommand<TContext>, bool>, CreateEntityCommandHandler<TContext>>();
         }
     }
 }

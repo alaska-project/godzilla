@@ -1,4 +1,7 @@
-﻿using Godzilla.Mongo.Settings;
+﻿using Godzilla.Abstractions.Infrastructure;
+using Godzilla.Mongo.Infrastructure;
+using Godzilla.Mongo.Services;
+using Godzilla.Mongo.Settings;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
@@ -16,7 +19,11 @@ namespace Godzilla.Mongo
                 ConnectionString = connectionString,
                 DatabaseName = database,
             };
-            builder.Services.AddSingleton(options);
+            builder.Services
+                .AddSingleton(options)
+                .AddScoped<IDatabaseTransactionManager<TContext>, MongoDatabaseTransactionManager<TContext>>()
+                .AddScoped<IDatabaseCollectionProvider<TContext>, MongoDatabaseCollectionProvider<TContext>>()
+                .AddScoped<MongoDatabaseFactory<TContext>>();
         }
     }
 }
