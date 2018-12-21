@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -12,7 +13,13 @@ namespace Godzilla.Mongo.FunctionalTests
 {
     public abstract class MongoGodzillaScenarioBase
     {
-        public TestServer CreateServer()
+        protected TContext GetEntityContext<TContext>(TestServer server)
+            where TContext : EntityContext
+        {
+            return server.Host.Services.GetRequiredService<TContext>();
+        }
+
+        protected TestServer CreateServer()
         {
             var path = Assembly.GetAssembly(typeof(MongoGodzillaScenarioBase))
                 .Location;
