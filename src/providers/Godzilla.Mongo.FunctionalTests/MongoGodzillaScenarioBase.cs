@@ -23,7 +23,8 @@ namespace Godzilla.Mongo.FunctionalTests
                 {
                     cb.AddJsonFile("appsettings.json", optional: false)
                     .AddEnvironmentVariables();
-                }).UseStartup<GodzillaServerStartup>();
+                })
+                    .UseStartup<GodzillaApiServerStartup>();
 
             var testServer = new TestServer(hostBuilder);
             return testServer;

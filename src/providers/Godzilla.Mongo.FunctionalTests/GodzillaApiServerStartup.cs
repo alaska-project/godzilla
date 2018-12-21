@@ -1,0 +1,40 @@
+﻿using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Mongo2Go;
+using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace Godzilla.Mongo.FunctionalTests
+{
+    public class GodzillaApiServerStartup
+    {
+        private MongoDbRunner _runner;
+
+        public GodzillaApiServerStartup(IConfiguration configuration)
+        {
+            Configuration = configuration;
+
+            _runner = MongoDbRunner.StartForDebugging(singleNodeReplSet: true);
+        }
+
+        public IConfiguration Configuration { get; }
+
+        public void ConfigureServices(IServiceCollection services)
+        {
+            services
+                .AddEntityContext<TestEntityContext>(opt =>
+                {
+                    opt.UseMongoDb<TestEntityContext>(_runner.ConnectionString, Configuration["Godzilla:Database"]);
+                });
+        }
+
+        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        {
+            
+        }
+    }
+}
