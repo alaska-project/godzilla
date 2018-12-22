@@ -21,5 +21,18 @@ namespace Godzilla.Mongo.FunctionalTests.Commands
                 });
             }
         }
+
+        [Fact]
+        public async Task Create_derived_item()
+        {
+            using (var server = CreateServer())
+            {
+                var context = GetEntityContext<TestEntityContext>(server);
+                await context.Add(new DerivedTestEntity
+                {
+                    Name = "gigi"
+                });
+            }
+        }
     }
 }
