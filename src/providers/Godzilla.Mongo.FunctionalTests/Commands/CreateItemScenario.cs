@@ -15,10 +15,12 @@ namespace Godzilla.Mongo.FunctionalTests.Commands
             using (var server = CreateServer())
             {
                 var context = GetEntityContext<TestEntityContext>(server);
-                await context.Add(new TestEntity
+                var item = await context.Add(new TestEntity
                 {
                     Name = "gigi"
                 });
+
+                Assert.NotEqual(Guid.Empty, item.Id);
             }
         }
 
@@ -28,10 +30,12 @@ namespace Godzilla.Mongo.FunctionalTests.Commands
             using (var server = CreateServer())
             {
                 var context = GetEntityContext<TestEntityContext>(server);
-                await context.Add(new DerivedTestEntity
+                var item = await context.Add(new DerivedTestEntity
                 {
                     Name = "gigi"
                 });
+
+                Assert.NotEqual(Guid.Empty, item.Id);
             }
         }
     }
