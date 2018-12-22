@@ -10,9 +10,9 @@ namespace Godzilla.Mongo.Infrastructure
 {
     internal class MongoDatabaseCollection<TItem> : IDatabaseCollection<TItem>
     {
-        protected IFilteredMongoCollection<TItem> _collection;
+        protected IMongoCollection<TItem> _collection;
 
-        public MongoDatabaseCollection(IFilteredMongoCollection<TItem> collection)
+        public MongoDatabaseCollection(IMongoCollection<TItem> collection)
         {
             _collection = collection ?? throw new ArgumentNullException(nameof(collection));
         }

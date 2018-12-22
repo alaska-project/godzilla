@@ -20,11 +20,8 @@ namespace Godzilla.Mongo.Infrastructure
         public IDatabaseCollection<TItem> GetCollection<TItem, TBaseItem>(string collectionId) 
             where TItem : TBaseItem
         {
-            var database = _factory.GetDatabase();
-            var collection = database.GetCollection<TBaseItem>(collectionId)
-                .OfType<TItem>();
-
+            var collection = _factory.GetMongoCollection<TItem, TBaseItem>(collectionId);
             return new MongoDatabaseCollection<TItem>(collection);
-        }
+        }        
     }
 }
