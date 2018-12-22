@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace Godzilla.Commands
 {
-    public class CreateEntityCommandHandler<TContext> : IRequestHandler<CreateEntityCommand<TContext>, bool>
+    public class CreateEntityCommandHandler<TContext> : IRequestHandler<CreateEntityCommand<TContext>, object>
         where TContext : EntityContext
     {
         private readonly ITransactionService<TContext> _transactionService;
@@ -26,7 +26,7 @@ namespace Godzilla.Commands
             _propertyResolver = propertyResolver ?? throw new ArgumentNullException(nameof(propertyResolver));
         }
 
-        public Task<bool> Handle(CreateEntityCommand<TContext> request, CancellationToken cancellationToken)
+        public Task<object> Handle(CreateEntityCommand<TContext> request, CancellationToken cancellationToken)
         {
             try
             {
@@ -51,7 +51,7 @@ namespace Godzilla.Commands
                 entityCollection.Add(request.Entity);
 
                 _transactionService.CommitTransaction();
-                return Task.FromResult(true);
+                return Task.FromResult(request.Entity);
             }
             catch (Exception e)
             {

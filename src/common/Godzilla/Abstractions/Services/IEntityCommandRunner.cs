@@ -7,6 +7,6 @@ namespace Godzilla.Abstractions.Services
 {
     internal interface IEntityCommandRunner
     {
-        Task Add<TEntity>(TEntity entity);
+        Task<TEntity> Add<TEntity>(TEntity entity);
     }
 }

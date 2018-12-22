@@ -8,7 +8,8 @@ using System.Threading.Tasks;
 
 namespace Godzilla.Services
 {
-    internal class EntityCommandRunner<TContext> : IEntityCommandRunner
+    internal class EntityCommandRunner<TContext> : 
+        IEntityCommandRunner
         where TContext : EntityContext
     {
         private readonly IMediator _mediator;
@@ -18,9 +19,9 @@ namespace Godzilla.Services
             _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
         }
 
-        public async Task Add<TEntity>(TEntity entity)
+        public async Task<TEntity> Add<TEntity>(TEntity entity)
         {
-            await _mediator.Send(new CreateEntityCommand<TContext>(Guid.Empty, entity));
+            return (TEntity)await _mediator.Send(new CreateEntityCommand<TContext>(Guid.Empty, entity));
         }
     }
 }

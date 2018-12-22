@@ -25,9 +25,9 @@ namespace Godzilla
             _runner = (IEntityCommandRunner)Activator.CreateInstance(typeof(EntityCommandRunner<>).MakeGenericType(this.GetType()), new object[] { mediator });
         }
 
-        public async Task Add<TEntity>(TEntity entity)
+        public async Task<TEntity> Add<TEntity>(TEntity entity)
         {
-            await _runner.Add<TEntity>(entity);
+            return await _runner.Add(entity);
         }
 
         public virtual void OnConfiguring()

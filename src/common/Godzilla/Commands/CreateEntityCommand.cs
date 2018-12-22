@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Godzilla.Commands
 {
-    public class CreateEntityCommand<TContext> : IRequest<bool>
+    public class CreateEntityCommand<TContext> : IRequest<object>
         where TContext : EntityContext
     {
         public CreateEntityCommand(Guid parentId, object entity)
