@@ -9,15 +9,14 @@ namespace Godzilla.Abstractions.Infrastructure
     public interface IDatabaseCollection<TItem>
     {
         IQueryable<TItem> AsQueryable();
-        IQueryable<TDerived> AsQueryable<TDerived>() where TDerived : TItem;
 
         Task Add(TItem entity);
-        Task Add<TDerived>(TDerived entity) where TDerived: TItem;
+        Task Add(IEnumerable<TItem> entities);
 
-        void Update(TItem entity);
-        void Update<TDerived>(TDerived entity) where TDerived : TItem;
+        Task Update(TItem entity);
+        Task Update(IEnumerable<TItem> entities);
 
-        void Delete(TItem entity);
-        void Delete<TDerived>(TItem entity) where TDerived : TItem;
+        Task Delete(TItem entity);
+        Task Delete(IEnumerable<TItem> entities);
     }
 }

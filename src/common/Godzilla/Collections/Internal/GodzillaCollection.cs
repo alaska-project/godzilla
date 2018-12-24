@@ -22,32 +22,25 @@ namespace Godzilla.Collections.Internal
         {
             return _collection.AsQueryable();
         }
-
-        public virtual IQueryable<TDerived> AsQueryable<TDerived>() where TDerived : TItem
-        {
-            return _collection.AsQueryable<TDerived>();
-        }
-
+        
         public virtual void Add(TItem entity)
         {
             _collection.Add(entity).ConfigureAwait(false);
         }
 
-        public virtual void Add<TDerived>(TDerived entity) 
-            where TDerived : TItem
+        public virtual void Add(IEnumerable<TItem> entities)
         {
-            _collection.Add(entity).ConfigureAwait(false);
+            _collection.Add(entities).ConfigureAwait(false);
         }
-        
+                
         public virtual void Delete(TItem entity)
         {
             _collection.Delete(entity);
         }
 
-        public virtual void Delete<TDerived>(TItem entity) 
-            where TDerived : TItem
+        public virtual void Delete(IEnumerable<TItem> entities)
         {
-            _collection.Delete(entity);
+            _collection.Delete(entities);
         }
 
         public virtual void Update(TItem entity)
@@ -55,9 +48,9 @@ namespace Godzilla.Collections.Internal
             _collection.Update(entity);
         }
 
-        public virtual void Update<TDerived>(TDerived entity) where TDerived : TItem
+        public virtual void Update(IEnumerable<TItem> entities)
         {
-            _collection.Update(entity);
+            _collection.Update(entities);
         }
 
         void IGodzillaCollection.Add(object entity)
@@ -65,14 +58,29 @@ namespace Godzilla.Collections.Internal
             Add((TItem)entity);
         }
 
+        void IGodzillaCollection.Add(IEnumerable<object> entities)
+        {
+            Add(entities.Cast<TItem>());
+        }
+
         void IGodzillaCollection.Update(object entity)
         {
             Update((TItem)entity);
         }
 
+        void IGodzillaCollection.Update(IEnumerable<object> entities)
+        {
+            Update(entities.Cast<TItem>());
+        }
+
         void IGodzillaCollection.Delete(object entity)
         {
             Delete((TItem)entity);
+        }
+
+        void IGodzillaCollection.Delete(IEnumerable<object> entities)
+        {
+            Delete(entities.Cast<TItem>());
         }
     }
 }

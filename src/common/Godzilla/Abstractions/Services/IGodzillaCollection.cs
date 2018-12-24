@@ -9,22 +9,24 @@ namespace Godzilla.Abstractions.Services
     public interface IGodzillaCollection<TItem>
     {
         IQueryable<TItem> AsQueryable();
-        IQueryable<TDerived> AsQueryable<TDerived>() where TDerived : TItem;
 
         void Add(TItem entity);
-        void Add<TDerived>(TDerived entity) where TDerived : TItem;
+        void Add(IEnumerable<TItem> entities);
 
         void Update(TItem entity);
-        void Update<TDerived>(TDerived entity) where TDerived : TItem;
+        void Update(IEnumerable<TItem> entities);
 
         void Delete(TItem entity);
-        void Delete<TDerived>(TItem entity) where TDerived : TItem;
+        void Delete(IEnumerable<TItem> entities);
     }
 
     public interface IGodzillaCollection
     {
         void Add(object entity);
+        void Add(IEnumerable<object> entities);
         void Update(object entity);
+        void Update(IEnumerable<object> entities);
         void Delete(object entity);
+        void Delete(IEnumerable<object> entities);
     }
 }

@@ -5,8 +5,9 @@ using System.Threading.Tasks;
 
 namespace Godzilla.Abstractions.Services
 {
-    internal interface IEntityCommandRunner
+    public interface IEntityCommandRunner
     {
         Task<TEntity> Add<TEntity>(TEntity entity);
+        Task<IEnumerable<TEntity>> Add<TEntity>(IEnumerable<TEntity> entity);
     }
 }

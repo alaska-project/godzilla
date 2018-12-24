@@ -22,43 +22,35 @@ namespace Godzilla.Mongo.Infrastructure
             return _collection
                 .AsQueryable();
         }
-
-        public IQueryable<TDerived> AsQueryable<TDerived>() where TDerived : TItem
-        {
-            return _collection
-                .OfType<TDerived>()
-                .AsQueryable();
-        }
-
+        
         public async Task Add(TItem entity)
         {
             await _collection
                 .InsertOneAsync(entity);
         }
 
-        public async Task Add<TDerived>(TDerived entity) where TDerived : TItem
+        public async Task Add(IEnumerable<TItem> entities)
         {
             await _collection
-                .OfType<TDerived>()
-                .InsertOneAsync(entity);
+                .InsertManyAsync(entities);
         }
         
-        public void Delete(TItem entity)
+        public Task Delete(TItem entity)
         {
             throw new NotImplementedException();
         }
 
-        public void Delete<TDerived>(TItem entity) where TDerived : TItem
+        public Task Delete(IEnumerable<TItem> entities)
         {
             throw new NotImplementedException();
         }
 
-        public void Update(TItem entity)
+        public Task Update(TItem entity)
         {
             throw new NotImplementedException();
         }
-
-        public void Update<TDerived>(TDerived entity) where TDerived : TItem
+        
+        public Task Update(IEnumerable<TItem> entities)
         {
             throw new NotImplementedException();
         }

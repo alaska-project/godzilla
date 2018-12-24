@@ -25,7 +25,7 @@ namespace Godzilla
                 .AddScoped<IEntityPropertyResolver<TContext>, EntityPropertyResolver<TContext>>()
                 .AddScoped<ITransactionService<TContext>, TransactionService<TContext>>()
                 .AddScoped<TContext>()
-                .AddTransient<IRequestHandler<CreateEntityCommand<TContext>, object>, CreateEntityCommandHandler<TContext>>();
+                .AddTransient<IRequestHandler<CreateEntityCommand<TContext>, IEnumerable<object>>, CreateEntityCommandHandler<TContext>>();
         }
     }
 }

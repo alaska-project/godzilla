@@ -3,6 +3,7 @@ using Godzilla.Commands;
 using MediatR;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -21,7 +22,19 @@ namespace Godzilla.Services
 
         public async Task<TEntity> Add<TEntity>(TEntity entity)
         {
-            return (TEntity)await _mediator.Send(new CreateEntityCommand<TContext>(Guid.Empty, entity));
+            var result = await Add((IEnumerable<TEntity>)new List<TEntity> { entity });
+            return result.First();
+        }
+
+        public async Task<IEnumerable<TEntity>> Add<TEntity>(IEnumerable<TEntity> entities)
+        {
+            var result = 
+                await _mediator.Send(new CreateEntityCommand<TContext>(Guid.Empty, entities.Cast<object>()));
+
+            return result
+                .Cast<TEntity>()
+                .ToList();
+
         }
     }
 }

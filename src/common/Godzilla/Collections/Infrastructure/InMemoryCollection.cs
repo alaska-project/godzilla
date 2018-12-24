@@ -47,6 +47,15 @@ namespace Godzilla.Collections.Infrastructure
             }
         }
 
+        public Task Add(IEnumerable<TItem> entities)
+        {
+            entities
+                .ToList()
+                .ForEach(x => Add(x).ConfigureAwait(false));
+
+            return Task.FromResult(true);
+        }
+
         public IQueryable<TItem> AsQueryable()
         {
             return _innerDict.Values.AsQueryable();
@@ -61,7 +70,7 @@ namespace Godzilla.Collections.Infrastructure
                 .AsQueryable();
         }
 
-        public void Delete(TItem entity)
+        public Task Delete(TItem entity)
         {
             var id = _propertyResolver.GetEntityId(entity);
 
@@ -71,23 +80,20 @@ namespace Godzilla.Collections.Infrastructure
                     throw new InvalidOperationException($"Element {id} not found");
 
                 _innerDict.Remove(id);
+                return Task.FromResult(true);
             }
         }
-
-        public void Delete<TDerived>(TItem entity) where TDerived : TItem
+        
+        public Task Delete(IEnumerable<TItem> entities)
         {
-            var id = _propertyResolver.GetEntityId(entity);
+            entities
+                .ToList()
+                .ForEach(x => Delete(x).ConfigureAwait(false));
 
-            lock (this)
-            {
-                if (!_innerDict.ContainsKey(id))
-                    throw new InvalidOperationException($"Element {id} not found");
-
-                _innerDict.Remove(id);
-            }
+            return Task.FromResult(true);
         }
-
-        public void Update(TItem entity)
+        
+        public Task Update(TItem entity)
         {
             var id = _propertyResolver.GetEntityId(entity);
 
@@ -97,7 +103,17 @@ namespace Godzilla.Collections.Infrastructure
                     throw new InvalidOperationException($"Element {id} not found");
 
                 _innerDict[id] = entity;
+                return Task.FromResult(true);
             }
+        }
+
+        public Task Update(IEnumerable<TItem> entities)
+        {
+            entities
+                .ToList()
+                .ForEach(x => Update(x).ConfigureAwait(false));
+
+            return Task.FromResult(true);
         }
 
         public void Update<TDerived>(TDerived entity) where TDerived : TItem
@@ -111,6 +127,16 @@ namespace Godzilla.Collections.Infrastructure
 
                 _innerDict[id] = entity;
             }
+        }
+        
+        Task IDatabaseCollection<TItem>.Delete(TItem entity)
+        {
+            throw new NotImplementedException();
+        }
+
+        Task IDatabaseCollection<TItem>.Update(TItem entity)
+        {
+            throw new NotImplementedException();
         }
     }
 }
