@@ -15,7 +15,7 @@ namespace Godzilla.Mongo.FunctionalTests.Commands
             using (var server = CreateServer())
             {
                 var context = GetEntityContext<TestEntityContext>(server);
-                var item = await context.Command.Add(new TestEntity
+                var item = await context.Commands.Add(new TestEntity
                 {
                     Name = "gigi"
                 });
@@ -30,7 +30,7 @@ namespace Godzilla.Mongo.FunctionalTests.Commands
             using (var server = CreateServer())
             {
                 var context = GetEntityContext<TestEntityContext>(server);
-                var item = await context.Command.Add(new DerivedTestEntity
+                var item = await context.Commands.Add(new DerivedTestEntity
                 {
                     Name = "gigi"
                 });

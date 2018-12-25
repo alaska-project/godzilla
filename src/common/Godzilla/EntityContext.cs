@@ -21,10 +21,10 @@ namespace Godzilla
         public EntityContext(IMediator mediator)
         {
             _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
-            Command = (IEntityCommandRunner)Activator.CreateInstance(typeof(EntityCommandRunner<>).MakeGenericType(this.GetType()), new object[] { mediator });
+            Commands = (IEntityCommandRunner)Activator.CreateInstance(typeof(EntityCommandRunner<>).MakeGenericType(this.GetType()), new object[] { mediator });
         }
 
-        public IEntityCommandRunner Command { get; }
+        public IEntityCommandRunner Commands { get; }
         
         public virtual void OnConfiguring()
         { }
