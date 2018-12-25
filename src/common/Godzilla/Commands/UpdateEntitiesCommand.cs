@@ -5,16 +5,14 @@ using System.Text;
 
 namespace Godzilla.Commands
 {
-    public class CreateEntityCommand<TContext> : IRequest<IEnumerable<object>>
+    public class UpdateEntitiesCommand<TContext> : IRequest<IEnumerable<object>>
         where TContext : EntityContext
     {
-        public CreateEntityCommand(Guid parentId, IEnumerable<object> entities)
+        public UpdateEntitiesCommand(IEnumerable<object> entities)
         {
-            ParentId = parentId;
             Entities = entities;
         }
 
-        public Guid ParentId { get; }
         public IEnumerable<object> Entities { get; }
     }
 }

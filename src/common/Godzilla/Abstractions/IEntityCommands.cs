@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Godzilla.Abstractions.Services
+namespace Godzilla.Abstractions
 {
-    public interface IEntityCommandRunner
+    public interface IEntityCommands
     {
         Task<TEntity> Add<TEntity>(TEntity entity);
         Task<IEnumerable<TEntity>> Add<TEntity>(IEnumerable<TEntity> entity);

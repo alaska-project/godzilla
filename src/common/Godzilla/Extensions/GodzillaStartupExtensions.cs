@@ -1,5 +1,8 @@
-﻿using Godzilla.Abstractions.Services;
+﻿using Godzilla.Abstractions;
+using Godzilla.Abstractions.Services;
 using Godzilla.Commands;
+using Godzilla.Internal;
+using Godzilla.Queries;
 using Godzilla.Services;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
@@ -17,15 +20,8 @@ namespace Godzilla
             var optionsBuilderObj = new EntityContextOptionsBuilder(services);
             optionsBuilder?.Invoke(optionsBuilderObj);
 
-            return services
-                .AddMediatR()
-                .AddScoped<ICollectionInitializer, CollectionInitializer>()
-                .AddScoped<ICollectionResolver<TContext>, CollectionResolver<TContext>>()
-                .AddScoped<ICollectionService<TContext>, CollectionService<TContext>>()
-                .AddScoped<IEntityPropertyResolver<TContext>, EntityPropertyResolver<TContext>>()
-                .AddScoped<ITransactionService<TContext>, TransactionService<TContext>>()
-                .AddScoped<TContext>()
-                .AddTransient<IRequestHandler<CreateEntityCommand<TContext>, IEnumerable<object>>, CreateEntityCommandHandler<TContext>>();
+            return new EntityContextServiceBuilder<TContext>(services)
+                .Build();
         }
     }
 }

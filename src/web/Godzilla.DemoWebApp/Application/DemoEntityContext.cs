@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using Godzilla.Abstractions;
+using MediatR;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,10 +7,10 @@ using System.Threading.Tasks;
 
 namespace Godzilla.DemoWebApp.Application
 {
-    public class DemoEntityContext : EntityContext
+    public class DemoEntityContext : EntityContext<DemoEntityContext>
     {
-        public DemoEntityContext(IMediator mediator)
-            : base(mediator)
+        public DemoEntityContext(IEntityContextServices<DemoEntityContext> services)
+            : base(services)
         { }
     }
 }

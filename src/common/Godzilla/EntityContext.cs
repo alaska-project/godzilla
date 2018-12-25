@@ -1,5 +1,6 @@
-﻿using Godzilla.Abstractions.Services;
-using Godzilla.Commands;
+﻿using Godzilla.Abstractions;
+using Godzilla.Abstractions.Services;
+using Godzilla.Queries;
 using Godzilla.Services;
 using MediatR;
 using System;
@@ -14,18 +15,26 @@ using System.Threading.Tasks;
 [assembly: InternalsVisibleTo("Godzilla.UnitTests")]
 namespace Godzilla
 {
+    public abstract class EntityContext<TContext> : EntityContext
+        where TContext : EntityContext
+    {
+        public EntityContext(IEntityContextServices<TContext> services)
+            : base(services)
+        { }
+    }
+
     public abstract class EntityContext
     {
-        private readonly IMediator _mediator;
+        private IEntityContextServices _entityContextServices;
 
-        public EntityContext(IMediator mediator)
+        internal EntityContext(IEntityContextServices entityContextServices)
         {
-            _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
-            Commands = (IEntityCommandRunner)Activator.CreateInstance(typeof(EntityCommandRunner<>).MakeGenericType(this.GetType()), new object[] { mediator });
+            _entityContextServices = entityContextServices;
         }
 
-        public IEntityCommandRunner Commands { get; }
-        
+        public IEntityCommands Commands => _entityContextServices.Commands;
+        public IEntityQueries Query => _entityContextServices.Queryes;
+
         public virtual void OnConfiguring()
         { }
     }

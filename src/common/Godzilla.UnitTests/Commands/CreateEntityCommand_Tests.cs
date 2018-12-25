@@ -50,8 +50,8 @@ namespace Godzilla.UnitTests.Commands
         {
             //setup
             var entityId = Guid.NewGuid();
-            var request = FakeCreateDerivedEntityCommand(Guid.NewGuid(), entityId);
-            var handler = new CreateEntityCommandHandler<FakeEntityContext>(_transactionService.Object, _propertyResolver.Object);
+            var request = FakeCreateDerivedEntityCommand(Guid.Empty, entityId);
+            var handler = new CreateEntitiesCommandHandler<FakeEntityContext>(_transactionService.Object, _propertyResolver.Object);
 
             _treeEdgesCollection
                 .Setup(x => x.NodeExists(It.IsAny<Guid>()))
@@ -80,8 +80,8 @@ namespace Godzilla.UnitTests.Commands
         {
             //setup
             var entityId = Guid.NewGuid();
-            var request = FakeCreateDerivedEntityCommand(Guid.NewGuid(), entityId);
-            var handler = new CreateEntityCommandHandler<FakeEntityContext>(_transactionService.Object, _propertyResolver.Object);
+            var request = FakeCreateDerivedEntityCommand(Guid.Empty, entityId);
+            var handler = new CreateEntitiesCommandHandler<FakeEntityContext>(_transactionService.Object, _propertyResolver.Object);
 
             _treeEdgesCollection
                 .Setup(x => x.NodeExists(It.IsAny<Guid>()))
@@ -109,8 +109,8 @@ namespace Godzilla.UnitTests.Commands
         {
             //setup
             var entityId = Guid.NewGuid();
-            var request = FakeCreateEntityCommand(Guid.NewGuid(), entityId);
-            var handler = new CreateEntityCommandHandler<FakeEntityContext>(_transactionService.Object, _propertyResolver.Object);
+            var request = FakeCreateEntityCommand(Guid.Empty, entityId);
+            var handler = new CreateEntitiesCommandHandler<FakeEntityContext>(_transactionService.Object, _propertyResolver.Object);
 
             _treeEdgesCollection
                 .Setup(x => x.NodeExists(It.IsAny<Guid>()))
@@ -137,8 +137,8 @@ namespace Godzilla.UnitTests.Commands
         {
             //setup
             var entityId = Guid.NewGuid();
-            var request = FakeCreateEntityCommand(Guid.NewGuid(), entityId);
-            var handler = new CreateEntityCommandHandler<FakeEntityContext>(_transactionService.Object, _propertyResolver.Object);
+            var request = FakeCreateEntityCommand(Guid.Empty, entityId);
+            var handler = new CreateEntitiesCommandHandler<FakeEntityContext>(_transactionService.Object, _propertyResolver.Object);
 
             _treeEdgesCollection
                 .Setup(x => x.NodeExists(It.IsAny<Guid>()))
@@ -166,8 +166,8 @@ namespace Godzilla.UnitTests.Commands
         {
             //setup
             var entityId = Guid.Empty;
-            var request = FakeCreateEntityCommand(Guid.NewGuid(), entityId);
-            var handler = new CreateEntityCommandHandler<FakeEntityContext>(_transactionService.Object, _propertyResolver.Object);
+            var request = FakeCreateEntityCommand(Guid.Empty, entityId);
+            var handler = new CreateEntitiesCommandHandler<FakeEntityContext>(_transactionService.Object, _propertyResolver.Object);
 
             _treeEdgesCollection
                 .Setup(x => x.NodeExists(It.IsAny<Guid>()))
@@ -190,9 +190,9 @@ namespace Godzilla.UnitTests.Commands
             _entityCollection.Verify(x => x.Add(request.Entities), Times.Once());
         }
 
-        private CreateEntityCommand<FakeEntityContext> FakeCreateDerivedEntityCommand(Guid parentId, Guid entityId)
+        private CreateEntitiesCommand<FakeEntityContext> FakeCreateDerivedEntityCommand(Guid parentId, Guid entityId)
         {
-            return new Godzilla.Commands.CreateEntityCommand<FakeEntityContext>(parentId, new List<FakeDerivedEntity> {
+            return new Godzilla.Commands.CreateEntitiesCommand<FakeEntityContext>(parentId, new List<FakeDerivedEntity> {
                 new FakeDerivedEntity
                 {
                     Id = entityId,
@@ -200,9 +200,9 @@ namespace Godzilla.UnitTests.Commands
             });
         }
 
-        private CreateEntityCommand<FakeEntityContext> FakeCreateEntityCommand(Guid parentId, Guid entityId)
+        private CreateEntitiesCommand<FakeEntityContext> FakeCreateEntityCommand(Guid parentId, Guid entityId)
         {
-            return new Godzilla.Commands.CreateEntityCommand<FakeEntityContext>(parentId, new List<FakeEntity> {
+            return new Godzilla.Commands.CreateEntitiesCommand<FakeEntityContext>(parentId, new List<FakeEntity> {
                 new FakeEntity
                 {
                     Id = entityId,

@@ -1,14 +1,14 @@
-﻿using MediatR;
+﻿using Godzilla.Abstractions;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace Godzilla.Mongo.FunctionalTests
 {
-    public class TestEntityContext : EntityContext
+    public class TestEntityContext : EntityContext<TestEntityContext>
     {
-        public TestEntityContext(IMediator mediator)
-            : base(mediator)
+        public TestEntityContext(IEntityContextServices<TestEntityContext> services)
+            : base(services)
         { }
     }
 
