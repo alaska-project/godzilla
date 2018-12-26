@@ -37,6 +37,8 @@ namespace Godzilla.Commands
                 var entityCollection = _transactionService.GetCollection(entityType);
                 var edgesCollection = _transactionService.GetCollection<TreeEdge, TreeEdgesCollection>();
 
+                _commandsHelper.VerifyEntitiesExist(request.Entities, edgesCollection);
+
                 entityCollection.Update(request.Entities);
 
                 _transactionService.CommitTransaction();

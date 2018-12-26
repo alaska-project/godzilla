@@ -31,9 +31,24 @@ namespace Godzilla.Internal
             return entityTypes.First().Key;
         }
 
-        public void VerifyEntitiesExist(ITreeEdgesCollection edgesCollection)
+        public void VerifyEntitiesExist(IEnumerable<object> entities, TreeEdgesCollection edgesCollection)
         {
+            var nodesId = entities
+                .Select(x => _propertyResolver.GetEntityId(x, false))
+                .ToList();
 
+            var existingNodesId = edgesCollection
+                .AsQueryable()
+                .Where(x => nodesId.Contains(x.NodeId))
+                .Select(x => x.NodeId)
+                .ToList();
+
+            var missingNodesId = nodesId
+                .Except(existingNodesId)
+                .ToList();
+
+            if (missingNodesId.Any())
+                throw new EntitiesNotFoundException($"Entities not found {string.Join(", ", missingNodesId)}");
         }
     }
 }

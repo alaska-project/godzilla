@@ -10,6 +10,6 @@ namespace Godzilla.Abstractions.Services
         where TContext : EntityContext
     {
         Type GetEntityType(IEnumerable<object> entities);
-        void VerifyEntitiesExist(ITreeEdgesCollection edgesCollection);
+        void VerifyEntitiesExist(IEnumerable<object> entities, TreeEdgesCollection edgesCollection);
     }
 }
