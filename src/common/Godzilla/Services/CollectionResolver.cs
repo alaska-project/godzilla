@@ -53,13 +53,13 @@ namespace Godzilla.Services
 
                     var collectionId = BuildCollectionId(collectionBaseType);
                     
-                    var overlappingCollection = _collectionMap.Values
-                        .FirstOrDefault(x => x.CollectionId.Equals(collectionId));
+                    //var overlappingCollection = _collectionMap.Values
+                    //    .FirstOrDefault(x => x.CollectionId.Equals(collectionId));
 
-                    if (overlappingCollection != null)
-                    {
-                        throw new DuplicateCollectionIdException($"Collection {collectionId} already used by {overlappingCollection.CollectionItemType.FullName}");
-                    }
+                    //if (overlappingCollection != null)
+                    //{
+                    //    throw new DuplicateCollectionIdException($"Collection {collectionId} already used by {overlappingCollection.CollectionItemType.FullName}");
+                    //}
 
                     return new CollectionInfo(collectionBaseType, collectionId);
                 });

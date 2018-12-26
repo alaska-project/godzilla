@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Xunit;
@@ -21,6 +22,14 @@ namespace Godzilla.Mongo.FunctionalTests.Commands
                 });
 
                 Assert.NotEqual(Guid.Empty, item.Id);
+
+                var foundItem = context.Query
+                    .AsQueryable<TestEntity>()
+                    .FirstOrDefault(x => x.Id == item.Id);
+
+                Assert.NotNull(foundItem);
+                Assert.Equal(item.Id, foundItem.Id);
+                Assert.Equal(item.Name, foundItem.Name);
             }
         }
 
@@ -36,6 +45,13 @@ namespace Godzilla.Mongo.FunctionalTests.Commands
                 });
 
                 Assert.NotEqual(Guid.Empty, item.Id);
+                var foundItem = context.Query
+                    .AsQueryable<TestEntity>()
+                    .FirstOrDefault(x => x.Id == item.Id);
+
+                Assert.NotNull(foundItem);
+                Assert.Equal(item.Id, foundItem.Id);
+                Assert.Equal(item.Name, foundItem.Name);
             }
         }
     }
