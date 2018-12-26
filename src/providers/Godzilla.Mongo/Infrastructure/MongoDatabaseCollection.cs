@@ -12,10 +12,13 @@ namespace Godzilla.Mongo.Infrastructure
     {
         protected IMongoCollection<TItem> _collection;
 
-        public MongoDatabaseCollection(IMongoCollection<TItem> collection)
+        public MongoDatabaseCollection(IMongoCollection<TItem> collection, string collectionId)
         {
             _collection = collection ?? throw new ArgumentNullException(nameof(collection));
+            CollectionId = collectionId;
         }
+
+        public string CollectionId { get; }
 
         public IQueryable<TItem> AsQueryable()
         {

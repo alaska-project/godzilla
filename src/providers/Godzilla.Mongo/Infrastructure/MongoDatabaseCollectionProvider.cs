@@ -21,7 +21,7 @@ namespace Godzilla.Mongo.Infrastructure
             where TItem : TBaseItem
         {
             var collection = _factory.GetMongoCollection<TItem, TBaseItem>(collectionId);
-            return new MongoDatabaseCollection<TItem>(collection);
+            return new MongoDatabaseCollection<TItem>(collection, collectionId);
         }        
     }
 }

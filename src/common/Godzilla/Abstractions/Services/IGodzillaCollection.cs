@@ -8,6 +8,10 @@ namespace Godzilla.Abstractions.Services
 {
     public interface IGodzillaCollection<TItem>
     {
+        string CollectionId { get; }
+
+        TItem GetItem(Guid id);
+        IEnumerable<TItem> GetItems(IEnumerable<Guid> id);
         IQueryable<TItem> AsQueryable();
 
         void Add(TItem entity);
@@ -22,6 +26,8 @@ namespace Godzilla.Abstractions.Services
 
     public interface IGodzillaCollection
     {
+        string CollectionId { get; }
+
         void Add(object entity);
         void Add(IEnumerable<object> entities);
         void Update(object entity);

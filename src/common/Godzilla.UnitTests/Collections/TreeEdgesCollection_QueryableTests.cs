@@ -25,7 +25,7 @@ namespace Godzilla.UnitTests.Collections
                 .Setup(x => x.GetEntityId(It.IsAny<TreeEdge>()))
                 .Returns((TreeEdge t) => t.Id);
 
-            _inMemoryCollection = new InMemoryCollection<FakeEntityContext, TreeEdge>(_propertyResolver.Object);
+            _inMemoryCollection = new InMemoryCollection<FakeEntityContext, TreeEdge>(_propertyResolver.Object, "fake-entity-context");
             _treeEdgesCollection = new TreeEdgesCollection(_inMemoryCollection);
         }
 

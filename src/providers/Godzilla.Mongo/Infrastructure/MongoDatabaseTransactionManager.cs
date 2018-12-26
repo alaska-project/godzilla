@@ -58,7 +58,7 @@ namespace Godzilla.Mongo.Infrastructure
             var database = _session.Client.GetDatabase(_factory.DatabaseName);
             var collection = _factory.GetMongoCollection<TItem, TBaseItem>(collectionId, database);
 
-            return new MongoDatabaseCollection<TItem>(collection);
+            return new MongoDatabaseCollection<TItem>(collection, collectionId);
         }
     }
 }

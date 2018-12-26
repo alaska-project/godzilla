@@ -46,7 +46,7 @@ namespace Godzilla.Mongo.FunctionalTests.Commands
 
                 Assert.NotEqual(Guid.Empty, item.Id);
                 var foundItem = context.Query
-                    .AsQueryable<TestEntity>()
+                    .AsQueryable<DerivedTestEntity>()
                     .FirstOrDefault(x => x.Id == item.Id);
 
                 Assert.NotNull(foundItem);

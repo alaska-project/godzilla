@@ -75,16 +75,16 @@ namespace Godzilla.UnitTests.Services
             Assert.Equal("custom-name", collectionInfo.CollectionId);
         }
 
-        [Fact]
-        public void Resolve_derived_type_with_overlapping_collection_id()
-        {
-            _resolver.GetCollectionInfo<LeafTypeFromCollectionAttributeTypeWithCustomName>();
+        //[Fact]
+        //public void Resolve_derived_type_with_overlapping_collection_id()
+        //{
+        //    _resolver.GetCollectionInfo<LeafTypeFromCollectionAttributeTypeWithCustomName>();
 
-            Assert.Throws<DuplicateCollectionIdException>(() => 
-            {
-                _resolver.GetCollectionInfo<DerivedTypeWithOverlappngCollectionName>();
-            });
-        }
+        //    Assert.Throws<DuplicateCollectionIdException>(() => 
+        //    {
+        //        _resolver.GetCollectionInfo<DerivedTypeWithOverlappngCollectionName>();
+        //    });
+        //}
 
         [Fact]
         public void Resolve_derived_type_with_no_overlapping_collection_id_multiple_times_without_exceptions()

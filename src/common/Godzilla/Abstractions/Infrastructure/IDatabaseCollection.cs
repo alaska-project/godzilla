@@ -8,6 +8,7 @@ namespace Godzilla.Abstractions.Infrastructure
 {
     public interface IDatabaseCollection<TItem>
     {
+        string CollectionId { get; }
         IQueryable<TItem> AsQueryable();
 
         Task Add(TItem entity);

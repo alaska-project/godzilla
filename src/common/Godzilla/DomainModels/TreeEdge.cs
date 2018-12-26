@@ -10,5 +10,6 @@ namespace Godzilla.DomainModels
         public Guid ParentId { get; set; }
         public Guid NodeId { get; set; }
         public string NodeName { get; set; }
+        public string CollectionId { get; set; }
     }
 }

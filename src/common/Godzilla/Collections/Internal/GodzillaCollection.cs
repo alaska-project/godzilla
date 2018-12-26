@@ -18,11 +18,23 @@ namespace Godzilla.Collections.Internal
             _collection = collection;
         }
 
+        public string CollectionId => _collection.CollectionId;
+
         public virtual IQueryable<TItem> AsQueryable()
         {
             return _collection.AsQueryable();
         }
-        
+
+        public virtual TItem GetItem(Guid id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public virtual IEnumerable<TItem> GetItems(IEnumerable<Guid> id)
+        {
+            throw new NotImplementedException();
+        }
+
         public virtual void Add(TItem entity)
         {
             _collection.Add(entity).ConfigureAwait(false);

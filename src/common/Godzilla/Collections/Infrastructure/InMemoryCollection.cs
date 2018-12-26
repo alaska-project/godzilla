@@ -14,10 +14,13 @@ namespace Godzilla.Collections.Infrastructure
         private readonly IEntityPropertyResolver<TContext> _propertyResolver;
         private Dictionary<Guid, TItem> _innerDict = new Dictionary<Guid, TItem>();
 
-        public InMemoryCollection(IEntityPropertyResolver<TContext> propertyResolver)
+        public InMemoryCollection(IEntityPropertyResolver<TContext> propertyResolver, string collectionId)
         {
             _propertyResolver = propertyResolver ?? throw new ArgumentNullException(nameof(propertyResolver));
+            CollectionId = collectionId;
         }
+
+        public string CollectionId { get; }
 
         public Task Add(TItem entity)
         {
