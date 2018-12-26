@@ -41,20 +41,20 @@ namespace Godzilla.Services
             _transactionManager.CommitTransaction();
         }
 
-        public IGodzillaCollection GetCollection(Type itemType)
+        public virtual IGodzillaCollection GetCollection(Type itemType)
         {
             var getCollectionMethod = ReflectionUtil.GetGenericMethod(this.GetType(), "GetCollection", BindingFlags.Instance | BindingFlags.Public);
             var specificGetCollectionMethod = getCollectionMethod.MakeGenericMethod(itemType);
             return (IGodzillaCollection)specificGetCollectionMethod.Invoke(this, new object[0]);
         }
 
-        public IGodzillaCollection<TItem> GetCollection<TItem>()
+        public virtual IGodzillaCollection<TItem> GetCollection<TItem>()
         {
             var collection = _resolver.GetCollection<TItem>(_transactionManager);
             return _initializer.CreateCollection(collection);
         }
 
-        public TCollection GetCollection<TItem, TCollection>() where TCollection : IGodzillaCollection<TItem>
+        public virtual TCollection GetCollection<TItem, TCollection>() where TCollection : IGodzillaCollection<TItem>
         {
             var collection = _resolver.GetCollection<TItem>(_transactionManager);
             return _initializer.CreateCollection<TItem, TCollection>(collection);

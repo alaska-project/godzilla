@@ -25,6 +25,7 @@ namespace Godzilla.Internal
         {
             AddLibraries();
             AddCoreServices();
+            AddCommandHandlers();
             AddInternalServices();
             return services;
         }
@@ -38,8 +39,15 @@ namespace Godzilla.Internal
                 .AddScoped<IEntityPropertyResolver<TContext>, EntityPropertyResolver<TContext>>()
                 .AddScoped<ITransactionService<TContext>, TransactionService<TContext>>()
                 .AddScoped<IEntityContextServices<TContext>, EntityContextServices<TContext>>()
-                .AddScoped<TContext>()
-                .AddTransient<IRequestHandler<CreateEntitiesCommand<TContext>, IEnumerable<object>>, CreateEntitiesCommandHandler<TContext>>();
+                .AddScoped<IEntityCommandsHelper<TContext>, CommandHandlerHelper<TContext>>()
+                .AddScoped<TContext>();
+        }
+
+        private void AddCommandHandlers()
+        {
+            services
+                .AddTransient<IRequestHandler<CreateEntitiesCommand<TContext>, IEnumerable<object>>, CreateEntitiesCommandHandler<TContext>>()
+                .AddTransient<IRequestHandler<UpdateEntitiesCommand<TContext>, IEnumerable<object>>, UpdateEntitiesCommandHandler<TContext>>();
         }
 
         private void AddInternalServices()

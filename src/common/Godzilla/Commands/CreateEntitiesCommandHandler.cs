@@ -2,6 +2,7 @@
 using Godzilla.Collections.Internal;
 using Godzilla.DomainModels;
 using Godzilla.Exceptions;
+using Godzilla.Internal;
 using MediatR;
 using System;
 using System.Collections.Generic;
@@ -12,25 +13,28 @@ using System.Threading.Tasks;
 
 namespace Godzilla.Commands
 {
-    public class CreateEntitiesCommandHandler<TContext> : IRequestHandler<CreateEntitiesCommand<TContext>, IEnumerable<object>>
+    internal class CreateEntitiesCommandHandler<TContext> : IRequestHandler<CreateEntitiesCommand<TContext>, IEnumerable<object>>
         where TContext : EntityContext
     {
         private readonly ITransactionService<TContext> _transactionService;
         private readonly IEntityPropertyResolver<TContext> _propertyResolver;
+        private readonly IEntityCommandsHelper<TContext> _commandsHelper;
 
         public CreateEntitiesCommandHandler(
             ITransactionService<TContext> transactionService,
-            IEntityPropertyResolver<TContext> propertyResolver)
+            IEntityPropertyResolver<TContext> propertyResolver,
+            IEntityCommandsHelper<TContext> commandsHelper)
         {
             _transactionService = transactionService ?? throw new ArgumentNullException(nameof(transactionService));
             _propertyResolver = propertyResolver ?? throw new ArgumentNullException(nameof(propertyResolver));
+            _commandsHelper = commandsHelper ?? throw new ArgumentNullException(nameof(commandsHelper));
         }
 
         public Task<IEnumerable<object>> Handle(CreateEntitiesCommand<TContext> request, CancellationToken cancellationToken)
         {
             try
             {
-                var entityType = GetEntityType(request.Entities);
+                var entityType = _commandsHelper.GetEntityType(request.Entities);
                 
                 _transactionService.StartTransaction();
 
@@ -54,7 +58,7 @@ namespace Godzilla.Commands
             catch (Exception e)
             {
                 _transactionService.AbortTransaction();
-                throw new EntityCreationException("Entity creation failed", e);
+                throw new EntitiesCreationException("Entities creation failed", e);
             }
         }
 
@@ -95,17 +99,6 @@ namespace Godzilla.Commands
                 ParentId = parentId,
                 CollectionId = entityCollection.CollectionId,
             };
-        }
-
-        private Type GetEntityType(IEnumerable<object> entities)
-        {
-            var entityTypes = entities
-                    .Where(x => x != null)
-                    .GroupBy(x => x.GetType());
-            if (entityTypes.Count() > 1)
-                throw new MultipleEntityTypesNotSupportedException($"Cannot add multiple entity types inside the same operation. Types: {string.Join(", ", entityTypes.Select(x => x.Key.FullName))}");
-
-            return entityTypes.First().Key;
         }
     }
 }

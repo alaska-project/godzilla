@@ -14,15 +14,16 @@ using Xunit;
 
 namespace Godzilla.UnitTests.Commands
 {
-    public class CreateEntityCommand_Tests
+    public class CreateEntitiesCommand_Tests
     {
         private Mock<ITransactionService<FakeEntityContext>> _transactionService = new Mock<ITransactionService<FakeEntityContext>>();
+        private Mock<IEntityCommandsHelper<FakeEntityContext>> _commandsHelper = new Mock<IEntityCommandsHelper<FakeEntityContext>>();
         private Mock<IEntityPropertyResolver<FakeEntityContext>> _propertyResolver = new Mock<IEntityPropertyResolver<FakeEntityContext>>();
         private Mock<TreeEdgesCollection> _treeEdgesCollection = new Mock<TreeEdgesCollection>();
         private Mock<IGodzillaCollection> _entityCollection = new Mock<IGodzillaCollection>();
         private Mock<IGodzillaCollection> _derivedEntityCollection = new Mock<IGodzillaCollection>();
 
-        public CreateEntityCommand_Tests()
+        public CreateEntitiesCommand_Tests()
         {
             _propertyResolver
                 .Setup(x => x.GetEntityId(It.IsAny<FakeEntity>()))
@@ -43,6 +44,10 @@ namespace Godzilla.UnitTests.Commands
             _transactionService
                 .Setup(x => x.GetCollection(typeof(FakeDerivedEntity)))
                 .Returns(_derivedEntityCollection.Object);
+
+            _commandsHelper
+                .Setup(x => x.GetEntityType(It.IsAny<IEnumerable<object>>()))
+                .Returns((IEnumerable<object> entities) => entities.First().GetType());
         }
 
         [Fact]
@@ -51,7 +56,7 @@ namespace Godzilla.UnitTests.Commands
             //setup
             var entityId = Guid.NewGuid();
             var request = FakeCreateDerivedEntityCommand(Guid.Empty, entityId);
-            var handler = new CreateEntitiesCommandHandler<FakeEntityContext>(_transactionService.Object, _propertyResolver.Object);
+            var handler = new CreateEntitiesCommandHandler<FakeEntityContext>(_transactionService.Object, _propertyResolver.Object, _commandsHelper.Object);
 
             _treeEdgesCollection
                 .Setup(x => x.NodeExists(It.IsAny<Guid>()))
@@ -81,7 +86,7 @@ namespace Godzilla.UnitTests.Commands
             //setup
             var entityId = Guid.NewGuid();
             var request = FakeCreateDerivedEntityCommand(Guid.Empty, entityId);
-            var handler = new CreateEntitiesCommandHandler<FakeEntityContext>(_transactionService.Object, _propertyResolver.Object);
+            var handler = new CreateEntitiesCommandHandler<FakeEntityContext>(_transactionService.Object, _propertyResolver.Object, _commandsHelper.Object);
 
             _treeEdgesCollection
                 .Setup(x => x.NodeExists(It.IsAny<Guid>()))
@@ -92,7 +97,7 @@ namespace Godzilla.UnitTests.Commands
                 .Returns(new List<TreeEdge> { new TreeEdge() });
             
             //act
-            await Assert.ThrowsAsync<EntityCreationException>(() => handler.Handle(request, default(CancellationToken)));
+            await Assert.ThrowsAsync<EntitiesCreationException>(() => handler.Handle(request, default(CancellationToken)));
 
             //verify
             _transactionService.Verify(x => x.StartTransaction(), Times.Once());
@@ -110,7 +115,7 @@ namespace Godzilla.UnitTests.Commands
             //setup
             var entityId = Guid.NewGuid();
             var request = FakeCreateEntityCommand(Guid.Empty, entityId);
-            var handler = new CreateEntitiesCommandHandler<FakeEntityContext>(_transactionService.Object, _propertyResolver.Object);
+            var handler = new CreateEntitiesCommandHandler<FakeEntityContext>(_transactionService.Object, _propertyResolver.Object, _commandsHelper.Object);
 
             _treeEdgesCollection
                 .Setup(x => x.NodeExists(It.IsAny<Guid>()))
@@ -121,7 +126,7 @@ namespace Godzilla.UnitTests.Commands
                 .Returns(new List<TreeEdge> { new TreeEdge() });
 
             //act
-            await Assert.ThrowsAsync<EntityCreationException>(() => handler.Handle(request, default(CancellationToken)));
+            await Assert.ThrowsAsync<EntitiesCreationException>(() => handler.Handle(request, default(CancellationToken)));
 
             //verify
             _transactionService.Verify(x => x.StartTransaction(), Times.Once());
@@ -138,7 +143,7 @@ namespace Godzilla.UnitTests.Commands
             //setup
             var entityId = Guid.NewGuid();
             var request = FakeCreateEntityCommand(Guid.Empty, entityId);
-            var handler = new CreateEntitiesCommandHandler<FakeEntityContext>(_transactionService.Object, _propertyResolver.Object);
+            var handler = new CreateEntitiesCommandHandler<FakeEntityContext>(_transactionService.Object, _propertyResolver.Object, _commandsHelper.Object);
 
             _treeEdgesCollection
                 .Setup(x => x.NodeExists(It.IsAny<Guid>()))
@@ -167,7 +172,7 @@ namespace Godzilla.UnitTests.Commands
             //setup
             var entityId = Guid.Empty;
             var request = FakeCreateEntityCommand(Guid.Empty, entityId);
-            var handler = new CreateEntitiesCommandHandler<FakeEntityContext>(_transactionService.Object, _propertyResolver.Object);
+            var handler = new CreateEntitiesCommandHandler<FakeEntityContext>(_transactionService.Object, _propertyResolver.Object, _commandsHelper.Object);
 
             _treeEdgesCollection
                 .Setup(x => x.NodeExists(It.IsAny<Guid>()))
