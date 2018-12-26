@@ -22,7 +22,7 @@ namespace Godzilla.Mongo
             };
             builder.Services
                 .AddSingleton(options)
-                .AddScoped<IDatabaseTransactionManager<TContext>, MongoDatabaseTransactionManager<TContext>>()
+                .AddTransient<IDatabaseTransactionManager<TContext>, MongoDatabaseTransactionManager<TContext>>()
                 .AddScoped<IDatabaseCollectionProvider<TContext>, MongoDatabaseCollectionProvider<TContext>>()
                 .AddScoped<MongoDatabaseFactory<TContext>>();
         }

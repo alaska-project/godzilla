@@ -1,4 +1,5 @@
 ﻿using Godzilla.Abstractions.Infrastructure;
+using Godzilla.Abstractions.Services;
 using MongoDB.Driver;
 using System;
 using System.Collections.Generic;
@@ -8,12 +9,18 @@ using System.Threading.Tasks;
 
 namespace Godzilla.Mongo.Infrastructure
 {
-    internal class MongoDatabaseCollection<TItem> : IDatabaseCollection<TItem>
+    internal class MongoDatabaseCollection<TContext, TItem> : IDatabaseCollection<TItem>
+        where TContext : EntityContext
     {
-        protected IMongoCollection<TItem> _collection;
+        private readonly IEntityPropertyResolver<TContext> _propertyResolver;
+        protected readonly IMongoCollection<TItem> _collection;
 
-        public MongoDatabaseCollection(IMongoCollection<TItem> collection, string collectionId)
+        public MongoDatabaseCollection(
+            IEntityPropertyResolver<TContext> propertyResolver,
+            IMongoCollection<TItem> collection, 
+            string collectionId)
         {
+            _propertyResolver = propertyResolver ?? throw new ArgumentNullException(nameof(propertyResolver));
             _collection = collection ?? throw new ArgumentNullException(nameof(collection));
             CollectionId = collectionId;
         }
@@ -38,24 +45,32 @@ namespace Godzilla.Mongo.Infrastructure
                 .InsertManyAsync(entities);
         }
         
-        public Task Delete(TItem entity)
+        public async Task Update(TItem entity)
         {
-            throw new NotImplementedException();
-        }
-
-        public Task Delete(IEnumerable<TItem> entities)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task Update(TItem entity)
-        {
-            throw new NotImplementedException();
+            var id = _propertyResolver.GetEntityId(entity);
+            await _collection.ReplaceOneAsync(Builders<TItem>.Filter.Eq("_id", id), entity);
         }
         
-        public Task Update(IEnumerable<TItem> entities)
+        public async Task Update(IEnumerable<TItem> entities)
         {
-            throw new NotImplementedException();
+            foreach (var entity in entities)
+                await Update(entity);
+        }
+
+        public async Task Delete(TItem entity)
+        {
+            var id = _propertyResolver.GetEntityId(entity);
+            await _collection.DeleteOneAsync(Builders<TItem>.Filter.Eq("_id", id));
+        }
+
+        public async Task Delete(IEnumerable<TItem> entities)
+        {
+            var entitiesId = entities
+                .Select(x => _propertyResolver.GetEntityId(x))
+                .ToList();
+
+            var filter = Builders<TItem>.Filter.In("_id", entitiesId);
+            await _collection.DeleteManyAsync(filter);
         }
     }
 }

@@ -37,7 +37,7 @@ namespace Godzilla.Internal
                 .AddScoped<ICollectionResolver<TContext>, CollectionResolver<TContext>>()
                 .AddScoped<ICollectionService<TContext>, CollectionService<TContext>>()
                 .AddScoped<IEntityPropertyResolver<TContext>, EntityPropertyResolver<TContext>>()
-                .AddScoped<ITransactionService<TContext>, TransactionService<TContext>>()
+                .AddTransient<ITransactionService<TContext>, TransactionService<TContext>>()
                 .AddScoped<IEntityContextServices<TContext>, EntityContextServices<TContext>>()
                 .AddScoped<IEntityCommandsHelper<TContext>, CommandHandlerHelper<TContext>>()
                 .AddScoped<TContext>();
@@ -47,7 +47,8 @@ namespace Godzilla.Internal
         {
             services
                 .AddTransient<IRequestHandler<CreateEntitiesCommand<TContext>, IEnumerable<object>>, CreateEntitiesCommandHandler<TContext>>()
-                .AddTransient<IRequestHandler<UpdateEntitiesCommand<TContext>, IEnumerable<object>>, UpdateEntitiesCommandHandler<TContext>>();
+                .AddTransient<IRequestHandler<UpdateEntitiesCommand<TContext>, IEnumerable<object>>, UpdateEntitiesCommandHandler<TContext>>()
+                .AddTransient<IRequestHandler<DeleteEntitiesCommand<TContext>>, DeleteEntitiesCommandHandler<TContext>>();
         }
 
         private void AddInternalServices()

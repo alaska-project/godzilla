@@ -35,5 +35,31 @@ namespace Godzilla.Services
                 .ToList();
 
         }
+
+        public async Task<TEntity> Update<TEntity>(TEntity entity)
+        {
+            var result = await Update((IEnumerable<TEntity>)new List<TEntity> { entity });
+            return result.First();
+        }
+
+        public async Task<IEnumerable<TEntity>> Update<TEntity>(IEnumerable<TEntity> entities)
+        {
+            var result =
+                await _mediator.Send(new UpdateEntitiesCommand<TContext>(entities.Cast<object>()));
+
+            return result
+                .Cast<TEntity>()
+                .ToList();
+        }
+
+        public async Task Delete<TEntity>(TEntity entity)
+        {
+            await Delete((IEnumerable<TEntity>)new List<TEntity> { entity });
+        }
+
+        public async Task Delete<TEntity>(IEnumerable<TEntity> entities)
+        {
+            await _mediator.Send(new DeleteEntitiesCommand<TContext>(entities.Cast<object>()));
+        }
     }
 }

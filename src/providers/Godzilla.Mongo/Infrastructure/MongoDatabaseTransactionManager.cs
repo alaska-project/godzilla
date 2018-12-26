@@ -1,4 +1,5 @@
 ﻿using Godzilla.Abstractions.Infrastructure;
+using Godzilla.Abstractions.Services;
 using Godzilla.Mongo.Services;
 using MongoDB.Driver;
 using System;
@@ -11,10 +12,15 @@ namespace Godzilla.Mongo.Infrastructure
         where TContext : EntityContext
     {
         private readonly MongoDatabaseFactory<TContext> _factory;
+        private readonly IEntityPropertyResolver<TContext> _propertyResolver;
+
         private IClientSessionHandle _session;
 
-        public MongoDatabaseTransactionManager(MongoDatabaseFactory<TContext> factory)
+        public MongoDatabaseTransactionManager(
+            IEntityPropertyResolver<TContext> propertyResolver,
+            MongoDatabaseFactory<TContext> factory)
         {
+            _propertyResolver = propertyResolver ?? throw new ArgumentNullException(nameof(propertyResolver));
             _factory = factory ?? throw new ArgumentNullException(nameof(factory));
         }
 
@@ -58,7 +64,7 @@ namespace Godzilla.Mongo.Infrastructure
             var database = _session.Client.GetDatabase(_factory.DatabaseName);
             var collection = _factory.GetMongoCollection<TItem, TBaseItem>(collectionId, database);
 
-            return new MongoDatabaseCollection<TItem>(collection, collectionId);
+            return new MongoDatabaseCollection<TContext, TItem>(_propertyResolver, collection, collectionId);
         }
     }
 }

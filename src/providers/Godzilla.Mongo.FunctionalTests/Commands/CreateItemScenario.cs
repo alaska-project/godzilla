@@ -30,6 +30,12 @@ namespace Godzilla.Mongo.FunctionalTests.Commands
                 Assert.NotNull(foundItem);
                 Assert.Equal(item.Id, foundItem.Id);
                 Assert.Equal(item.Name, foundItem.Name);
+
+                foundItem.Name = "gigi-new";
+                var updatedItem = await context.Commands.Update(foundItem);
+
+                Assert.NotNull(foundItem);
+                Assert.Equal(updatedItem.Name, foundItem.Name);
             }
         }
 
@@ -52,6 +58,12 @@ namespace Godzilla.Mongo.FunctionalTests.Commands
                 Assert.NotNull(foundItem);
                 Assert.Equal(item.Id, foundItem.Id);
                 Assert.Equal(item.Name, foundItem.Name);
+
+                foundItem.Name = "gigi-new";
+                var updatedItem = await context.Commands.Update(foundItem);
+
+                Assert.NotNull(foundItem);
+                Assert.Equal(updatedItem.Name, foundItem.Name);
             }
         }
     }
