@@ -3,6 +3,7 @@ using Godzilla.Abstractions.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 
 namespace Godzilla.Collections.Internal
@@ -27,12 +28,17 @@ namespace Godzilla.Collections.Internal
 
         public virtual TItem GetItem(Guid id)
         {
-            throw new NotImplementedException();
+            return _collection.GetItem(id);
         }
 
         public virtual IEnumerable<TItem> GetItems(IEnumerable<Guid> id)
         {
-            throw new NotImplementedException();
+            return _collection.GetItems(id);
+        }
+
+        public IEnumerable<TItem> GetItems(IEnumerable<Guid> id, Expression<Func<TItem, bool>> filter)
+        {
+            return _collection.GetItems(id, filter);
         }
 
         public virtual void Add(TItem entity)

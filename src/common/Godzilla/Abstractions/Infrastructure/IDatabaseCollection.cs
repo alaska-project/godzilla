@@ -11,6 +11,9 @@ namespace Godzilla.Abstractions.Infrastructure
     {
         string CollectionId { get; }
         IQueryable<TItem> AsQueryable();
+        TItem GetItem(Guid id);
+        IEnumerable<TItem> GetItems(IEnumerable<Guid> id);
+        IEnumerable<TItem> GetItems(IEnumerable<Guid> id, Expression<Func<TItem, bool>> filter);
 
         Task Add(TItem entity);
         Task Add(IEnumerable<TItem> entities);

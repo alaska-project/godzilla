@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 
 namespace Godzilla.Abstractions.Services
@@ -12,6 +13,7 @@ namespace Godzilla.Abstractions.Services
 
         TItem GetItem(Guid id);
         IEnumerable<TItem> GetItems(IEnumerable<Guid> id);
+        IEnumerable<TItem> GetItems(IEnumerable<Guid> id, Expression<Func<TItem, bool>> filter);
         IQueryable<TItem> AsQueryable();
 
         void Add(TItem entity);

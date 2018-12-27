@@ -15,6 +15,7 @@ namespace Godzilla.Mongo.FunctionalTests.Commands
         {
             using (var server = CreateServer())
             {
+                // create
                 var context = GetEntityContext<TestEntityContext>(server);
                 var item = await context.Commands.Add(new TestEntity
                 {
@@ -23,6 +24,7 @@ namespace Godzilla.Mongo.FunctionalTests.Commands
 
                 Assert.NotEqual(Guid.Empty, item.Id);
 
+                // AsQueryable retreive
                 var foundItem = context.Query
                     .AsQueryable<TestEntity>()
                     .FirstOrDefault(x => x.Id == item.Id);
@@ -31,11 +33,22 @@ namespace Godzilla.Mongo.FunctionalTests.Commands
                 Assert.Equal(item.Id, foundItem.Id);
                 Assert.Equal(item.Name, foundItem.Name);
 
+                // GetItem retreive
+
+                foundItem = context.Query.GetItem<TestEntity>(item.Id);
+                Assert.NotNull(foundItem);
+                Assert.Equal(item.Id, foundItem.Id);
+                Assert.Equal(item.Name, foundItem.Name);
+
+                // update
+
                 foundItem.Name = "gigi-new";
                 var updatedItem = await context.Commands.Update(foundItem);
 
                 Assert.NotNull(foundItem);
                 Assert.Equal(updatedItem.Name, foundItem.Name);
+
+                // delete
 
                 await context.Commands.Delete(updatedItem);
 
@@ -52,11 +65,14 @@ namespace Godzilla.Mongo.FunctionalTests.Commands
         {
             using (var server = CreateServer())
             {
+                // create
                 var context = GetEntityContext<TestEntityContext>(server);
                 var item = await context.Commands.Add(new DerivedTestEntity
                 {
                     Name = "gigi"
                 });
+
+                // AsQueryable retreive
 
                 Assert.NotEqual(Guid.Empty, item.Id);
                 var foundItem = context.Query
@@ -67,16 +83,27 @@ namespace Godzilla.Mongo.FunctionalTests.Commands
                 Assert.Equal(item.Id, foundItem.Id);
                 Assert.Equal(item.Name, foundItem.Name);
 
+                // GetItem retreive
+
+                foundItem = context.Query.GetItem<DerivedTestEntity>(item.Id);
+                Assert.NotNull(foundItem);
+                Assert.Equal(item.Id, foundItem.Id);
+                Assert.Equal(item.Name, foundItem.Name);
+
+                // update
+
                 foundItem.Name = "gigi-new";
                 var updatedItem = await context.Commands.Update(foundItem);
 
                 Assert.NotNull(foundItem);
                 Assert.Equal(updatedItem.Name, foundItem.Name);
 
+                // delete
+
                 await context.Commands.Delete(updatedItem);
 
                 var foundItemAfterDelete = context.Query
-                    .AsQueryable<TestEntity>()
+                    .AsQueryable<DerivedTestEntity>()
                     .FirstOrDefault(x => x.Id == item.Id);
 
                 Assert.Null(foundItemAfterDelete);

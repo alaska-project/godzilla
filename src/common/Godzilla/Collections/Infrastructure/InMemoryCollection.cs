@@ -23,6 +23,45 @@ namespace Godzilla.Collections.Infrastructure
 
         public string CollectionId { get; }
 
+        public IQueryable<TItem> AsQueryable()
+        {
+            return _innerDict.Values.AsQueryable();
+        }
+
+        public IQueryable<TDerived> AsQueryable<TDerived>() where TDerived : TItem
+        {
+            return _innerDict
+                .Values
+                .Where(x => x is TDerived)
+                .Cast<TDerived>()
+                .AsQueryable();
+        }
+
+        public TItem GetItem(Guid id)
+        {
+            return _innerDict.ContainsKey(id) ?
+                _innerDict[id] :
+                default(TItem);
+        }
+
+        public IEnumerable<TItem> GetItems(IEnumerable<Guid> id)
+        {
+            return _innerDict
+                .Where(x => id.Contains(x.Key))
+                .Select(x => x.Value)
+                .ToList();
+        }
+
+        public IEnumerable<TItem> GetItems(IEnumerable<Guid> id, Expression<Func<TItem, bool>> filter)
+        {
+            var f = filter.Compile();
+
+            return _innerDict
+                .Where(x => id.Contains(x.Key) && f(x.Value))
+                .Select(x => x.Value)
+                .ToList();
+        }
+
         public Task Add(TItem entity)
         {
             var id = _propertyResolver.GetEntityId(entity);
@@ -59,21 +98,7 @@ namespace Godzilla.Collections.Infrastructure
 
             return Task.FromResult(true);
         }
-
-        public IQueryable<TItem> AsQueryable()
-        {
-            return _innerDict.Values.AsQueryable();
-        }
-
-        public IQueryable<TDerived> AsQueryable<TDerived>() where TDerived : TItem
-        {
-            return _innerDict
-                .Values
-                .Where(x => x is TDerived)
-                .Cast<TDerived>()
-                .AsQueryable();
-        }
-
+        
         public Task Delete(TItem entity)
         {
             var id = _propertyResolver.GetEntityId(entity);
@@ -113,7 +138,7 @@ namespace Godzilla.Collections.Infrastructure
 
             return Task.FromResult(true);
         }
-
+        
         public Task Update(TItem entity)
         {
             var id = _propertyResolver.GetEntityId(entity);
