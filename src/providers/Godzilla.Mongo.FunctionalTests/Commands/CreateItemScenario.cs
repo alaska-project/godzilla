@@ -15,12 +15,19 @@ namespace Godzilla.Mongo.FunctionalTests.Commands
         {
             using (var server = CreateServer())
             {
-                // create
                 var context = GetEntityContext<TestEntityContext>(server);
+
+                // create root
+                var rootItem = await context.Commands.Add(new TestEntity
+                {
+                    Name = "root"
+                });
+
+                // create item
                 var item = await context.Commands.Add(new TestEntity
                 {
                     Name = "gigi"
-                });
+                }, rootItem);
 
                 Assert.NotEqual(Guid.Empty, item.Id);
 
@@ -40,6 +47,23 @@ namespace Godzilla.Mongo.FunctionalTests.Commands
                 Assert.Equal(item.Id, foundItem.Id);
                 Assert.Equal(item.Name, foundItem.Name);
 
+                // GetChild retreive
+
+                foundItem = context.Query.GetChild<TestEntity>(rootItem);
+                Assert.NotNull(foundItem);
+                Assert.Equal(item.Id, foundItem.Id);
+                Assert.Equal(item.Name, foundItem.Name);
+
+                // filtered GetChild retreive
+
+                foundItem = context.Query.GetChild<TestEntity>(rootItem, x => x.Name == "gigi");
+                Assert.NotNull(foundItem);
+                Assert.Equal(item.Id, foundItem.Id);
+                Assert.Equal(item.Name, foundItem.Name);
+
+                foundItem = context.Query.GetChild<TestEntity>(rootItem, x => x.Name == "gigio");
+                Assert.Null(foundItem);
+
                 // update
 
                 foundItem.Name = "gigi-new";
@@ -50,7 +74,7 @@ namespace Godzilla.Mongo.FunctionalTests.Commands
 
                 // delete
 
-                await context.Commands.Delete(updatedItem);
+                await context.Commands.Delete(rootItem);
 
                 var foundItemAfterDelete = context.Query
                     .AsQueryable<TestEntity>()
@@ -65,12 +89,20 @@ namespace Godzilla.Mongo.FunctionalTests.Commands
         {
             using (var server = CreateServer())
             {
-                // create
                 var context = GetEntityContext<TestEntityContext>(server);
+
+                // create root
+                var rootItem = await context.Commands.Add(new TestEntity
+                {
+                    Name = "root"
+                });
+
+                // create
+                
                 var item = await context.Commands.Add(new DerivedTestEntity
                 {
                     Name = "gigi"
-                });
+                }, rootItem);
 
                 // AsQueryable retreive
 
@@ -90,6 +122,23 @@ namespace Godzilla.Mongo.FunctionalTests.Commands
                 Assert.Equal(item.Id, foundItem.Id);
                 Assert.Equal(item.Name, foundItem.Name);
 
+                // GetChild retreive
+
+                foundItem = context.Query.GetChild<DerivedTestEntity>(rootItem);
+                Assert.NotNull(foundItem);
+                Assert.Equal(item.Id, foundItem.Id);
+                Assert.Equal(item.Name, foundItem.Name);
+
+                // filtered GetChild retreive
+
+                foundItem = context.Query.GetChild<DerivedTestEntity>(rootItem, x => x.Name == "gigi");
+                Assert.NotNull(foundItem);
+                Assert.Equal(item.Id, foundItem.Id);
+                Assert.Equal(item.Name, foundItem.Name);
+
+                foundItem = context.Query.GetChild<DerivedTestEntity>(rootItem, x => x.Name == "gigio");
+                Assert.Null(foundItem);
+
                 // update
 
                 foundItem.Name = "gigi-new";
@@ -100,7 +149,7 @@ namespace Godzilla.Mongo.FunctionalTests.Commands
 
                 // delete
 
-                await context.Commands.Delete(updatedItem);
+                await context.Commands.Delete(rootItem);
 
                 var foundItemAfterDelete = context.Query
                     .AsQueryable<DerivedTestEntity>()
