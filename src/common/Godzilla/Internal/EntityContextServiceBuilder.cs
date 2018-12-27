@@ -48,7 +48,7 @@ namespace Godzilla.Internal
             services
                 .AddTransient<IRequestHandler<CreateEntitiesCommand<TContext>, IEnumerable<object>>, CreateEntitiesCommandHandler<TContext>>()
                 .AddTransient<IRequestHandler<UpdateEntitiesCommand<TContext>, IEnumerable<object>>, UpdateEntitiesCommandHandler<TContext>>()
-                .AddTransient<IRequestHandler<DeleteEntitiesCommand<TContext>>, DeleteEntitiesCommandHandler<TContext>>();
+                .AddTransient<IRequestHandler<DeleteEntitiesCommand<TContext>, Unit>, DeleteEntitiesCommandHandler<TContext>>();
         }
 
         private void AddInternalServices()

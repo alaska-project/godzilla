@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Godzilla.Commands
 {
-    internal class DeleteEntitiesCommand<TContext> : IRequest
+    internal class DeleteEntitiesCommand<TContext> : IRequest<Unit>
         where TContext : EntityContext
     {
         public DeleteEntitiesCommand(IEnumerable<object> entities)

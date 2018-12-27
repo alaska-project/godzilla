@@ -4,6 +4,7 @@ using MongoDB.Driver;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -70,6 +71,11 @@ namespace Godzilla.Mongo.Infrastructure
                 .ToList();
 
             var filter = Builders<TItem>.Filter.In("_id", entitiesId);
+            await _collection.DeleteManyAsync(filter);
+        }
+
+        public async Task Delete(Expression<Func<TItem, bool>> filter)
+        {
             await _collection.DeleteManyAsync(filter);
         }
     }

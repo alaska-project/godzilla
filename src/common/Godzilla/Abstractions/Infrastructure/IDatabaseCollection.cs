@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -19,5 +20,6 @@ namespace Godzilla.Abstractions.Infrastructure
 
         Task Delete(TItem entity);
         Task Delete(IEnumerable<TItem> entities);
+        Task Delete(Expression<Func<TItem, bool>> filter);
     }
 }

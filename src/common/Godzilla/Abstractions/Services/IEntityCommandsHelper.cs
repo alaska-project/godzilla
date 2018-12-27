@@ -11,5 +11,7 @@ namespace Godzilla.Abstractions.Services
     {
         Type GetEntityType(IEnumerable<object> entities);
         void VerifyEntitiesExist(IEnumerable<object> entities, TreeEdgesCollection edgesCollection);
+        void VerifyEntitiesExist(IEnumerable<Guid> entitiesId, TreeEdgesCollection edgesCollection);
+        IEnumerable<Guid> GetEntitiesId(IEnumerable<object> entities);
     }
 }

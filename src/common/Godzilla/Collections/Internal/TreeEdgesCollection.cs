@@ -43,5 +43,15 @@ namespace Godzilla.Collections.Internal
                 .AsQueryable()
                 .Any(x => x.NodeId == nodeId);
         }
+
+        public virtual void DeleteNode(Guid nodeId)
+        {
+            _collection.Delete(x => x.NodeId == nodeId);
+        }
+
+        public virtual void DeleteNodes(IEnumerable<Guid> nodesId)
+        {
+            _collection.Delete(x => nodesId.Contains(x.NodeId));
+        }
     }
 }

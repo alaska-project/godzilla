@@ -36,6 +36,14 @@ namespace Godzilla.Mongo.FunctionalTests.Commands
 
                 Assert.NotNull(foundItem);
                 Assert.Equal(updatedItem.Name, foundItem.Name);
+
+                await context.Commands.Delete(updatedItem);
+
+                var foundItemAfterDelete = context.Query
+                    .AsQueryable<TestEntity>()
+                    .FirstOrDefault(x => x.Id == item.Id);
+
+                Assert.Null(foundItemAfterDelete);
             }
         }
 
@@ -64,6 +72,14 @@ namespace Godzilla.Mongo.FunctionalTests.Commands
 
                 Assert.NotNull(foundItem);
                 Assert.Equal(updatedItem.Name, foundItem.Name);
+
+                await context.Commands.Delete(updatedItem);
+
+                var foundItemAfterDelete = context.Query
+                    .AsQueryable<TestEntity>()
+                    .FirstOrDefault(x => x.Id == item.Id);
+
+                Assert.Null(foundItemAfterDelete);
             }
         }
     }

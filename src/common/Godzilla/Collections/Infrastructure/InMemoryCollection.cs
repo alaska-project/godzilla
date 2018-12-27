@@ -3,6 +3,7 @@ using Godzilla.Abstractions.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -95,7 +96,24 @@ namespace Godzilla.Collections.Infrastructure
 
             return Task.FromResult(true);
         }
-        
+
+        public Task Delete(Expression<Func<TItem, bool>> filter)
+        {
+            var f = filter.Compile();
+
+            lock(this)
+            {
+                var elementsToDelete = _innerDict
+                    .Where(x => f(x.Value))
+                    .ToList();
+
+                elementsToDelete
+                    .ForEach(x => _innerDict.Remove(x.Key));
+            }
+
+            return Task.FromResult(true);
+        }
+
         public Task Update(TItem entity)
         {
             var id = _propertyResolver.GetEntityId(entity);
@@ -117,29 +135,6 @@ namespace Godzilla.Collections.Infrastructure
                 .ForEach(x => Update(x).ConfigureAwait(false));
 
             return Task.FromResult(true);
-        }
-
-        public void Update<TDerived>(TDerived entity) where TDerived : TItem
-        {
-            var id = _propertyResolver.GetEntityId(entity);
-
-            lock (this)
-            {
-                if (!_innerDict.ContainsKey(id))
-                    throw new InvalidOperationException($"Element {id} not found");
-
-                _innerDict[id] = entity;
-            }
-        }
-        
-        Task IDatabaseCollection<TItem>.Delete(TItem entity)
-        {
-            throw new NotImplementedException();
-        }
-
-        Task IDatabaseCollection<TItem>.Update(TItem entity)
-        {
-            throw new NotImplementedException();
         }
     }
 }
