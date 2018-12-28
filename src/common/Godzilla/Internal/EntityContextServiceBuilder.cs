@@ -3,6 +3,7 @@ using Godzilla.Abstractions.Services;
 using Godzilla.Commands;
 using Godzilla.Queries;
 using Godzilla.Services;
+using Godzilla.Settings;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -33,7 +34,9 @@ namespace Godzilla.Internal
         private void AddCoreServices()
         {
             services
+                .AddSingleton<IGodzillaOptions<TContext>, GodzillaOptions<TContext>>()
                 .AddScoped<ICollectionInitializer, CollectionInitializer>()
+                .AddScoped<IPathBuilder<TContext>, PathBuilder<TContext>>()
                 .AddScoped<ICollectionResolver<TContext>, CollectionResolver<TContext>>()
                 .AddScoped<ICollectionService<TContext>, CollectionService<TContext>>()
                 .AddScoped<IEntityPropertyResolver<TContext>, EntityPropertyResolver<TContext>>()
