@@ -70,12 +70,16 @@ namespace Godzilla.Internal
                 .ToList();
         }
 
-        public string BuildPath(string name, TreeEdge parent)
+        public string BuildNamePath(string name, TreeEdge parent)
         {
-            if (parent == null)
-                return _pathBuilder.RootPath;
+            var parentPath = parent?.Path ?? _pathBuilder.RootPath;
+            return _pathBuilder.JoinPath(parentPath, name);
+        }
 
-            return _pathBuilder.JoinPath(parent.Path, name);
+        public string BuildIdPath(Guid id, TreeEdge parent)
+        {
+            var parentPath = parent?.IdPath ?? _pathBuilder.RootPath;
+            return _pathBuilder.JoinPath(parentPath, id.ToString());
         }
     }
 }

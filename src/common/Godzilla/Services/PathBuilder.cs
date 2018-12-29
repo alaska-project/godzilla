@@ -21,6 +21,14 @@ namespace Godzilla.Services
         public string PathSeparator => _options.PathSeparator;
         public string RootPath => PathSeparator.ToLower();
 
+        public string NormalizePath(string path)
+        {
+            return path
+                .EnsurePrefix(PathSeparator)
+                .EnsureSuffix(PathSeparator)
+                .ToLower();
+        }
+
         public string NestPath(string path, string destination)
         {
             var lastSegment = path
@@ -32,34 +40,33 @@ namespace Godzilla.Services
 
         public string JoinPath(string path, string other)
         {
-            return string.Concat(
-                path.TrimEnd(PathSeparator),
-                PathSeparator,
-                other.Trim(PathSeparator),
-                PathSeparator)
-                .ToLower();
+            return NormalizePath(
+                string.Concat(
+                    path.TrimEnd(PathSeparator),
+                    PathSeparator,
+                    other.Trim(PathSeparator),
+                    PathSeparator));
         }
 
         public string RenameLeaf(string path, string newName)
         {
-            return path.ReplaceLastSegment(PathSeparator, newName)
-                .EnsureSuffix(PathSeparator)
-                .ToLower();
+            return NormalizePath(
+                path.ReplaceLastSegment(PathSeparator, newName)
+                );
         }
 
         public string AddChild(string path, string name)
         {
-            return path.AppendSegment(PathSeparator, name)
-                .EnsureSuffix(PathSeparator)
-                .ToLower();
+            return NormalizePath(
+                path.AppendSegment(PathSeparator, name)
+                );
         }
 
         public string GetParentPath(string path)
         {
-            return path
+            return NormalizePath(path
                 .RemoveLastSegment(PathSeparator)
-                .EnsureSuffix(PathSeparator)
-                .ToLower();
+                );
         }
 
         public string GetLeafName(string path)
@@ -90,8 +97,8 @@ namespace Godzilla.Services
 
         public bool IsDescendantPath(string value, string ancestorPath)
         {
-            return !value.EnsureSuffix(PathSeparator).Equals(ancestorPath.EnsureSuffix(PathSeparator), StringComparison.OrdinalIgnoreCase) &&
-                value.EnsureSuffix(PathSeparator).StartsWith(ancestorPath.EnsureSuffix(PathSeparator), StringComparison.OrdinalIgnoreCase);
+            return !NormalizePath(value).Equals(NormalizePath(ancestorPath)) &&
+                NormalizePath(value).StartsWith(NormalizePath(ancestorPath));
         }
     }
 }

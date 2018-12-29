@@ -56,10 +56,10 @@ namespace Godzilla.Collections.Internal
 
         public IEnumerable<TreeEdge> GetDescendants(TreeEdge node)
         {
-            var path = node.Path;
+            var path = node.IdPath;
             return _collection
                 .AsQueryable()
-                .Where(x => x.Path.StartsWith(path))
+                .Where(x => x.IdPath.StartsWith(path))
                 .ToList();
         }
     }

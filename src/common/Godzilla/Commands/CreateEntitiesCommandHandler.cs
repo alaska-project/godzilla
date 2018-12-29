@@ -102,7 +102,8 @@ namespace Godzilla.Commands
                 NodeName = entityName,
                 ParentId = parent?.NodeId ?? Guid.Empty,
                 CollectionId = entityCollection.CollectionId,
-                Path = _commandsHelper.BuildPath(entityName, parent),
+                Path = _commandsHelper.BuildNamePath(entityName, parent),
+                IdPath = _commandsHelper.BuildIdPath(entityId, parent),
             };
         }
     }

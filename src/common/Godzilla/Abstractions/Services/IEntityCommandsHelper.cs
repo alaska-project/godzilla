@@ -14,6 +14,7 @@ namespace Godzilla.Abstractions.Services
         IEnumerable<TreeEdge> VerifyEntitiesExist(IEnumerable<object> entities, TreeEdgesCollection edgesCollection);
         IEnumerable<TreeEdge> VerifyEntitiesExist(IEnumerable<Guid> entitiesId, TreeEdgesCollection edgesCollection);
         IEnumerable<Guid> GetEntitiesId(IEnumerable<object> entities);
-        string BuildPath(string name, TreeEdge parent);
+        string BuildNamePath(string name, TreeEdge parent);
+        string BuildIdPath(Guid id, TreeEdge parent);
     }
 }

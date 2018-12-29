@@ -35,7 +35,7 @@ namespace Godzilla.Mongo.FunctionalTests.Commands
                 var foundItem = context.Query
                     .AsQueryable<TestEntity>()
                     .FirstOrDefault(x => x.Id == item.Id);
-
+                
                 Assert.NotNull(foundItem);
                 Assert.Equal(item.Id, foundItem.Id);
                 Assert.Equal(item.Name, foundItem.Name);
@@ -46,6 +46,11 @@ namespace Godzilla.Mongo.FunctionalTests.Commands
                 Assert.NotNull(foundItem);
                 Assert.Equal(item.Id, foundItem.Id);
                 Assert.Equal(item.Name, foundItem.Name);
+
+                var foundItems = context.Query.GetItems<TestEntity>("/root/gigi");
+                Assert.NotEmpty(foundItems);
+                Assert.Contains(foundItems, x => x.Id == item.Id);
+                Assert.Contains(foundItems, x => x.Name == item.Name);
 
                 // GetChild retreive
 
@@ -121,6 +126,11 @@ namespace Godzilla.Mongo.FunctionalTests.Commands
                 Assert.NotNull(foundItem);
                 Assert.Equal(item.Id, foundItem.Id);
                 Assert.Equal(item.Name, foundItem.Name);
+
+                var foundItems = context.Query.GetItems<TestEntity>("/root/gigi");
+                Assert.NotEmpty(foundItems);
+                Assert.Contains(foundItems, x => x.Id == item.Id);
+                Assert.Contains(foundItems, x => x.Name == item.Name);
 
                 // GetChild retreive
 
