@@ -30,7 +30,7 @@ namespace Godzilla.Services
 
         public IGodzillaCollection GetCollection(Type itemType)
         {
-            var getCollectionMethod = ReflectionUtil.GetGenericMethod(this.GetType(), "GetCollection", BindingFlags.Instance | BindingFlags.Public);
+            var getCollectionMethod = ReflectionUtil.GetGenericMethod(this.GetType(), "GetCollection", BindingFlags.Instance | BindingFlags.Public, 1, 0);
             var specificGetCollectionMethod = getCollectionMethod.MakeGenericMethod(itemType);
             return (IGodzillaCollection)specificGetCollectionMethod.Invoke(this, new object[0]);
         }

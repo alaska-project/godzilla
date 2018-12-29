@@ -41,11 +41,13 @@ namespace Godzilla.Commands
                 var entityCollection = _transactionService.GetCollection(entityType);
                 var edgesCollection = _transactionService.GetCollection<TreeEdge, TreeEdgesCollection>();
 
+                var parent = GetParentNode(edgesCollection, request.ParentId);
+
                 var treeEdges = request.Entities
-                    .Select(x => CreateTreeEdge(x, request.ParentId, entityCollection))
+                    .Select(x => CreateTreeEdge(x, parent, entityCollection))
                     .ToList();
 
-                ValidateParentId(edgesCollection, request.ParentId);
+                
                 ValidateTreeEdges(edgesCollection, treeEdges);
 
                 edgesCollection.Add(treeEdges);
@@ -62,10 +64,10 @@ namespace Godzilla.Commands
             }
         }
 
-        private void ValidateParentId(TreeEdgesCollection edgesCollection, Guid parentId)
+        private TreeEdge GetParentNode(TreeEdgesCollection edgesCollection, Guid parentId)
         {
             if (parentId == Guid.Empty)
-                return;
+                return null;
 
             var parent = edgesCollection
                 .AsQueryable()
@@ -73,6 +75,8 @@ namespace Godzilla.Commands
 
             if (parent == null)
                 throw new ParentNodeNotFoundException($"Parent node {parentId} not found");
+
+            return parent;
         }
 
         private void ValidateTreeEdges(TreeEdgesCollection edgesCollection, IEnumerable<TreeEdge> treeEdges)
@@ -86,7 +90,7 @@ namespace Godzilla.Commands
                 throw new NodeAlreadyExistsException($"Node {string.Join(", ", existingNodes.Select(x => x.NodeId))} already exists");
         }
 
-        private TreeEdge CreateTreeEdge(object entity, Guid parentId, IGodzillaCollection entityCollection)
+        private TreeEdge CreateTreeEdge(object entity, TreeEdge parent, IGodzillaCollection entityCollection)
         {
             var entityId = _propertyResolver.GetEntityId(entity, true);
             var entityName = _propertyResolver.GetEntityName(entity);
@@ -96,8 +100,9 @@ namespace Godzilla.Commands
                 Id = Guid.NewGuid(),
                 NodeId = entityId,
                 NodeName = entityName,
-                ParentId = parentId,
+                ParentId = parent?.NodeId ?? Guid.Empty,
                 CollectionId = entityCollection.CollectionId,
+                Path = _commandsHelper.BuildPath(entityName, parent),
             };
         }
     }

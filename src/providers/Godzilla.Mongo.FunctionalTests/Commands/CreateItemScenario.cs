@@ -56,13 +56,13 @@ namespace Godzilla.Mongo.FunctionalTests.Commands
 
                 // filtered GetChild retreive
 
+                foundItem = context.Query.GetChild<TestEntity>(rootItem, x => x.Name == "gigio");
+                Assert.Null(foundItem);
+
                 foundItem = context.Query.GetChild<TestEntity>(rootItem, x => x.Name == "gigi");
                 Assert.NotNull(foundItem);
                 Assert.Equal(item.Id, foundItem.Id);
                 Assert.Equal(item.Name, foundItem.Name);
-
-                foundItem = context.Query.GetChild<TestEntity>(rootItem, x => x.Name == "gigio");
-                Assert.Null(foundItem);
 
                 // update
 
@@ -131,14 +131,14 @@ namespace Godzilla.Mongo.FunctionalTests.Commands
 
                 // filtered GetChild retreive
 
+                foundItem = context.Query.GetChild<DerivedTestEntity>(rootItem, x => x.Name == "gigio");
+                Assert.Null(foundItem);
+
                 foundItem = context.Query.GetChild<DerivedTestEntity>(rootItem, x => x.Name == "gigi");
                 Assert.NotNull(foundItem);
                 Assert.Equal(item.Id, foundItem.Id);
                 Assert.Equal(item.Name, foundItem.Name);
-
-                foundItem = context.Query.GetChild<DerivedTestEntity>(rootItem, x => x.Name == "gigio");
-                Assert.Null(foundItem);
-
+                
                 // update
 
                 foundItem.Name = "gigi-new";

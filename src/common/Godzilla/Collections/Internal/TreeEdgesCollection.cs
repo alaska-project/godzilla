@@ -53,5 +53,14 @@ namespace Godzilla.Collections.Internal
         {
             _collection.Delete(x => nodesId.Contains(x.NodeId));
         }
+
+        public IEnumerable<TreeEdge> GetDescendants(TreeEdge node)
+        {
+            var path = node.Path;
+            return _collection
+                .AsQueryable()
+                .Where(x => x.Path.StartsWith(path))
+                .ToList();
+        }
     }
 }

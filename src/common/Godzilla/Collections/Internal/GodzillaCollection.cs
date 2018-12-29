@@ -61,6 +61,11 @@ namespace Godzilla.Collections.Internal
             _collection.Delete(entities);
         }
 
+        public void Delete(IEnumerable<Guid> id)
+        {
+            _collection.Delete(id);
+        }
+
         public virtual void Update(TItem entity)
         {
             _collection.Update(entity);
@@ -70,7 +75,7 @@ namespace Godzilla.Collections.Internal
         {
             _collection.Update(entities);
         }
-
+        
         void IGodzillaCollection.Add(object entity)
         {
             Add((TItem)entity);

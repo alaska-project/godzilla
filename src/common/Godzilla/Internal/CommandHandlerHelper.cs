@@ -1,6 +1,7 @@
 ﻿using Godzilla.Abstractions.Collections;
 using Godzilla.Abstractions.Services;
 using Godzilla.Collections.Internal;
+using Godzilla.DomainModels;
 using Godzilla.Exceptions;
 using System;
 using System.Collections.Generic;
@@ -13,10 +14,14 @@ namespace Godzilla.Internal
         where TContext : EntityContext
     {
         private readonly IEntityPropertyResolver<TContext> _propertyResolver;
+        private readonly IPathBuilder<TContext> _pathBuilder;
 
-        public CommandHandlerHelper(IEntityPropertyResolver<TContext> propertyResolver)
+        public CommandHandlerHelper(
+            IEntityPropertyResolver<TContext> propertyResolver,
+            IPathBuilder<TContext> pathBuilder)
         {
             _propertyResolver = propertyResolver ?? throw new ArgumentNullException(nameof(propertyResolver));
+            _pathBuilder = pathBuilder ?? throw new ArgumentNullException(nameof(pathBuilder));
         }
         
         public Type GetEntityType(IEnumerable<object> entities)
@@ -31,20 +36,22 @@ namespace Godzilla.Internal
             return entityTypes.First().Key;
         }
         
-        public void VerifyEntitiesExist(IEnumerable<object> entities, TreeEdgesCollection edgesCollection)
+        public IEnumerable<TreeEdge> VerifyEntitiesExist(IEnumerable<object> entities, TreeEdgesCollection edgesCollection)
         {
             var entitiesId = GetEntitiesId(entities);
 
-            VerifyEntitiesExist(entitiesId, edgesCollection);
+            return VerifyEntitiesExist(entitiesId, edgesCollection);
         }
 
-        public void VerifyEntitiesExist(IEnumerable<Guid> entitiesId, TreeEdgesCollection edgesCollection)
+        public IEnumerable<TreeEdge> VerifyEntitiesExist(IEnumerable<Guid> entitiesId, TreeEdgesCollection edgesCollection)
         {
-            var existingNodesId = edgesCollection
+            var existingNodes = edgesCollection
                 .AsQueryable()
                 .Where(x => entitiesId.Contains(x.NodeId))
-                .Select(x => x.NodeId)
                 .ToList();
+
+            var existingNodesId = existingNodes
+                .Select(x => x.NodeId);
 
             var missingNodesId = entitiesId
                 .Except(existingNodesId)
@@ -52,6 +59,8 @@ namespace Godzilla.Internal
 
             if (missingNodesId.Any())
                 throw new EntitiesNotFoundException($"Entities not found {string.Join(", ", missingNodesId)}");
+
+            return existingNodes;
         }
 
         public IEnumerable<Guid> GetEntitiesId(IEnumerable<object> entities)
@@ -59,6 +68,14 @@ namespace Godzilla.Internal
             return entities
                 .Select(x => _propertyResolver.GetEntityId(x, false))
                 .ToList();
+        }
+
+        public string BuildPath(string name, TreeEdge parent)
+        {
+            if (parent == null)
+                return _pathBuilder.RootPath;
+
+            return _pathBuilder.JoinPath(parent.Path, name);
         }
     }
 }

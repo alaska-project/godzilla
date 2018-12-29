@@ -26,15 +26,20 @@ namespace Godzilla.Services
         {
             var collectionInfo = GetCollectionInfo<TItem>();
 
+            return GetCollection<TItem>(collectionProvider, collectionInfo.CollectionId, collectionInfo.CollectionItemType);
+        }
+
+        public IDatabaseCollection<TItem> GetCollection<TItem>(IDatabaseCollectionProvider<TContext> collectionProvider, string collectionId, Type collectionItemType)
+        {
             //collection item type and actual requested item type is the same
-            if (collectionInfo.CollectionItemType == typeof(TItem))
-                return collectionProvider.GetCollection<TItem, TItem>(collectionInfo.CollectionId);
+            if (collectionItemType == typeof(TItem))
+                return collectionProvider.GetCollection<TItem, TItem>(collectionId);
 
             //requested item type is derived from collection item type
             //TODO: cache
-            var getCollectionMethod = ReflectionUtil.GetGenericMethod(collectionProvider.GetType(), "GetCollection", BindingFlags.Instance | BindingFlags.Public, 2);
-            var genericGetCollectionMethod = getCollectionMethod.MakeGenericMethod(typeof(TItem), collectionInfo.CollectionItemType);
-            return (IDatabaseCollection<TItem>)genericGetCollectionMethod.Invoke(collectionProvider, new object[] { collectionInfo.CollectionId });
+            var getCollectionMethod = ReflectionUtil.GetGenericMethod(collectionProvider.GetType(), "GetCollection", BindingFlags.Instance | BindingFlags.Public, 2, 1);
+            var genericGetCollectionMethod = getCollectionMethod.MakeGenericMethod(typeof(TItem), collectionItemType);
+            return (IDatabaseCollection<TItem>)genericGetCollectionMethod.Invoke(collectionProvider, new object[] { collectionId });
         }
 
         public ICollectionInfo GetCollectionInfo<TItem>()

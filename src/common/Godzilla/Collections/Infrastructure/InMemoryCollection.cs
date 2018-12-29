@@ -138,7 +138,19 @@ namespace Godzilla.Collections.Infrastructure
 
             return Task.FromResult(true);
         }
-        
+
+        public Task Delete(IEnumerable<Guid> id)
+        {
+            lock (this)
+            {
+                id
+                    .ToList()
+                    .ForEach(x => _innerDict.Remove(x));
+            }
+
+            return Task.FromResult(true);
+        }
+
         public Task Update(TItem entity)
         {
             var id = _propertyResolver.GetEntityId(entity);

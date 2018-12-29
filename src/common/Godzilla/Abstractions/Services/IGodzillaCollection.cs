@@ -36,5 +36,6 @@ namespace Godzilla.Abstractions.Services
         void Update(IEnumerable<object> entities);
         void Delete(object entity);
         void Delete(IEnumerable<object> entities);
+        void Delete(IEnumerable<Guid> entities);
     }
 }

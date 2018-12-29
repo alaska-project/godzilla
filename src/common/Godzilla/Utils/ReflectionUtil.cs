@@ -26,15 +26,16 @@ namespace Godzilla.Utils
 
         public static MethodInfo GetGenericMethod(Type type, string name, BindingFlags bindingFlags)
         {
-            return GetGenericMethod(type, name, bindingFlags, 1);
+            return GetGenericMethod(type, name, bindingFlags, 1, null);
         }
 
-        public static MethodInfo GetGenericMethod(Type type, string name, BindingFlags bindingFlags, int genericArgumentCount)
+        public static MethodInfo GetGenericMethod(Type type, string name, BindingFlags bindingFlags, int genericArgumentCount, int? parametersCount)
         {
             return type.GetMethods(bindingFlags)
                 .FirstOrDefault(x => 
                     x.Name == name && 
                     x.IsGenericMethod &&
+                    (!parametersCount.HasValue || x.GetParameters().Count() == parametersCount.Value) &&
                     x.GetGenericArguments().Count() == genericArgumentCount);
         }
     }
