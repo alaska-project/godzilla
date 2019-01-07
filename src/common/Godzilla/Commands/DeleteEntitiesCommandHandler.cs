@@ -5,6 +5,7 @@ using Godzilla.Exceptions;
 using MediatR;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -33,15 +34,16 @@ namespace Godzilla.Commands
                 var nodesId = _commandsHelper.GetEntitiesId(request.Entities);
 
                 _transactionService.StartTransaction();
-
-                var entityCollection = _transactionService.GetCollection(entityType);
+                
                 var edgesCollection = _transactionService.GetCollection<TreeEdge, TreeEdgesCollection>();
 
-                _commandsHelper.VerifyEntitiesExist(nodesId, edgesCollection);
+                var treeNodes = _commandsHelper.VerifyEntitiesExist(nodesId, edgesCollection);
 
-                entityCollection.Delete(request.Entities);
-                edgesCollection.DeleteNodes(nodesId);
-
+                foreach (var treeNode in treeNodes)
+                {
+                    DeleteEntityAndDescendants(treeNode, edgesCollection);
+                }
+                
                 _transactionService.CommitTransaction();
                 return Unit.Task;
             }
@@ -50,6 +52,25 @@ namespace Godzilla.Commands
                 _transactionService.AbortTransaction();
                 throw new EntitiesDeleteException("Entities delete failed", e);
             }
+        }
+
+        private void DeleteEntityAndDescendants(TreeEdge deleteRoot, TreeEdgesCollection edgesCollection)
+        {
+            var descendants = edgesCollection.GetDescendants(deleteRoot);
+
+            var groupedEntities = descendants.GroupBy(x => x.CollectionId);
+
+            foreach (var entityGroup in groupedEntities)
+            {
+                var entitiesIdToDelete = entityGroup
+                    .Select(x => x.NodeId)
+                    .ToList();
+
+                var entityCollection = _transactionService.GetCollection(typeof(object), entityGroup.Key);
+                entityCollection.Delete(entitiesIdToDelete);
+            }
+
+            edgesCollection.DeleteNodes(descendants.Select(x => x.NodeId));
         }
     }
 }

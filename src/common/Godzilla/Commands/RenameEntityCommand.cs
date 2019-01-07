@@ -12,7 +12,7 @@ namespace Godzilla.Commands
         {
             if (string.IsNullOrWhiteSpace(newName))
             {
-                throw new ArgumentException("message", nameof(newName));
+                throw new ArgumentException("Parameter cannot be empty", nameof(newName));
             }
 
             EntityId = entityId;

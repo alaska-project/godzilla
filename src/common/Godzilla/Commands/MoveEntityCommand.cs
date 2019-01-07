@@ -5,16 +5,16 @@ using System.Text;
 
 namespace Godzilla.Commands
 {
-    internal class MoveEntitiesCommand<TContext> : IRequest<Unit>
+    internal class MoveEntityCommand<TContext> : IRequest<Unit>
         where TContext : EntityContext
     {
-        public MoveEntitiesCommand(IEnumerable<object> entities, Guid newParentId)
+        public MoveEntityCommand(Guid entityId, Guid newParentId)
         {
-            Entities = entities;
+            EntityId = entityId;
             NewParentId = newParentId;
         }
 
-        public IEnumerable<object> Entities { get; }
+        public Guid EntityId { get; }
         public Guid NewParentId { get; }
     }
 }

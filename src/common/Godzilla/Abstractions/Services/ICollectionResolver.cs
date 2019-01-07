@@ -9,6 +9,7 @@ namespace Godzilla.Abstractions.Services
         where TContext : EntityContext
     {
         IDatabaseCollection<TItem> GetCollection<TItem>(IDatabaseCollectionProvider<TContext> collectionProvider);
+        IDatabaseCollection<TItem> GetCollection<TItem>(IDatabaseCollectionProvider<TContext> collectionProvider, string collectionId, Type collectionItemType);
         ICollectionInfo GetCollectionInfo<TItem>();
         ICollectionInfo GetCollectionInfo(Type itemType);
     }

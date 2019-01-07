@@ -35,7 +35,7 @@ namespace Godzilla.Mongo.FunctionalTests.Commands
                 var foundItem = context.Query
                     .AsQueryable<TestEntity>()
                     .FirstOrDefault(x => x.Id == item.Id);
-
+                
                 Assert.NotNull(foundItem);
                 Assert.Equal(item.Id, foundItem.Id);
                 Assert.Equal(item.Name, foundItem.Name);
@@ -47,6 +47,11 @@ namespace Godzilla.Mongo.FunctionalTests.Commands
                 Assert.Equal(item.Id, foundItem.Id);
                 Assert.Equal(item.Name, foundItem.Name);
 
+                var foundItems = context.Query.GetItems<TestEntity>("/root/gigi");
+                Assert.NotEmpty(foundItems);
+                Assert.Contains(foundItems, x => x.Id == item.Id);
+                Assert.Contains(foundItems, x => x.Name == item.Name);
+
                 // GetChild retreive
 
                 foundItem = context.Query.GetChild<TestEntity>(rootItem);
@@ -56,13 +61,13 @@ namespace Godzilla.Mongo.FunctionalTests.Commands
 
                 // filtered GetChild retreive
 
+                foundItem = context.Query.GetChild<TestEntity>(rootItem, x => x.Name == "gigio");
+                Assert.Null(foundItem);
+
                 foundItem = context.Query.GetChild<TestEntity>(rootItem, x => x.Name == "gigi");
                 Assert.NotNull(foundItem);
                 Assert.Equal(item.Id, foundItem.Id);
                 Assert.Equal(item.Name, foundItem.Name);
-
-                foundItem = context.Query.GetChild<TestEntity>(rootItem, x => x.Name == "gigio");
-                Assert.Null(foundItem);
 
                 // update
 
@@ -123,6 +128,11 @@ namespace Godzilla.Mongo.FunctionalTests.Commands
                 Assert.Equal(item.Id, foundItem.Id);
                 Assert.Equal(item.Name, foundItem.Name);
 
+                var foundItems = context.Query.GetItems<TestEntity>("/root/gigi");
+                Assert.NotEmpty(foundItems);
+                Assert.Contains(foundItems, x => x.Id == item.Id);
+                Assert.Contains(foundItems, x => x.Name == item.Name);
+
                 // GetChild retreive
 
                 foundItem = context.Query.GetChild<DerivedTestEntity>(rootItem);
@@ -132,14 +142,14 @@ namespace Godzilla.Mongo.FunctionalTests.Commands
 
                 // filtered GetChild retreive
 
+                foundItem = context.Query.GetChild<DerivedTestEntity>(rootItem, x => x.Name == "gigio");
+                Assert.Null(foundItem);
+
                 foundItem = context.Query.GetChild<DerivedTestEntity>(rootItem, x => x.Name == "gigi");
                 Assert.NotNull(foundItem);
                 Assert.Equal(item.Id, foundItem.Id);
                 Assert.Equal(item.Name, foundItem.Name);
-
-                foundItem = context.Query.GetChild<DerivedTestEntity>(rootItem, x => x.Name == "gigio");
-                Assert.Null(foundItem);
-
+                
                 // update
 
                 var itemToUpdate = context.Query.GetItem<DerivedTestEntity>(item.Id);

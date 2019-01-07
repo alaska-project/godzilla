@@ -16,18 +16,40 @@ namespace Godzilla.Queries
     {
         private readonly ICollectionService<TContext> _collectionService;
         private readonly IEntityPropertyResolver<TContext> _propertyResolver;
+        private readonly IPathBuilder<TContext> _pathBuilder;
 
         public EntityQueries(ICollectionService<TContext> collectionService,
-            IEntityPropertyResolver<TContext> propertyResolver)
+            IEntityPropertyResolver<TContext> propertyResolver,
+            IPathBuilder<TContext> pathBuilder)
         {
             _collectionService = collectionService ?? throw new ArgumentNullException(nameof(collectionService));
             _propertyResolver = propertyResolver ?? throw new ArgumentNullException(nameof(propertyResolver));
+            _pathBuilder = pathBuilder ?? throw new ArgumentNullException(nameof(pathBuilder));
         }
 
         public IQueryable<TEntity> AsQueryable<TEntity>()
         {
             return GetCollection<TEntity>()
                 .AsQueryable();
+        }
+
+        public TEntity GetItem<TEntity>(string path)
+        {
+            return GetItems<TEntity>(path)
+                .FirstOrDefault();
+        }
+
+        public IEnumerable<TEntity> GetItems<TEntity>(string path)
+        {
+            var normalizedPath = _pathBuilder.NormalizePath(path);
+            var nodesId = GetTreeEdgesCollection()
+                .AsQueryable()
+                .Where(x => x.Path == normalizedPath)
+                .Select(x => x.NodeId)
+                .ToList();
+
+            return GetCollection<TEntity>()
+                .GetItems(nodesId);
         }
 
         public TEntity GetItem<TEntity>(Guid id)

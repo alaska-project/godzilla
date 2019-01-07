@@ -3,6 +3,7 @@ using Godzilla.Abstractions.Services;
 using Godzilla.Commands;
 using Godzilla.Queries;
 using Godzilla.Services;
+using Godzilla.Settings;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -33,7 +34,9 @@ namespace Godzilla.Internal
         private void AddCoreServices()
         {
             services
+                .AddSingleton<IGodzillaOptions<TContext>, GodzillaOptions<TContext>>()
                 .AddScoped<ICollectionInitializer, CollectionInitializer>()
+                .AddScoped<IPathBuilder<TContext>, PathBuilder<TContext>>()
                 .AddScoped<ICollectionResolver<TContext>, CollectionResolver<TContext>>()
                 .AddScoped<ICollectionService<TContext>, CollectionService<TContext>>()
                 .AddScoped<IEntityPropertyResolver<TContext>, EntityPropertyResolver<TContext>>()
@@ -48,7 +51,7 @@ namespace Godzilla.Internal
             services
                 .AddTransient<IRequestHandler<CreateEntitiesCommand<TContext>, IEnumerable<object>>, CreateEntitiesCommandHandler<TContext>>()
                 .AddTransient<IRequestHandler<UpdateEntitiesCommand<TContext>, IEnumerable<object>>, UpdateEntitiesCommandHandler<TContext>>()
-                .AddTransient<IRequestHandler<MoveEntitiesCommand<TContext>, Unit>, MoveEntitiesCommandHandler<TContext>>()
+                .AddTransient<IRequestHandler<MoveEntityCommand<TContext>, Unit>, MoveEntityCommandHandler<TContext>>()
                 .AddTransient<IRequestHandler<RenameEntityCommand<TContext>, Unit>, RenameEntityCommandHandler<TContext>>()
                 .AddTransient<IRequestHandler<DeleteEntitiesCommand<TContext>, Unit>, DeleteEntitiesCommandHandler<TContext>>();
         }

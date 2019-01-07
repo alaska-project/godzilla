@@ -106,6 +106,12 @@ namespace Godzilla.Mongo.Infrastructure
             await _collection.DeleteManyAsync(filter);
         }
 
+        public async Task Delete(IEnumerable<Guid> id)
+        {
+            await _collection
+                .DeleteManyAsync(GetEntityIdFilter(id));
+        }
+
         private FilterDefinition<TItem> GetEntityIdFilter(Guid entityId)
         {
             return Builders<TItem>.Filter.Eq(IdField, entityId);
