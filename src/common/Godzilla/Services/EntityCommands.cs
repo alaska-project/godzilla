@@ -148,14 +148,15 @@ namespace Godzilla.Services
 
         #region Rename
 
-        public Task Rename<TEntity>(TEntity entity, string newName)
+        public async Task Rename<TEntity>(TEntity entity, string newName)
         {
-            throw new NotImplementedException();
+            var entityId = _propertyResolver.GetEntityId(entity);
+            await Rename(entityId, newName);
         }
 
-        public Task Rename(Guid entityId, string newName)
+        public async Task Rename(Guid entityId, string newName)
         {
-            throw new NotImplementedException();
+            await _mediator.Send(new RenameEntityCommand<TContext>(entityId, newName));
         }
 
         #endregion

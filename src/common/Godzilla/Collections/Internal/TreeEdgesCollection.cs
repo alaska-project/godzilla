@@ -22,6 +22,13 @@ namespace Godzilla.Collections.Internal
             : base(collection)
         { }
 
+        public virtual TreeEdge GetNode(Guid nodeId)
+        {
+            return _collection
+                .AsQueryable()
+                .FirstOrDefault(x => nodeId == x.NodeId);
+        }
+
         public virtual IEnumerable<TreeEdge> GetNodes(IEnumerable<Guid> nodesId)
         {
             return _collection
@@ -54,7 +61,7 @@ namespace Godzilla.Collections.Internal
             _collection.Delete(x => nodesId.Contains(x.NodeId));
         }
 
-        public IEnumerable<TreeEdge> GetDescendants(TreeEdge node)
+        public virtual IEnumerable<TreeEdge> GetDescendants(TreeEdge node)
         {
             var path = node.IdPath;
             return _collection

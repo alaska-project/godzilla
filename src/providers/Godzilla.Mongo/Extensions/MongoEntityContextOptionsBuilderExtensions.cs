@@ -4,6 +4,7 @@ using Godzilla.Mongo.Services;
 using Godzilla.Mongo.Settings;
 using Microsoft.Extensions.DependencyInjection;
 using MongoDB.Bson.Serialization.Conventions;
+using MongoDB.Driver;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -15,6 +16,8 @@ namespace Godzilla.Mongo
         public static void UseMongoDb<TContext>(this EntityContextOptionsBuilder builder, string connectionString, string database)
             where TContext : EntityContext
         {
+            RegisterConventions();
+
             var options = new MongoEntityContextOptions<TContext>
             {
                 ConnectionString = connectionString,
@@ -29,9 +32,10 @@ namespace Godzilla.Mongo
 
         private static void RegisterConventions()
         {
+            //MongoDefaults.GuidRepresentation = MongoDB.Bson.GuidRepresentation.Standard;
             var conventions = new ConventionPack
             {
-                new GuidAsStringRepresentationConvention(new List<System.Reflection.Assembly>()),
+                //new GuidAsStringRepresentationConvention(new List<System.Reflection.Assembly>()),
                 new IgnoreExtraElementsConvention(true)
             };
             ConventionRegistry.Register("customConventions", conventions, x => true);

@@ -78,6 +78,18 @@ namespace Godzilla.Mongo.FunctionalTests.Commands
                 Assert.NotNull(updatedItem);
                 Assert.Equal(itemToUpdate.Name, updatedItem.Name);
 
+                //rename
+                
+                await context.Commands.Rename(rootItem, "root-new");
+
+                var renamedRootItems = context.Query.GetItems<TestEntity>("/root-new");
+                var renamedRootItem = renamedRootItems.FirstOrDefault(x => x.Id == rootItem.Id);
+                Assert.NotNull(renamedRootItem);
+
+                var renamedItems = context.Query.GetItems<TestEntity>("/root-new/gigi");
+                var renamedItem = renamedItems.FirstOrDefault(x => x.Id == item.Id);
+                Assert.NotNull(renamedItem);
+
                 // delete
 
                 await context.Commands.Delete(rootItem);
@@ -158,6 +170,18 @@ namespace Godzilla.Mongo.FunctionalTests.Commands
 
                 Assert.NotNull(updatedItem);
                 Assert.Equal(itemToUpdate.Name, updatedItem.Name);
+
+                //rename
+
+                await context.Commands.Rename(rootItem, "root-new");
+
+                var renamedRootItems = context.Query.GetItems<TestEntity>("/root-new");
+                var renamedRootItem = renamedRootItems.FirstOrDefault(x => x.Id == rootItem.Id);
+                Assert.NotNull(renamedRootItem);
+
+                var renamedItems = context.Query.GetItems<DerivedTestEntity>("/root-new/gigi");
+                var renamedItem = renamedItems.FirstOrDefault(x => x.Id == item.Id);
+                Assert.NotNull(renamedItem);
 
                 // delete
 

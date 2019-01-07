@@ -1,5 +1,6 @@
 ﻿using Godzilla.Abstractions.Infrastructure;
 using Godzilla.Abstractions.Services;
+using MongoDB.Bson;
 using MongoDB.Driver;
 using System;
 using System.Collections.Generic;
@@ -14,7 +15,7 @@ namespace Godzilla.Mongo.Infrastructure
         where TContext : EntityContext
     {
         private const string IdField = "_id";
-
+        
         private readonly IEntityPropertyResolver<TContext> _propertyResolver;
         protected readonly IMongoCollection<TItem> _collection;
 
