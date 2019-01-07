@@ -66,11 +66,12 @@ namespace Godzilla.Mongo.FunctionalTests.Commands
 
                 // update
 
-                foundItem.Name = "gigi-new";
-                var updatedItem = await context.Commands.Update(foundItem);
+                var itemToUpdate = context.Query.GetItem<TestEntity>(item.Id);
+                itemToUpdate.Name = "gigi-new";
+                var updatedItem = await context.Commands.Update(itemToUpdate);
 
-                Assert.NotNull(foundItem);
-                Assert.Equal(updatedItem.Name, foundItem.Name);
+                Assert.NotNull(updatedItem);
+                Assert.Equal(itemToUpdate.Name, updatedItem.Name);
 
                 // delete
 
@@ -141,11 +142,12 @@ namespace Godzilla.Mongo.FunctionalTests.Commands
 
                 // update
 
-                foundItem.Name = "gigi-new";
-                var updatedItem = await context.Commands.Update(foundItem);
+                var itemToUpdate = context.Query.GetItem<DerivedTestEntity>(item.Id);
+                itemToUpdate.Name = "gigi-new";
+                var updatedItem = await context.Commands.Update(itemToUpdate);
 
-                Assert.NotNull(foundItem);
-                Assert.Equal(updatedItem.Name, foundItem.Name);
+                Assert.NotNull(updatedItem);
+                Assert.Equal(itemToUpdate.Name, updatedItem.Name);
 
                 // delete
 
