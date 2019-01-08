@@ -39,7 +39,10 @@ namespace Godzilla.DemoWebApp
             services
                 .AddEntityContext<DemoEntityContext>(opt => 
                 {
-                    opt.UseMongoDb<DemoEntityContext>(Configuration["Godzilla:ConnectionString"], Configuration["Godzilla:Database"]);
+                    opt.UseMongoDb<DemoEntityContext>(
+                            Configuration["Godzilla:ConnectionString"], 
+                            Configuration["Godzilla:Database"],
+                            MongoDB.Bson.GuidRepresentation.Standard);
                 });
         }
 

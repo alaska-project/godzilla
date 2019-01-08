@@ -11,6 +11,7 @@ namespace Godzilla.Abstractions.Services
         string PathSeparator { get; }
         string RootPath { get; }
         string NormalizePath(string path);
+        string MovePath(string path, string source, string destination);
         string NestPath(string path, string destination);
         string JoinPath(string path, string other);
         string RenameLeaf(string path, string newName);

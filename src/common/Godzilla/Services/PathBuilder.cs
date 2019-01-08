@@ -29,6 +29,12 @@ namespace Godzilla.Services
                 .ToLower();
         }
 
+        public string MovePath(string path, string source, string destination)
+        {
+            var parent = GetParentPath(source);
+            return path = destination + path.Substring(parent.Length);
+        }
+
         public string NestPath(string path, string destination)
         {
             var lastSegment = path

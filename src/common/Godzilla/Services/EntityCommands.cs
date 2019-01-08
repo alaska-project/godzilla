@@ -114,34 +114,22 @@ namespace Godzilla.Services
 
         #region Move
 
-        public Task Move<TEntity>(TEntity entity, Guid newParentId)
+        public async Task Move<TEntity>(TEntity entity, Guid newParentId)
         {
-            throw new NotImplementedException();
+            var entityId = _propertyResolver.GetEntityId(entity);
+            await Move(entityId, newParentId);
         }
 
-        public Task Move<TEntity>(TEntity entity, object newParent)
+        public async Task Move<TEntity>(TEntity entity, object newParent)
         {
-            throw new NotImplementedException();
+            var entityId = _propertyResolver.GetEntityId(entity);
+            var newParentId = _propertyResolver.GetEntityId(newParent);
+            await Move(entityId, newParentId);
         }
-
-        public Task Move<TEntity>(IEnumerable<TEntity> entities, Guid newParentId)
+        
+        public async Task Move(Guid entityId, Guid newParentId)
         {
-            throw new NotImplementedException();
-        }
-
-        public Task Move<TEntity>(IEnumerable<TEntity> entities, object newParent)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task Move(Guid entityId, Guid newParentId)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task Move(IEnumerable<Guid> entitiesId, Guid newParentId)
-        {
-            throw new NotImplementedException();
+            await _mediator.Send(new MoveEntityCommand<TContext>(entityId, newParentId));
         }
 
         #endregion

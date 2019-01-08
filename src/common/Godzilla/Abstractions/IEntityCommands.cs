@@ -24,10 +24,7 @@ namespace Godzilla.Abstractions
 
         Task Move<TEntity>(TEntity entity, Guid newParentId);
         Task Move<TEntity>(TEntity entity, object newParent);
-        Task Move<TEntity>(IEnumerable<TEntity> entities, Guid newParentId);
-        Task Move<TEntity>(IEnumerable<TEntity> entities, object newParent);
         Task Move(Guid entityId, Guid newParentId);
-        Task Move(IEnumerable<Guid> entitiesId, Guid newParentId);
 
         Task Rename<TEntity>(TEntity entity, string newName);
         Task Rename(Guid entityId, string newName);

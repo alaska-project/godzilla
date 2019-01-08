@@ -13,10 +13,13 @@ namespace Godzilla.Mongo
 {
     public static class MongoEntityContextOptionsBuilderExtensions
     {
-        public static void UseMongoDb<TContext>(this EntityContextOptionsBuilder builder, string connectionString, string database)
+        public static void UseMongoDb<TContext>(this EntityContextOptionsBuilder builder, 
+            string connectionString, 
+            string database,
+            MongoDB.Bson.GuidRepresentation? guidRepresentation = null)
             where TContext : EntityContext
         {
-            RegisterConventions();
+            RegisterConventions(guidRepresentation);
 
             var options = new MongoEntityContextOptions<TContext>
             {
@@ -30,9 +33,11 @@ namespace Godzilla.Mongo
                 .AddScoped<MongoDatabaseFactory<TContext>>();
         }
 
-        private static void RegisterConventions()
+        private static void RegisterConventions(MongoDB.Bson.GuidRepresentation? guidRepresentation)
         {
-            //MongoDefaults.GuidRepresentation = MongoDB.Bson.GuidRepresentation.Standard;
+            if (guidRepresentation.HasValue)
+                MongoDefaults.GuidRepresentation = guidRepresentation.Value;
+
             var conventions = new ConventionPack
             {
                 //new GuidAsStringRepresentationConvention(new List<System.Reflection.Assembly>()),
