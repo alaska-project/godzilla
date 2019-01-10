@@ -30,10 +30,13 @@ namespace Godzilla
         internal EntityContext(IEntityContextServices entityContextServices)
         {
             _entityContextServices = entityContextServices;
+
+            entityContextServices.Initializer.Initialize(this, entityContextServices.Configurator);
         }
 
         public IEntityCommands Commands => _entityContextServices.Commands;
         public IEntityQueries Query => _entityContextServices.Queryes;
+        protected IEntityConfigurator Configurator => _entityContextServices.Configurator;
 
         public virtual void OnConfiguring()
         { }

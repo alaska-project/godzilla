@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Godzilla.Collections.Internal
 {
@@ -104,6 +105,11 @@ namespace Godzilla.Collections.Internal
         void IGodzillaCollection.Delete(IEnumerable<object> entities)
         {
             Delete(entities.Cast<TItem>());
+        }
+
+        public virtual async Task CreateIndex(IndexDefinition<TItem> index)
+        {
+           await _collection.CreateIndex(index.Name, index.Fields, index.Options);
         }
     }
 }

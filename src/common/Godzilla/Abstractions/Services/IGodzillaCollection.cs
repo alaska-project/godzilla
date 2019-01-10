@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Godzilla.Abstractions.Services
 {
@@ -24,6 +25,8 @@ namespace Godzilla.Abstractions.Services
 
         void Delete(TItem entity);
         void Delete(IEnumerable<TItem> entities);
+
+        Task CreateIndex(IndexDefinition<TItem> index);
     }
 
     public interface IGodzillaCollection

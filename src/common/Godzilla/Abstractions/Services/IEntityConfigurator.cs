@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Godzilla.Abstractions.Services
 {
-    public interface IEntityConfigurator<TContext>
-        where TContext : EntityContext
+    public interface IEntityConfigurator
     {
-        void DefineIndex<TEntity>(string name, IEnumerable<IndexField<TEntity>> fields, IndexOptions options);
+        Task DefineIndex<TEntity>(IndexDefinition<TEntity> index);
     }
 }

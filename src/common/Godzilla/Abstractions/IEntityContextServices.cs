@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Godzilla.Abstractions.Services;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -13,5 +14,7 @@ namespace Godzilla.Abstractions
     {
         IEntityCommands Commands { get; }
         IEntityQueries Queryes { get; }
+        IEntityConfigurator Configurator { get; }
+        IEntityContextInitializer Initializer { get; }
     }
 }

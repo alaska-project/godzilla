@@ -59,6 +59,8 @@ namespace Godzilla.Internal
         private void AddInternalServices()
         {
             services
+                .AddSingleton<EntityContextInitializer<TContext>>()
+                .AddScoped<EntityConfigurator<TContext>>()
                 .AddScoped<EntityQueries<TContext>>()
                 .AddScoped<EntityCommands<TContext>>();
         }
