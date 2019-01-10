@@ -26,7 +26,7 @@ namespace Godzilla.Commands
             _commandsHelper = commandsHelper ?? throw new ArgumentNullException(nameof(commandsHelper));
         }
 
-        public Task<Unit> Handle(DeleteEntitiesCommand<TContext> request, CancellationToken cancellationToken)
+        public async Task<Unit> Handle(DeleteEntitiesCommand<TContext> request, CancellationToken cancellationToken)
         {
             try
             {
@@ -41,11 +41,11 @@ namespace Godzilla.Commands
 
                 foreach (var treeNode in treeNodes)
                 {
-                    DeleteEntityAndDescendants(treeNode, edgesCollection);
+                    await DeleteEntityAndDescendants(treeNode, edgesCollection);
                 }
                 
                 _transactionService.CommitTransaction();
-                return Unit.Task;
+                return Unit.Value;
             }
             catch (Exception e)
             {
@@ -54,7 +54,7 @@ namespace Godzilla.Commands
             }
         }
 
-        private void DeleteEntityAndDescendants(TreeEdge deleteRoot, TreeEdgesCollection edgesCollection)
+        private async Task DeleteEntityAndDescendants(TreeEdge deleteRoot, TreeEdgesCollection edgesCollection)
         {
             var descendants = edgesCollection.GetDescendants(deleteRoot);
 
@@ -67,7 +67,7 @@ namespace Godzilla.Commands
                     .ToList();
 
                 var entityCollection = _transactionService.GetCollection(typeof(object), entityGroup.Key);
-                entityCollection.Delete(entitiesIdToDelete);
+                await entityCollection.Delete(entitiesIdToDelete);
             }
 
             edgesCollection.DeleteNodes(descendants.Select(x => x.NodeId));

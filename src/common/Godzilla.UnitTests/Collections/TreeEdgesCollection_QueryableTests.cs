@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace Godzilla.UnitTests.Collections
@@ -30,14 +31,14 @@ namespace Godzilla.UnitTests.Collections
         }
 
         [Fact]
-        public void Node_already_exists()
+        public async Task Node_already_exists()
         {
             var node = new TreeEdge
             {
                 NodeId = Guid.NewGuid()
             };
 
-            _treeEdgesCollection.Add(node);
+            await _treeEdgesCollection.Add(node);
             var nodeExists = _treeEdgesCollection.NodeExists(node.NodeId);
             Assert.True(nodeExists);
         }

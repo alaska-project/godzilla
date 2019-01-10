@@ -42,74 +42,74 @@ namespace Godzilla.Collections.Internal
             return _collection.GetItems(id, filter);
         }
 
-        public virtual void Add(TItem entity)
+        public virtual async Task Add(TItem entity)
         {
-            _collection.Add(entity).ConfigureAwait(false);
+            await _collection.Add(entity);
         }
 
-        public virtual void Add(IEnumerable<TItem> entities)
+        public virtual async Task Add(IEnumerable<TItem> entities)
         {
-            _collection.Add(entities).ConfigureAwait(false);
+            await _collection.Add(entities);
         }
                 
-        public virtual void Delete(TItem entity)
+        public virtual async Task Delete(TItem entity)
         {
-            _collection.Delete(entity);
+            await _collection.Delete(entity);
         }
 
-        public virtual void Delete(IEnumerable<TItem> entities)
+        public virtual async Task Delete(IEnumerable<TItem> entities)
         {
-            _collection.Delete(entities);
+            await _collection.Delete(entities);
         }
 
-        public void Delete(IEnumerable<Guid> id)
+        public async Task Delete(IEnumerable<Guid> id)
         {
-            _collection.Delete(id);
+            await _collection.Delete(id);
         }
 
-        public virtual void Update(TItem entity)
+        public virtual async Task Update(TItem entity)
         {
-            _collection.Update(entity);
+            await _collection.Update(entity);
         }
 
-        public virtual void Update(IEnumerable<TItem> entities)
+        public virtual async Task Update(IEnumerable<TItem> entities)
         {
-            _collection.Update(entities);
-        }
-        
-        void IGodzillaCollection.Add(object entity)
-        {
-            Add((TItem)entity);
-        }
-
-        void IGodzillaCollection.Add(IEnumerable<object> entities)
-        {
-            Add(entities.Cast<TItem>());
-        }
-
-        void IGodzillaCollection.Update(object entity)
-        {
-            Update((TItem)entity);
-        }
-
-        void IGodzillaCollection.Update(IEnumerable<object> entities)
-        {
-            Update(entities.Cast<TItem>());
-        }
-
-        void IGodzillaCollection.Delete(object entity)
-        {
-            Delete((TItem)entity);
-        }
-
-        void IGodzillaCollection.Delete(IEnumerable<object> entities)
-        {
-            Delete(entities.Cast<TItem>());
+            await _collection.Update(entities);
         }
 
         public virtual async Task CreateIndex(IndexDefinition<TItem> index)
         {
-           await _collection.CreateIndex(index.Name, index.Fields, index.Options);
+            await _collection.CreateIndex(index.Name, index.Fields, index.Options);
+        }
+
+        async Task IGodzillaCollection.Add(object entity)
+        {
+            await Add((TItem)entity);
+        }
+
+        async Task IGodzillaCollection.Add(IEnumerable<object> entities)
+        {
+            await Add(entities.Cast<TItem>());
+        }
+
+        async Task IGodzillaCollection.Update(object entity)
+        {
+            await Update((TItem)entity);
+        }
+
+        async Task IGodzillaCollection.Update(IEnumerable<object> entities)
+        {
+            await Update(entities.Cast<TItem>());
+        }
+
+        async Task IGodzillaCollection.Delete(object entity)
+        {
+            await Delete((TItem)entity);
+        }
+
+        async Task IGodzillaCollection.Delete(IEnumerable<object> entities)
+        {
+            await Delete(entities.Cast<TItem>());
         }
     }
 }

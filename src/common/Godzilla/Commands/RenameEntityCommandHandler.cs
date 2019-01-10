@@ -29,7 +29,7 @@ namespace Godzilla.Commands
             _pathBuilder = pathBuilder ?? throw new ArgumentNullException(nameof(pathBuilder));
         }
 
-        public Task<Unit> Handle(RenameEntityCommand<TContext> request, CancellationToken cancellationToken)
+        public async Task<Unit> Handle(RenameEntityCommand<TContext> request, CancellationToken cancellationToken)
         {
             try
             {
@@ -51,10 +51,10 @@ namespace Godzilla.Commands
                 renameDescendants
                     .ForEach(x => UpdateNodePath(x, oldRootPath, newRootPath));
 
-                edgesCollection.Update(renameDescendants);
+                await edgesCollection.Update(renameDescendants);
 
                 _transactionService.CommitTransaction();
-                return Unit.Task;
+                return Unit.Value;
             }
             catch (Exception e)
             {

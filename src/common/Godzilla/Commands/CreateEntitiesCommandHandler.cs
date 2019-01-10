@@ -29,7 +29,7 @@ namespace Godzilla.Commands
             _commandsHelper = commandsHelper ?? throw new ArgumentNullException(nameof(commandsHelper));
         }
 
-        public Task<IEnumerable<object>> Handle(CreateEntitiesCommand<TContext> request, CancellationToken cancellationToken)
+        public async Task<IEnumerable<object>> Handle(CreateEntitiesCommand<TContext> request, CancellationToken cancellationToken)
         {
             try
             {
@@ -45,16 +45,16 @@ namespace Godzilla.Commands
                 var treeEdges = request.Entities
                     .Select(x => CreateTreeEdge(x, parent, entityCollection))
                     .ToList();
-
                 
                 ValidateTreeEdges(edgesCollection, treeEdges);
 
-                edgesCollection.Add(treeEdges);
+                await edgesCollection.Add(treeEdges);
                 
-                entityCollection.Add(request.Entities);
+                await entityCollection.Add(request.Entities);
 
                 _transactionService.CommitTransaction();
-                return Task.FromResult(request.Entities);
+
+                return request.Entities;
             }
             catch (Exception e)
             {

@@ -29,7 +29,7 @@ namespace Godzilla.Commands
             _pathBuilder = pathBuilder ?? throw new ArgumentNullException(nameof(pathBuilder));
         }
 
-        public Task<Unit> Handle(MoveEntityCommand<TContext> request, CancellationToken cancellationToken)
+        public async Task<Unit> Handle(MoveEntityCommand<TContext> request, CancellationToken cancellationToken)
         {
             try
             {
@@ -49,10 +49,10 @@ namespace Godzilla.Commands
 
                 MoveNodes(nodesToMove, moveSourceNode, moveTargetNode);
 
-                edgesCollection.Update(nodesToMove);
+                await edgesCollection.Update(nodesToMove);
 
                 _transactionService.CommitTransaction();
-                return Unit.Task;
+                return Unit.Value;
             }
             catch (Exception e)
             {

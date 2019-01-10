@@ -4,6 +4,7 @@ using Moq;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace Godzilla.UnitTests.Collections
@@ -19,56 +20,57 @@ namespace Godzilla.UnitTests.Collections
         }
 
         [Fact]
-        public void Add_item()
+        public async Task Add_item()
         {
             var newItem = new FakeGodzillaItem();
 
-            _godzillaCollection.Add(newItem);
+            await _godzillaCollection.Add(newItem);
             _databaseCollection.Verify(c => c.Add(newItem), Times.Once);
         }
 
         [Fact]
-        public void Add_derived_item()
+        public async Task Add_derived_item()
         {
             var newItem = new FakeGodzilleDerivedItem();
 
-            _godzillaCollection.Add(newItem);
+            await _godzillaCollection.Add(newItem);
             _databaseCollection.Verify(c => c.Add(newItem), Times.Once);
         }
 
         [Fact]
-        public void Delete_item()
+        public async Task Delete_item()
         {
             var newItem = new FakeGodzillaItem();
 
-            _godzillaCollection.Delete(newItem);
+            await _godzillaCollection.Delete(newItem);
+
             _databaseCollection.Verify(c => c.Delete(newItem), Times.Once);
         }
 
         [Fact]
-        public void Delete_derived_item()
+        public async Task Delete_derived_item()
         {
             var newItem = new FakeGodzilleDerivedItem();
 
-            _godzillaCollection.Delete(newItem);
+            await _godzillaCollection.Delete(newItem);
             _databaseCollection.Verify(c => c.Delete(newItem), Times.Once);
         }
 
         [Fact]
-        public void Update_item()
+        public async Task Update_item()
         {
             var newItem = new FakeGodzillaItem();
 
-            _godzillaCollection.Update(newItem);
+            await _godzillaCollection.Update(newItem);
             _databaseCollection.Verify(c => c.Update(newItem), Times.Once);
         }
 
         [Fact]
-        public void Update_derived_item()
+        public async Task Update_derived_item()
         {
             var newItem = new FakeGodzilleDerivedItem();
 
-            _godzillaCollection.Update(newItem);
+            await _godzillaCollection.Update(newItem);
             _databaseCollection.Verify(c => c.Update(newItem), Times.Once);
         }
     }

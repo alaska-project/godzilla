@@ -26,7 +26,7 @@ namespace Godzilla.Commands
             _commandsHelper = commandsHelper ?? throw new ArgumentNullException(nameof(commandsHelper));
         }
 
-        public Task<IEnumerable<object>> Handle(UpdateEntitiesCommand<TContext> request, CancellationToken cancellationToken)
+        public async Task<IEnumerable<object>> Handle(UpdateEntitiesCommand<TContext> request, CancellationToken cancellationToken)
         {
             try
             {
@@ -39,10 +39,10 @@ namespace Godzilla.Commands
 
                 _commandsHelper.VerifyEntitiesExist(request.Entities, edgesCollection);
 
-                entityCollection.Update(request.Entities);
+                await entityCollection.Update(request.Entities);
 
                 _transactionService.CommitTransaction();
-                return Task.FromResult(request.Entities);
+                return request.Entities;
             }
             catch (Exception e)
             {
