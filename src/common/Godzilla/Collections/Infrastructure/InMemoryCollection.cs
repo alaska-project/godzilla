@@ -173,5 +173,10 @@ namespace Godzilla.Collections.Infrastructure
 
             return Task.FromResult(true);
         }
+
+        public Task CreateIndex(string name, IEnumerable<IIndexField<TItem>> fields, IIndexOptions options)
+        {
+            return Task.FromResult(true);
+        }
     }
 }

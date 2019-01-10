@@ -1,6 +1,5 @@
 ﻿using Godzilla.Abstractions.Infrastructure;
 using Godzilla.Abstractions.Services;
-using MongoDB.Bson;
 using MongoDB.Driver;
 using System;
 using System.Collections.Generic;
@@ -111,6 +110,13 @@ namespace Godzilla.Mongo.Infrastructure
         {
             await _collection
                 .DeleteManyAsync(GetEntityIdFilter(id));
+        }
+
+        public async Task CreateIndex(string name, IEnumerable<IIndexField<TItem>> fields, IIndexOptions options)
+        {
+            var indexDefinition = MongoIndexHelper.CreateIndexDefinition(fields, options);
+            var indexOptions = MongoIndexHelper.CreateIndexOptions(name, options);
+            await _collection.Indexes.CreateOneAsync(new CreateIndexModel<TItem>(indexDefinition, indexOptions));
         }
 
         private FilterDefinition<TItem> GetEntityIdFilter(Guid entityId)

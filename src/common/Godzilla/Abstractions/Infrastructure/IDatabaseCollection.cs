@@ -25,5 +25,7 @@ namespace Godzilla.Abstractions.Infrastructure
         Task Delete(IEnumerable<TItem> entities);
         Task Delete(Expression<Func<TItem, bool>> filter);
         Task Delete(IEnumerable<Guid> id);
+
+        Task CreateIndex(string name, IEnumerable<IIndexField<TItem>> fields, IIndexOptions options);
     }
 }
