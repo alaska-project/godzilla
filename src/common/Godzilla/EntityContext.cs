@@ -24,11 +24,11 @@ namespace Godzilla
     public abstract class EntityContext
     {
         private IEntityContextServices _entityContextServices;
-        private IDocumentService _documentQueries;
+        private IDocumentService _documentService;
 
-        internal EntityContext(IEntityContextServices entityContextServices)
+        public EntityContext(IEntityContextServices entityContextServices)
         {
-            _documentQueries = new DocumentService(
+            _documentService = new DocumentService(
                 this, 
                 entityContextServices.Queries,
                 entityContextServices.Commands);
@@ -40,7 +40,7 @@ namespace Godzilla
 
         public IEntityCommands Commands => _entityContextServices.Commands;
         public IEntityQueries Query => _entityContextServices.Queries;
-        public IDocumentService Documents => _documentQueries;
+        public IDocumentService Documents => _documentService;
 
         protected IEntityConfigurator Configurator => _entityContextServices.Configurator;
 
