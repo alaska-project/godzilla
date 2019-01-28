@@ -17,9 +17,11 @@ namespace Godzilla.Services
     {
         private readonly SafeDictionary<Type, Type> _baseTypesMap = new SafeDictionary<Type, Type>();
         private readonly SafeDictionary<Type, ICollectionInfo> _collectionMap = new SafeDictionary<Type, ICollectionInfo>();
+        private string ContextId { get; }
 
         public CollectionResolver()
         {
+            ContextId = GetContextId(typeof(TContext));
         }
 
         public IDatabaseCollection<TItem> GetCollection<TItem>(IDatabaseCollectionProvider<TContext> collectionProvider)
@@ -52,12 +54,12 @@ namespace Godzilla.Services
         {
             return _collectionMap.Retreive(
                 itemType,
-                () =>
+(Func<ICollectionInfo>)(() =>
                 {
                     var collectionBaseType = GetRootCollectionType(itemType);
 
-                    var collectionId = BuildCollectionId(collectionBaseType);
-                    
+                    var collectionId = this.BuildCollectionId((Type)collectionBaseType);
+
                     //var overlappingCollection = _collectionMap.Values
                     //    .FirstOrDefault(x => x.CollectionId.Equals(collectionId));
 
@@ -67,15 +69,15 @@ namespace Godzilla.Services
                     //}
 
                     return new CollectionInfo(collectionBaseType, collectionId);
-                });
+                }));
         }
 
         private string BuildCollectionId(Type itemType)
         {
             var collectionAttribute = GetCollectionAttribute(itemType);
-            return !string.IsNullOrEmpty(collectionAttribute?.CollectionId) ?
-                collectionAttribute.CollectionId :
-                itemType.Name;
+            var collectionName = collectionAttribute?.CollectionId ?? itemType.Name;
+
+            return BuildCollectionId(collectionName);
         }
 
         private Type GetRootCollectionType(Type itemType)
@@ -96,6 +98,19 @@ namespace Godzilla.Services
         private CollectionAttribute GetCollectionAttribute(Type type)
         {
             return type.GetCustomAttribute<CollectionAttribute>(false);
+        }
+
+        private string BuildCollectionId(string collectionName)
+        {
+            return $"{ContextId}_{collectionName}";
+        }
+
+        private static string GetContextId(Type contextType)
+        {
+            var contextAttribute = contextType.GetCustomAttribute<ContextAttribute>(false);
+            return contextAttribute != null ?
+                contextAttribute.ContextId :
+                contextType.Name;
         }
     }
 
