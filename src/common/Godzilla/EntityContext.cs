@@ -1,8 +1,5 @@
 ﻿using Godzilla.Abstractions;
 using Godzilla.Abstractions.Services;
-using Godzilla.Queries;
-using Godzilla.Services;
-using MediatR;
 using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
