@@ -25,16 +25,16 @@ namespace Godzilla.Services
             _commands = commands ?? throw new ArgumentNullException(nameof(commands));
         }
 
-        public async Task<Document<Container>> Container(string name)
+        public async Task<DocumentContainer> Container(string name)
         {
-            var container = GetDocument<Container>(name);
+            var container = _queries.GetItem<Container>(name);
             if (container == null)
-                container = await CreateDocument(new Container
+                container = await _commands.Add(new Container
                 {
                     Name = name
                 });
 
-            return container;
+            return new DocumentContainer(_context, container);
         }
 
         public async Task<Document<TItem>> CreateDocument<TItem>(TItem item)

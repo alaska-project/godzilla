@@ -9,7 +9,7 @@ namespace Godzilla.Abstractions
 {
     public interface IDocumentService
     {
-        Task<Document<Container>> Container(string name);
+        Task<DocumentContainer> Container(string name);
         Task<Document<TItem>> CreateDocument<TItem>(TItem item);
 
         Document<TItem> GetDocument<TItem>(Guid id);

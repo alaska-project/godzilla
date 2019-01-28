@@ -21,7 +21,7 @@ namespace Godzilla
             _entity = entity;
         }
 
-        public TEntity Value => _entity; 
+        public TEntity Value => _entity;
 
         #endregion
 
@@ -55,16 +55,16 @@ namespace Godzilla
             return CreateDocuments(entities);
         }
 
-        public async Task<Document<Container>> Container(string name)
+        public async Task<DocumentContainer> Container(string name)
         {
-            var container = GetChild<Container>(x => x.Name.ToLower() == name.ToLower());
+            var container = _context.Query.GetChild<Container>(_entity, x => x.Name.ToLower() == name.ToLower());
             if (container == null)
-                container = await AddChild(new Container
+                container = await _context.Commands.Add(new Container
                 {
                     Name = name
-                });
+                }, _entity);
 
-            return container;
+            return new DocumentContainer(_context, container);
         }
 
         #endregion
@@ -119,5 +119,12 @@ namespace Godzilla
         }
 
         #endregion
+    }
+
+    public class DocumentContainer : Document<Container>
+    {
+        internal DocumentContainer(EntityContext context, Container entity) : base(context, entity)
+        {
+        }
     }
 }
