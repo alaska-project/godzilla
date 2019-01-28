@@ -93,7 +93,6 @@ namespace Godzilla
             return new Document<T>(_context, value);
         }
 
-
         #endregion
     }
 }

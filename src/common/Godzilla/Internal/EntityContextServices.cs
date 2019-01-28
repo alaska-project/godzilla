@@ -19,7 +19,7 @@ namespace Godzilla.Internal
             EntityConfigurator<TContext> configurator,
             EntityContextInitializer<TContext> initializer)
         {
-            Queryes = queries ?? throw new ArgumentNullException(nameof(queries));
+            Queries = queries ?? throw new ArgumentNullException(nameof(queries));
             Commands = commands ?? throw new ArgumentNullException(nameof(commands));
             Configurator = configurator ?? throw new ArgumentNullException(nameof(configurator));
             Initializer = initializer ?? throw new ArgumentNullException(nameof(initializer));
@@ -27,7 +27,7 @@ namespace Godzilla.Internal
 
         public IEntityCommands Commands { get; }
 
-        public IEntityQueries Queryes { get; }
+        public IEntityQueries Queries { get; }
 
         public IEntityConfigurator Configurator { get; }
 

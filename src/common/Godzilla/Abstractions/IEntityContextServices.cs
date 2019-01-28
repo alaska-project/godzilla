@@ -13,7 +13,7 @@ namespace Godzilla.Abstractions
     public interface IEntityContextServices
     {
         IEntityCommands Commands { get; }
-        IEntityQueries Queryes { get; }
+        IEntityQueries Queries { get; }
         IEntityConfigurator Configurator { get; }
         IEntityContextInitializer Initializer { get; }
     }

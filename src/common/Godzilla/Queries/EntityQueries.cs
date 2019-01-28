@@ -26,7 +26,7 @@ namespace Godzilla.Queries
             _propertyResolver = propertyResolver ?? throw new ArgumentNullException(nameof(propertyResolver));
             _pathBuilder = pathBuilder ?? throw new ArgumentNullException(nameof(pathBuilder));
         }
-
+        
         public IQueryable<TEntity> AsQueryable<TEntity>()
         {
             return GetCollection<TEntity>()
@@ -58,10 +58,26 @@ namespace Godzilla.Queries
                 .GetItem(id);
         }
 
+        public TItem GetItem<TItem>(Expression<Func<TItem, bool>> filter)
+        {
+            return GetCollection<TItem>()
+                .AsQueryable()
+                .Where(filter)
+                .FirstOrDefault();
+        }
+        
         public IEnumerable<TEntity> GetItems<TEntity>(IEnumerable<Guid> id)
         {
             return GetCollection<TEntity>()
                 .GetItems(id);
+        }
+
+        public IEnumerable<TItem> GetItems<TItem>(Expression<Func<TItem, bool>> filter)
+        {
+            return GetCollection<TItem>()
+                .AsQueryable()
+                .Where(filter)
+                .ToList();
         }
 
         public TParent GetParent<TParent>(object entity)
