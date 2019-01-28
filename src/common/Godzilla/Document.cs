@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Godzilla.DomainModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
@@ -54,6 +55,18 @@ namespace Godzilla
             return CreateDocuments(entities);
         }
 
+        public async Task<Document<Container>> Container(string name)
+        {
+            var container = GetChild<Container>(x => x.Name.ToLower() == name.ToLower());
+            if (container == null)
+                container = await AddChild(new Container
+                {
+                    Name = name
+                });
+
+            return container;
+        }
+
         #endregion
 
         #region Query
@@ -63,6 +76,18 @@ namespace Godzilla
             var parent = _context.Query.GetParent<T>(_entity);
 
             return CreateDocument(parent);
+        }
+
+        public Document<T> GetChild<T>()
+        {
+            var children = GetChildren<T>();
+            return children.FirstOrDefault();
+        }
+
+        public Document<T> GetChild<T>(Expression<Func<T, bool>> filter)
+        {
+            var children = GetChildren<T>(filter);
+            return children.FirstOrDefault();
         }
 
         public IEnumerable<Document<T>> GetChildren<T>()

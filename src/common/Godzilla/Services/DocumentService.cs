@@ -1,4 +1,5 @@
 ﻿using Godzilla.Abstractions;
+using Godzilla.DomainModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,13 +16,25 @@ namespace Godzilla.Services
         private readonly IEntityCommands _commands;
 
         public DocumentService(
-            EntityContext context, 
+            EntityContext context,
             IEntityQueries queries,
             IEntityCommands commands)
         {
             _context = context ?? throw new ArgumentNullException(nameof(context));
             _queries = queries ?? throw new ArgumentNullException(nameof(queries));
             _commands = commands ?? throw new ArgumentNullException(nameof(commands));
+        }
+
+        public async Task<Document<Container>> Container(string name)
+        {
+            var container = GetDocument<Container>(name);
+            if (container == null)
+                container = await CreateDocument(new Container
+                {
+                    Name = name
+                });
+
+            return container;
         }
 
         public async Task<Document<TItem>> CreateDocument<TItem>(TItem item)
@@ -82,7 +95,7 @@ namespace Godzilla.Services
                 null :
                 new Document<T>(_context, value);
         }
-        
+
         #endregion
     }
 }

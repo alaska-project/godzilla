@@ -79,6 +79,19 @@ namespace Godzilla.Internal
                     Unique = true,
                 }
             });
+
+            configurator.DefineIndex(new IndexDefinition<Container>
+            {
+                Name = "containerName_asc",
+                Fields = new List<IndexField<Container>>
+                {
+                    new IndexField<Container>(x => x.Name, Abstractions.Infrastructure.IndexSortOrder.Asc)
+                },
+                Options = new IndexOptions
+                {
+                    Unique = false,
+                }
+            });
         }
     }
 }
