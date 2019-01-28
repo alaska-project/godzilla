@@ -29,8 +29,7 @@ namespace Godzilla.Mongo.FunctionalTests
                 {
                     opt.UseMongoDb<TestEntityContext>(
                             _runner.ConnectionString, 
-                            Configuration["Godzilla:Database"],
-                            MongoDB.Bson.GuidRepresentation.Standard);
+                            Configuration["Godzilla:Database"]);
                 });
         }
 

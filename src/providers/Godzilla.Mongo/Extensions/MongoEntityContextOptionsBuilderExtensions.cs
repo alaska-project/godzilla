@@ -15,11 +15,10 @@ namespace Godzilla.Mongo
     {
         public static void UseMongoDb<TContext>(this EntityContextOptionsBuilder builder, 
             string connectionString, 
-            string database,
-            MongoDB.Bson.GuidRepresentation? guidRepresentation = null)
+            string database)
             where TContext : EntityContext
         {
-            RegisterConventions(guidRepresentation);
+            RegisterConventions(MongoDB.Bson.GuidRepresentation.Standard);
 
             var options = new MongoEntityContextOptions<TContext>
             {
