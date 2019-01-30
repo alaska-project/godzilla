@@ -5,7 +5,9 @@ using MediatR;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Godzilla.Services
@@ -18,12 +20,20 @@ namespace Godzilla.Services
         private readonly IEntityPropertyResolver<TContext> _propertyResolver;
         private readonly IMediator _mediator;
 
+        private readonly ITransactionService<TContext> _transactionService;
+        private readonly IEntityCommandsHelper<TContext> _entityCommandsHelper;
+
         public EntityCommands(
             IMediator mediator,
-            IEntityPropertyResolver<TContext> propertyResolver)
+            IEntityPropertyResolver<TContext> propertyResolver,
+            ITransactionService<TContext> transactionService,
+            IEntityCommandsHelper<TContext> entityCommandsHelper
+            )
         {
             _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
             _propertyResolver = propertyResolver ?? throw new ArgumentNullException(nameof(propertyResolver));
+            _transactionService = transactionService ?? throw new ArgumentNullException(nameof(transactionService));
+            _entityCommandsHelper = entityCommandsHelper ?? throw new ArgumentNullException(nameof(entityCommandsHelper));
         } 
 
         #endregion
@@ -93,6 +103,41 @@ namespace Godzilla.Services
 
             return result
                 .Cast<TEntity>()
+                .ToList();
+        }
+
+        public async Task<TEntity> Update<TEntity, TField>(TEntity entity, Expression<Func<TEntity, TField>> field, TField value)
+        {
+            var id = _propertyResolver.GetEntityId(entity);
+
+            return await Update<TEntity, TField>(id, field, value);
+        }
+
+        public async Task<IEnumerable<TEntity>> Update<TEntity, TField>(IEnumerable<TEntity> entities, Expression<Func<TEntity, TField>> field, TField value)
+        {
+            var idList = entities.Select(x => _propertyResolver.GetEntityId(x));
+
+            return await Update<TEntity, TField>(idList, field, value);
+        }
+
+        public async Task<TEntity> Update<TEntity, TField>(Guid entityId, Expression<Func<TEntity, TField>> field, TField value)
+        {
+            var results = await Update(new List<Guid> { entityId }, field, value);
+
+            return results.First();
+        }
+
+        public async Task<IEnumerable<TEntity>> Update<TEntity, TField>(IEnumerable<Guid> idList, Expression<Func<TEntity, TField>> field, TField value)
+        {
+            //TODO: mediatr generics
+            //var result =
+            //    await _mediator.Send(new PartialUpdateEntitiesCommand<TContext, TEntity, TField>(idList, field, value));
+
+            var request = new PartialUpdateEntitiesCommand<TContext, TEntity, TField>(idList, field, value);
+            var handler = new PartialUpdateEntitiesCommandHandler<TContext, TEntity, TField>(_transactionService, _entityCommandsHelper);
+            var result = await handler.Handle(request, default(CancellationToken));
+
+            return result
                 .ToList();
         }
 

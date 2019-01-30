@@ -77,6 +77,26 @@ namespace Godzilla.Collections.Internal
             await _collection.Update(entities);
         }
 
+        public virtual async Task Update<TField>(TItem entity, Expression<Func<TItem, TField>> field, TField value)
+        {
+            await _collection.Update<TField>(entity, field, value);
+        }
+
+        public virtual async Task Update<TField>(IEnumerable<TItem> entities, Expression<Func<TItem, TField>> field, TField value)
+        {
+            await _collection.Update<TField>(entities, field, value);
+        }
+
+        public virtual async Task Update<TField>(Guid id, Expression<Func<TItem, TField>> field, TField value)
+        {
+            await _collection.Update<TField>(id, field, value);
+        }
+
+        public virtual async Task Update<TField>(IEnumerable<Guid> idList, Expression<Func<TItem, TField>> field, TField value)
+        {
+            await _collection.Update<TField>(idList, field, value);
+        }
+
         public virtual async Task CreateIndex(IndexDefinition<TItem> index)
         {
             await _collection.CreateIndex(index.Name, index.Fields, index.Options);

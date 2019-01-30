@@ -78,11 +78,33 @@ namespace Godzilla.Mongo.Infrastructure
             var id = _propertyResolver.GetEntityId(entity);
             await _collection.ReplaceOneAsync(GetEntityIdFilter(id), entity);
         }
-        
+
+        public async Task Update<TField>(TItem entity, Expression<Func<TItem, TField>> field, TField value)
+        {
+            var id = _propertyResolver.GetEntityId(entity);
+            await Update(id, field, value);
+        }
+
+        public async Task Update<TField>(Guid id, Expression<Func<TItem, TField>> field, TField value)
+        {
+            await _collection.UpdateOneAsync(GetEntityIdFilter(id), Builders<TItem>.Update.Set(field, value));
+        }
+
         public async Task Update(IEnumerable<TItem> entities)
         {
             foreach (var entity in entities)
                 await Update(entity);
+        }
+
+        public async Task Update<TField>(IEnumerable<TItem> entities, Expression<Func<TItem, TField>> field, TField value)
+        {
+            var ids = entities.Select(x => _propertyResolver.GetEntityId(x));
+            await Update(ids, field, value);
+        }
+
+        public async Task Update<TField>(IEnumerable<Guid> idList, Expression<Func<TItem, TField>> field, TField value)
+        {
+            await _collection.UpdateManyAsync(GetEntityIdFilter(idList), Builders<TItem>.Update.Set(field, value));
         }
 
         public async Task Delete(TItem entity)

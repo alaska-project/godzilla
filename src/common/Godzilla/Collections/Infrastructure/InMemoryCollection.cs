@@ -174,6 +174,26 @@ namespace Godzilla.Collections.Infrastructure
             return Task.FromResult(true);
         }
 
+        public Task Update<TField>(TItem entity, Expression<Func<TItem, TField>> field, TField value)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task Update<TField>(IEnumerable<TItem> entities, Expression<Func<TItem, TField>> field, TField value)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task Update<TField>(Guid id, Expression<Func<TItem, TField>> field, TField value)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task Update<TField>(IEnumerable<Guid> idList, Expression<Func<TItem, TField>> field, TField value)
+        {
+            throw new NotImplementedException();
+        }
+
         public Task CreateIndex(string name, IEnumerable<IIndexField<TItem>> fields, IIndexOptions options)
         {
             return Task.FromResult(true);

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -18,6 +19,10 @@ namespace Godzilla.Abstractions
 
         Task<TEntity> Update<TEntity>(TEntity entity);
         Task<IEnumerable<TEntity>> Update<TEntity>(IEnumerable<TEntity> entities);
+        Task<TEntity> Update<TEntity, TField>(TEntity entity, Expression<Func<TEntity, TField>> field, TField value);
+        Task<IEnumerable<TEntity>> Update<TEntity, TField>(IEnumerable<TEntity> entities, Expression<Func<TEntity, TField>> field, TField value);
+        Task<TEntity> Update<TEntity, TField>(Guid entityId, Expression<Func<TEntity, TField>> field, TField value);
+        Task<IEnumerable<TEntity>> Update<TEntity, TField>(IEnumerable<Guid> idList, Expression<Func<TEntity, TField>> field, TField value);
 
         Task Delete<TEntity>(TEntity entity);
         Task Delete<TEntity>(IEnumerable<TEntity> entities);

@@ -35,7 +35,12 @@ namespace Godzilla.Internal
 
             return entityTypes.First().Key;
         }
-        
+
+        public IEnumerable<TreeEdge> VerifyEntitiesExist<TEntity>(IEnumerable<TEntity> entities, TreeEdgesCollection edgesCollection)
+        {
+            return VerifyEntitiesExist(entities.Cast<object>(), edgesCollection);
+        }
+
         public IEnumerable<TreeEdge> VerifyEntitiesExist(IEnumerable<object> entities, TreeEdgesCollection edgesCollection)
         {
             var entitiesId = GetEntitiesId(entities);
@@ -61,6 +66,11 @@ namespace Godzilla.Internal
                 throw new EntitiesNotFoundException($"Entities not found {string.Join(", ", missingNodesId)}");
 
             return existingNodes;
+        }
+
+        public IEnumerable<Guid> GetEntitiesId<TEntity>(IEnumerable<TEntity> entities)
+        {
+            return GetEntitiesId(entities.Cast<object>());
         }
 
         public IEnumerable<Guid> GetEntitiesId(IEnumerable<object> entities)

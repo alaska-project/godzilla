@@ -20,6 +20,10 @@ namespace Godzilla.Abstractions.Infrastructure
 
         Task Update(TItem entity);
         Task Update(IEnumerable<TItem> entities);
+        Task Update<TField>(TItem entity, Expression<Func<TItem, TField>> field, TField value);
+        Task Update<TField>(IEnumerable<TItem> entities, Expression<Func<TItem, TField>> field, TField value);
+        Task Update<TField>(Guid id, Expression<Func<TItem, TField>> field, TField value);
+        Task Update<TField>(IEnumerable<Guid> idList, Expression<Func<TItem, TField>> field, TField value);
 
         Task Delete(TItem entity);
         Task Delete(IEnumerable<TItem> entities);

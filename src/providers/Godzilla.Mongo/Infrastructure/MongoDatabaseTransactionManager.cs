@@ -26,7 +26,7 @@ namespace Godzilla.Mongo.Infrastructure
 
         public void StartTransaction()
         {
-            if (_session != null)
+            if (_session != null && _session.IsInTransaction)
             {
                 throw new InvalidOperationException("Transaction already started");
             }

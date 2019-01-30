@@ -47,6 +47,18 @@ namespace Godzilla
             await Update();
         }
 
+        public async Task UpdateField<TField>(Expression<Func<TEntity, TField>> field, TField value)
+        {
+            ChekId(value);
+
+            _entity = await _context.Commands.Update(_entity, field, value);
+        }
+
+        public async Task ClearField<TField>(Expression<Func<TEntity, TField>> field)
+        {
+            await UpdateField(field, default(TField));
+        }
+
         public async Task Update()
         {
             ChekId(_entity);

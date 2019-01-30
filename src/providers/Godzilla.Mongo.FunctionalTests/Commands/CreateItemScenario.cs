@@ -95,6 +95,18 @@ namespace Godzilla.Mongo.FunctionalTests.Commands
 
                 #endregion
 
+                #region partial update
+
+                var partialUpdatedItem = await context.Commands.Update<TestEntity, string>(itemToUpdate.Id, x => x.Val2, "val-2");
+                Assert.NotNull(partialUpdatedItem);
+                Assert.Equal("val-2", partialUpdatedItem.Val2);
+
+                var partialUpdatedItem2 = await context.Commands.Update<TestEntity, string>(itemToUpdate.Id, x => x.Val2, null);
+                Assert.NotNull(partialUpdatedItem2);
+                Assert.Null(partialUpdatedItem2.Val2);
+
+                #endregion
+
                 #region rename
 
                 await context.Commands.Rename(rootItem, "root-new");
@@ -225,6 +237,18 @@ namespace Godzilla.Mongo.FunctionalTests.Commands
 
                 Assert.NotNull(updatedItem);
                 Assert.Equal(itemToUpdate.Name, updatedItem.Name);
+
+                #endregion
+
+                #region partial update
+
+                var partialUpdatedItem = await context.Commands.Update<DerivedTestEntity, string>(itemToUpdate.Id, x => x.Val2, "val-2");
+                Assert.NotNull(partialUpdatedItem);
+                Assert.Equal("val-2", partialUpdatedItem.Val2);
+
+                var partialUpdatedItem2 = await context.Commands.Update<DerivedTestEntity, string>(itemToUpdate.Id, x => x.Val2, null);
+                Assert.NotNull(partialUpdatedItem2);
+                Assert.Null(partialUpdatedItem2.Val2);
 
                 #endregion
 
