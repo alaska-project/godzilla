@@ -38,6 +38,7 @@ namespace Godzilla
             entityContextServices.Initializer.Initialize(this, entityContextServices.Configurator);
         }
 
+        internal IEntityPropertyResolver Resolver => _entityContextServices.PropertyResolver;
         public IEntityCommands Commands => _entityContextServices.Commands;
         public IEntityQueries Query => _entityContextServices.Queries;
         public IDocumentService Documents => _documentService;

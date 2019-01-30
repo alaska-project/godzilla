@@ -14,13 +14,15 @@ namespace Godzilla
 
         private readonly EntityContext _context;
         private TEntity _entity;
-
+        
         internal Document(EntityContext context, TEntity entity)
         {
             _context = context ?? throw new ArgumentNullException(nameof(context));
             _entity = entity;
+            Id = context.Resolver.GetEntityId(entity);
         }
 
+        public Guid Id { get; }
         public TEntity Value => _entity;
 
         #endregion
@@ -29,28 +31,48 @@ namespace Godzilla
 
         public async void Delete()
         {
+            ChekId(_entity);
+
             await _context.Commands.Delete(_entity);
+
             _entity = default(TEntity);
+        }
+
+        public async Task Set(TEntity value)
+        {
+            ChekId(value);
+
+            _entity = value;
+
+            await Update();
         }
 
         public async Task Update()
         {
+            ChekId(_entity);
+
             _entity = await _context.Commands.Update(_entity);
         }
 
         public async Task Rename(string newName)
         {
+            ChekId(_entity);
+
             await _context.Commands.Rename(_entity, newName);
         }
 
         public async Task<Document<TChild>> AddChild<TChild>(TChild child)
         {
+            ChekId(_entity);
+
             var entity = await _context.Commands.Add(child, _entity);
             return CreateDocument(entity);
         }
 
         public async Task<IEnumerable<Document<TChild>>> AddChildren<TChild>(IEnumerable<TChild> children)
         {
+            ChekId(_entity);
+
             var entities = await _context.Commands.Add(children, _entity);
             return CreateDocuments(entities);
         }
@@ -105,6 +127,18 @@ namespace Godzilla
         #endregion
 
         #region Conversions
+
+        private void ChekId<T>(T item)
+        {
+            var itemId = GetId(item);
+            if (Id != itemId)
+                throw new InvalidOperationException($"Mismatching entity id. Expected {Id} - actual value {itemId}");
+        }
+
+        private Guid GetId<T>(T item)
+        {
+            return _context.Resolver.GetEntityId(item);
+        }
 
         private IEnumerable<Document<T>> CreateDocuments<T>(IEnumerable<T> values)
         {

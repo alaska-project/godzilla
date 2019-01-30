@@ -32,7 +32,7 @@ namespace Godzilla.UnitTests.Services
         {
             var collectionInfo = _resolver.GetCollectionInfo<RootType>();
             Assert.Equal(typeof(RootType), collectionInfo.CollectionItemType);
-            Assert.Equal(typeof(RootType).Name, collectionInfo.CollectionId);
+            Assert.Equal($"{typeof(FakeEntityContext).Name}_{typeof(RootType).Name}", collectionInfo.CollectionId);
         }
 
         [Fact]
@@ -40,7 +40,7 @@ namespace Godzilla.UnitTests.Services
         {
             var collectionInfo = _resolver.GetCollectionInfo<MiddleType>();
             Assert.Equal(typeof(RootType), collectionInfo.CollectionItemType);
-            Assert.Equal(typeof(RootType).Name, collectionInfo.CollectionId);
+            Assert.Equal($"{typeof(FakeEntityContext).Name}_{typeof(RootType).Name}", collectionInfo.CollectionId);
         }
 
         [Fact]
@@ -48,7 +48,7 @@ namespace Godzilla.UnitTests.Services
         {
             var collectionInfo = _resolver.GetCollectionInfo<DerivedTypeWithCollectionAttribute>();
             Assert.Equal(typeof(DerivedTypeWithCollectionAttribute), collectionInfo.CollectionItemType);
-            Assert.Equal(typeof(DerivedTypeWithCollectionAttribute).Name, collectionInfo.CollectionId);
+            Assert.Equal($"{typeof(FakeEntityContext).Name}_{typeof(DerivedTypeWithCollectionAttribute).Name}", collectionInfo.CollectionId);
         }
 
         [Fact]
@@ -56,7 +56,7 @@ namespace Godzilla.UnitTests.Services
         {
             var collectionInfo = _resolver.GetCollectionInfo<LeafTypeFromCollectionAttributeType>();
             Assert.Equal(typeof(DerivedTypeWithCollectionAttribute), collectionInfo.CollectionItemType);
-            Assert.Equal(typeof(DerivedTypeWithCollectionAttribute).Name, collectionInfo.CollectionId);
+            Assert.Equal($"{typeof(FakeEntityContext).Name}_{typeof(DerivedTypeWithCollectionAttribute).Name}", collectionInfo.CollectionId);
         }
 
         [Fact]
@@ -64,7 +64,7 @@ namespace Godzilla.UnitTests.Services
         {
             var collectionInfo = _resolver.GetCollectionInfo<DerivedTypeWithCollectionAttributeWithCustomName>();
             Assert.Equal(typeof(DerivedTypeWithCollectionAttributeWithCustomName), collectionInfo.CollectionItemType);
-            Assert.Equal("custom-name", collectionInfo.CollectionId);
+            Assert.Equal($"{typeof(FakeEntityContext).Name}_custom-name", collectionInfo.CollectionId);
         }
 
         [Fact]
@@ -72,7 +72,7 @@ namespace Godzilla.UnitTests.Services
         {
             var collectionInfo = _resolver.GetCollectionInfo<LeafTypeFromCollectionAttributeTypeWithCustomName>();
             Assert.Equal(typeof(DerivedTypeWithCollectionAttributeWithCustomName), collectionInfo.CollectionItemType);
-            Assert.Equal("custom-name", collectionInfo.CollectionId);
+            Assert.Equal($"{typeof(FakeEntityContext).Name}_custom-name", collectionInfo.CollectionId);
         }
 
         //[Fact]

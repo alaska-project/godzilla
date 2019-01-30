@@ -14,6 +14,7 @@ namespace Godzilla.Abstractions
     {
         IEntityCommands Commands { get; }
         IEntityQueries Queries { get; }
+        IEntityPropertyResolver PropertyResolver { get; }
         IEntityConfigurator Configurator { get; }
         IEntityContextInitializer Initializer { get; }
     }
