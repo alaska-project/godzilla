@@ -29,7 +29,7 @@ namespace Godzilla
 
         #region Commands
 
-        public async void Delete()
+        public async Task Delete()
         {
             ChekId(_entity);
 
