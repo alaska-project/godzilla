@@ -26,7 +26,7 @@ namespace Godzilla
         private IEntityContextServices _entityContextServices;
         private IDocumentService _documentService;
 
-        public EntityContext(IEntityContextServices entityContextServices)
+        internal EntityContext(IEntityContextServices entityContextServices)
         {
             _documentService = new DocumentService(
                 this, 
