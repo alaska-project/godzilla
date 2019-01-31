@@ -37,29 +37,27 @@ namespace Godzilla.Collections.Infrastructure
                 .AsQueryable();
         }
 
-        public TItem GetItem(Guid id)
+        public Task<TItem> GetItem(Guid id)
         {
-            return _innerDict.ContainsKey(id) ?
+            return Task.FromResult(_innerDict.ContainsKey(id) ?
                 _innerDict[id] :
-                default(TItem);
+                default(TItem));
         }
 
-        public IEnumerable<TItem> GetItems(IEnumerable<Guid> id)
+        public Task<IEnumerable<TItem>> GetItems(IEnumerable<Guid> id)
         {
-            return _innerDict
+            return Task.FromResult(_innerDict
                 .Where(x => id.Contains(x.Key))
-                .Select(x => x.Value)
-                .ToList();
+                .Select(x => x.Value));
         }
 
-        public IEnumerable<TItem> GetItems(IEnumerable<Guid> id, Expression<Func<TItem, bool>> filter)
+        public Task<IEnumerable<TItem>> GetItems(IEnumerable<Guid> id, Expression<Func<TItem, bool>> filter)
         {
             var f = filter.Compile();
 
-            return _innerDict
+            return Task.FromResult(_innerDict
                 .Where(x => id.Contains(x.Key) && f(x.Value))
-                .Select(x => x.Value)
-                .ToList();
+                .Select(x => x.Value));
         }
 
         public Task Add(TItem entity)

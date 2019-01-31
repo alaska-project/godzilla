@@ -40,7 +40,7 @@ namespace Godzilla.Commands
 
                 _transactionService.CommitTransaction();
 
-                var entities = entityCollection.GetItems(request.Entities);
+                var entities = await entityCollection.GetItems(request.Entities);
 
                 return entities;
             }

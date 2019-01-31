@@ -27,7 +27,7 @@ namespace Godzilla.Services
 
         public async Task<DocumentContainer> Container(string name)
         {
-            var container = _queries.GetItem<Container>(name);
+            var container = await _queries.GetItem<Container>(name);
             if (container == null)
                 container = await _commands.Add(new Container
                 {
@@ -43,39 +43,39 @@ namespace Godzilla.Services
             return NewDocument(newItem);
         }
 
-        public Document<TItem> GetDocument<TItem>(Guid id)
+        public async Task<Document<TItem>> GetDocument<TItem>(Guid id)
         {
-            var item = _queries.GetItem<TItem>(id);
+            var item = await _queries.GetItem<TItem>(id);
             return NewDocument(item);
         }
 
-        public Document<TItem> GetDocument<TItem>(string path)
+        public async Task<Document<TItem>> GetDocument<TItem>(string path)
         {
-            var item = _queries.GetItem<TItem>(path);
+            var item = await _queries.GetItem<TItem>(path);
             return NewDocument(item);
         }
 
-        public Document<TItem> GetDocument<TItem>(Expression<Func<TItem, bool>> filter)
+        public async Task<Document<TItem>> GetDocument<TItem>(Expression<Func<TItem, bool>> filter)
         {
-            var item = _queries.GetItem<TItem>(filter);
+            var item = await _queries.GetItem<TItem>(filter);
             return NewDocument(item);
         }
 
-        public IEnumerable<Document<TItem>> GetDocuments<TItem>(string path)
+        public async Task<IEnumerable<Document<TItem>>> GetDocuments<TItem>(string path)
         {
-            var items = _queries.GetItems<TItem>(path);
+            var items = await _queries.GetItems<TItem>(path);
             return NewDocuments(items);
         }
 
-        public IEnumerable<Document<TItem>> GetDocuments<TItem>(IEnumerable<Guid> id)
+        public async Task<IEnumerable<Document<TItem>>> GetDocuments<TItem>(IEnumerable<Guid> id)
         {
-            var items = _queries.GetItems<TItem>(id);
+            var items = await _queries.GetItems<TItem>(id);
             return NewDocuments(items);
         }
 
-        public IEnumerable<Document<TItem>> GetDocuments<TItem>(Expression<Func<TItem, bool>> filter)
+        public async Task<IEnumerable<Document<TItem>>> GetDocuments<TItem>(Expression<Func<TItem, bool>> filter)
         {
-            var items = _queries.GetItems<TItem>(filter);
+            var items = await _queries.GetItems<TItem>(filter);
             return NewDocuments(items);
         }
 

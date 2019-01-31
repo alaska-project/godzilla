@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Godzilla.Queries
 {
@@ -33,13 +34,13 @@ namespace Godzilla.Queries
                 .AsQueryable();
         }
 
-        public TEntity GetItem<TEntity>(string path)
+        public async Task<TEntity> GetItem<TEntity>(string path)
         {
-            return GetItems<TEntity>(path)
+            return (await GetItems<TEntity>(path))
                 .FirstOrDefault();
         }
 
-        public IEnumerable<TEntity> GetItems<TEntity>(string path)
+        public async Task<IEnumerable<TEntity>> GetItems<TEntity>(string path)
         {
             var normalizedPath = _pathBuilder.NormalizePath(path);
             var nodesId = GetTreeEdgesCollection()
@@ -48,39 +49,39 @@ namespace Godzilla.Queries
                 .Select(x => x.NodeId)
                 .ToList();
 
-            return GetCollection<TEntity>()
+            return await GetCollection<TEntity>()
                 .GetItems(nodesId);
         }
 
-        public TEntity GetItem<TEntity>(Guid id)
+        public async Task<TEntity> GetItem<TEntity>(Guid id)
         {
-            return GetCollection<TEntity>()
+            return await GetCollection<TEntity>()
                 .GetItem(id);
         }
 
-        public TItem GetItem<TItem>(Expression<Func<TItem, bool>> filter)
+        public async Task<TItem> GetItem<TItem>(Expression<Func<TItem, bool>> filter)
         {
-            return GetCollection<TItem>()
+            return await Task.FromResult(GetCollection<TItem>()
                 .AsQueryable()
                 .Where(filter)
-                .FirstOrDefault();
+                .FirstOrDefault());
         }
         
-        public IEnumerable<TEntity> GetItems<TEntity>(IEnumerable<Guid> id)
+        public async Task<IEnumerable<TEntity>> GetItems<TEntity>(IEnumerable<Guid> id)
         {
-            return GetCollection<TEntity>()
+            return await GetCollection<TEntity>()
                 .GetItems(id);
         }
 
-        public IEnumerable<TItem> GetItems<TItem>(Expression<Func<TItem, bool>> filter)
+        public Task<IEnumerable<TItem>> GetItems<TItem>(Expression<Func<TItem, bool>> filter)
         {
-            return GetCollection<TItem>()
+            return Task.FromResult<IEnumerable<TItem>>(GetCollection<TItem>()
                 .AsQueryable()
                 .Where(filter)
-                .ToList();
+                .ToList());
         }
 
-        public TParent GetParent<TParent>(object entity)
+        public async Task<TParent> GetParent<TParent>(object entity)
         {
             var itemId = _propertyResolver.GetEntityId(entity);
             var parentCollection = GetCollection<TParent>();
@@ -94,27 +95,27 @@ namespace Godzilla.Queries
             if (itemNode == null || itemNode.ParentId == Guid.Empty)
                 return default(TParent);
 
-            return parentCollection.GetItem(itemNode.ParentId);
+            return await parentCollection.GetItem(itemNode.ParentId);
         }
 
-        public TChild GetChild<TChild>(object entity)
+        public async Task<TChild> GetChild<TChild>(object entity)
         {
-            return GetChildren<TChild>(entity)
+            return (await GetChildren<TChild>(entity))
                 .FirstOrDefault();
         }
 
-        public TChild GetChild<TChild>(object entity, Expression<Func<TChild, bool>> filter)
+        public async Task<TChild> GetChild<TChild>(object entity, Expression<Func<TChild, bool>> filter)
         {
-            return GetChildren<TChild>(entity, filter)
+            return (await GetChildren<TChild>(entity, filter))
                 .FirstOrDefault();
         }
 
-        public IEnumerable<TChild> GetChildren<TChild>(object entity)
+        public async Task<IEnumerable<TChild>> GetChildren<TChild>(object entity)
         {
-            return GetChildren<TChild>(entity, null);
+            return await GetChildren<TChild>(entity, null);
         }
 
-        public IEnumerable<TChild> GetChildren<TChild>(object entity, Expression<Func<TChild, bool>> filter)
+        public async Task<IEnumerable<TChild>> GetChildren<TChild>(object entity, Expression<Func<TChild, bool>> filter)
         {
             var parentId = _propertyResolver.GetEntityId(entity);
             var childrenCollection = GetCollection<TChild>();
@@ -127,9 +128,9 @@ namespace Godzilla.Queries
                 .Select(x => x.NodeId)
                 .ToList();
 
-            return filter == null ? 
+            return await (filter == null ? 
                 childrenCollection.GetItems(childrenNodes) :
-                childrenCollection.GetItems(childrenNodes, filter);
+                childrenCollection.GetItems(childrenNodes, filter));
         }
 
         private TreeEdgesCollection GetTreeEdgesCollection()

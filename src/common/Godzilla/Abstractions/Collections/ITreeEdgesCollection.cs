@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Godzilla.Abstractions.Collections
 {
@@ -11,8 +12,8 @@ namespace Godzilla.Abstractions.Collections
         IEnumerable<TreeEdge> GetNodes(IEnumerable<Guid> nodesId);
         bool ExistsAny(IEnumerable<Guid> nodesId);
         bool NodeExists(Guid nodeId);
-        void DeleteNode(Guid nodeId);
-        void DeleteNodes(IEnumerable<Guid> nodesId);
+        Task DeleteNode(Guid nodeId);
+        Task DeleteNodes(IEnumerable<Guid> nodesId);
         IEnumerable<TreeEdge> GetDescendants(TreeEdge node);
     }
 }

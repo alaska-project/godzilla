@@ -36,29 +36,29 @@ namespace Godzilla.Mongo.Infrastructure
                 .AsQueryable();
         }
 
-        public TItem GetItem(Guid id)
+        public async Task<TItem> GetItem(Guid id)
         {
-            return _collection
+            return await _collection
                 .Find(GetEntityIdFilter(id))
-                .FirstOrDefault();
+                .FirstOrDefaultAsync();
         }
 
-        public IEnumerable<TItem> GetItems(IEnumerable<Guid> id)
+        public async Task<IEnumerable<TItem>> GetItems(IEnumerable<Guid> id)
         {
-            return _collection
+            return await _collection
                 .Find(GetEntityIdFilter(id))
-                .ToList();
+                .ToListAsync();
         }
 
-        public IEnumerable<TItem> GetItems(IEnumerable<Guid> id, Expression<Func<TItem, bool>> filter)
+        public async Task<IEnumerable<TItem>> GetItems(IEnumerable<Guid> id, Expression<Func<TItem, bool>> filter)
         {
             var idFilter = GetEntityIdFilter(id);
             var expressionFilter = GetExpressionFilter(filter);
             var collectionFilter = Builders<TItem>.Filter.And(idFilter, expressionFilter);
 
-            return _collection
+            return await _collection
                 .Find(collectionFilter)
-                .ToList();
+                .ToListAsync();
         }
 
         public async Task Add(TItem entity)

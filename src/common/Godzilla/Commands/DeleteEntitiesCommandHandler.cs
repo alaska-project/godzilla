@@ -70,7 +70,7 @@ namespace Godzilla.Commands
                 await entityCollection.Delete(entitiesIdToDelete);
             }
 
-            edgesCollection.DeleteNodes(descendants.Select(x => x.NodeId));
+            await edgesCollection.DeleteNodes(descendants.Select(x => x.NodeId));
         }
     }
 }

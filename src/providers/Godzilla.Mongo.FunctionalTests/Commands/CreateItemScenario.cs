@@ -51,12 +51,12 @@ namespace Godzilla.Mongo.FunctionalTests.Commands
 
                 #region GetItem retreive
 
-                foundItem = context.Query.GetItem<TestEntity>(item.Id);
+                foundItem = await context.Query.GetItem<TestEntity>(item.Id);
                 Assert.NotNull(foundItem);
                 Assert.Equal(item.Id, foundItem.Id);
                 Assert.Equal(item.Name, foundItem.Name);
 
-                var foundItems = context.Query.GetItems<TestEntity>("/root/gigi");
+                var foundItems = await context.Query.GetItems<TestEntity>("/root/gigi");
                 Assert.NotEmpty(foundItems);
                 Assert.Contains(foundItems, x => x.Id == item.Id);
                 Assert.Contains(foundItems, x => x.Name == item.Name);
@@ -65,7 +65,7 @@ namespace Godzilla.Mongo.FunctionalTests.Commands
 
                 #region GetChild retreive
 
-                foundItem = context.Query.GetChild<TestEntity>(rootItem);
+                foundItem = await context.Query.GetChild<TestEntity>(rootItem);
                 Assert.NotNull(foundItem);
                 Assert.Equal(item.Id, foundItem.Id);
                 Assert.Equal(item.Name, foundItem.Name);
@@ -74,10 +74,10 @@ namespace Godzilla.Mongo.FunctionalTests.Commands
 
                 #region filtered GetChild retreive
 
-                foundItem = context.Query.GetChild<TestEntity>(rootItem, x => x.Name == "gigio");
+                foundItem = await context.Query.GetChild<TestEntity>(rootItem, x => x.Name == "gigio");
                 Assert.Null(foundItem);
 
-                foundItem = context.Query.GetChild<TestEntity>(rootItem, x => x.Name == "gigi");
+                foundItem = await context.Query.GetChild<TestEntity>(rootItem, x => x.Name == "gigi");
                 Assert.NotNull(foundItem);
                 Assert.Equal(item.Id, foundItem.Id);
                 Assert.Equal(item.Name, foundItem.Name);
@@ -86,7 +86,7 @@ namespace Godzilla.Mongo.FunctionalTests.Commands
 
                 #region update
 
-                var itemToUpdate = context.Query.GetItem<TestEntity>(item.Id);
+                var itemToUpdate = await context.Query.GetItem<TestEntity>(item.Id);
                 itemToUpdate.Name = "gigi-new";
                 var updatedItem = await context.Commands.Update(itemToUpdate);
 
@@ -111,11 +111,11 @@ namespace Godzilla.Mongo.FunctionalTests.Commands
 
                 await context.Commands.Rename(rootItem, "root-new");
 
-                var renamedRootItems = context.Query.GetItems<TestEntity>("/root-new");
+                var renamedRootItems = await context.Query.GetItems<TestEntity>("/root-new");
                 var renamedRootItem = renamedRootItems.FirstOrDefault(x => x.Id == rootItem.Id);
                 Assert.NotNull(renamedRootItem);
 
-                var renamedItems = context.Query.GetItems<TestEntity>("/root-new/gigi");
+                var renamedItems = await context.Query.GetItems<TestEntity>("/root-new/gigi");
                 var renamedItem = renamedItems.FirstOrDefault(x => x.Id == item.Id);
                 Assert.NotNull(renamedItem);
 
@@ -130,13 +130,13 @@ namespace Godzilla.Mongo.FunctionalTests.Commands
 
                 await context.Commands.Move(rootItem, rootItem2);
 
-                var movedItems = context.Query.GetItems<TestEntity>("/root2/root-new/gigi");
+                var movedItems = await context.Query.GetItems<TestEntity>("/root2/root-new/gigi");
                 var movedItem = movedItems.FirstOrDefault(x => x.Id == item.Id);
                 Assert.NotNull(movedItem);
 
                 await context.Commands.Move(movedItem, rootItem2);
 
-                var secondMovedItems = context.Query.GetItems<TestEntity>("/root2/gigi");
+                var secondMovedItems = await context.Query.GetItems<TestEntity>("/root2/gigi");
                 var secondMovedItem = secondMovedItems.FirstOrDefault(x => x.Id == item.Id);
                 Assert.NotNull(secondMovedItem);
 
@@ -196,12 +196,12 @@ namespace Godzilla.Mongo.FunctionalTests.Commands
 
                 #region GetItem retreive
 
-                foundItem = context.Query.GetItem<DerivedTestEntity>(item.Id);
+                foundItem = await context.Query.GetItem<DerivedTestEntity>(item.Id);
                 Assert.NotNull(foundItem);
                 Assert.Equal(item.Id, foundItem.Id);
                 Assert.Equal(item.Name, foundItem.Name);
 
-                var foundItems = context.Query.GetItems<TestEntity>("/root/gigi");
+                var foundItems = await context.Query.GetItems<TestEntity>("/root/gigi");
                 Assert.NotEmpty(foundItems);
                 Assert.Contains(foundItems, x => x.Id == item.Id);
                 Assert.Contains(foundItems, x => x.Name == item.Name);
@@ -210,7 +210,7 @@ namespace Godzilla.Mongo.FunctionalTests.Commands
 
                 #region GetChild retreive
 
-                foundItem = context.Query.GetChild<DerivedTestEntity>(rootItem);
+                foundItem = await context.Query.GetChild<DerivedTestEntity>(rootItem);
                 Assert.NotNull(foundItem);
                 Assert.Equal(item.Id, foundItem.Id);
                 Assert.Equal(item.Name, foundItem.Name);
@@ -219,10 +219,10 @@ namespace Godzilla.Mongo.FunctionalTests.Commands
 
                 #region filtered GetChild retreive
 
-                foundItem = context.Query.GetChild<DerivedTestEntity>(rootItem, x => x.Name == "gigio");
+                foundItem = await context.Query.GetChild<DerivedTestEntity>(rootItem, x => x.Name == "gigio");
                 Assert.Null(foundItem);
 
-                foundItem = context.Query.GetChild<DerivedTestEntity>(rootItem, x => x.Name == "gigi");
+                foundItem = await context.Query.GetChild<DerivedTestEntity>(rootItem, x => x.Name == "gigi");
                 Assert.NotNull(foundItem);
                 Assert.Equal(item.Id, foundItem.Id);
                 Assert.Equal(item.Name, foundItem.Name);
@@ -231,7 +231,7 @@ namespace Godzilla.Mongo.FunctionalTests.Commands
 
                 #region Update
 
-                var itemToUpdate = context.Query.GetItem<DerivedTestEntity>(item.Id);
+                var itemToUpdate = await context.Query.GetItem<DerivedTestEntity>(item.Id);
                 itemToUpdate.Name = "gigi-new";
                 var updatedItem = await context.Commands.Update(itemToUpdate);
 
@@ -256,11 +256,11 @@ namespace Godzilla.Mongo.FunctionalTests.Commands
 
                 await context.Commands.Rename(rootItem, "root-new");
 
-                var renamedRootItems = context.Query.GetItems<TestEntity>("/root-new");
+                var renamedRootItems = await context.Query.GetItems<TestEntity>("/root-new");
                 var renamedRootItem = renamedRootItems.FirstOrDefault(x => x.Id == rootItem.Id);
                 Assert.NotNull(renamedRootItem);
 
-                var renamedItems = context.Query.GetItems<DerivedTestEntity>("/root-new/gigi");
+                var renamedItems = await context.Query.GetItems<DerivedTestEntity>("/root-new/gigi");
                 var renamedItem = renamedItems.FirstOrDefault(x => x.Id == item.Id);
                 Assert.NotNull(renamedItem);
 
@@ -275,13 +275,13 @@ namespace Godzilla.Mongo.FunctionalTests.Commands
 
                 await context.Commands.Move(rootItem, rootItem2);
 
-                var movedItems = context.Query.GetItems<DerivedTestEntity>("/root2/root-new/gigi");
+                var movedItems = await context.Query.GetItems<DerivedTestEntity>("/root2/root-new/gigi");
                 var movedItem = movedItems.FirstOrDefault(x => x.Id == item.Id);
                 Assert.NotNull(movedItem);
 
                 await context.Commands.Move(movedItem, rootItem2);
 
-                var secondMovedItems = context.Query.GetItems<DerivedTestEntity>("/root2/gigi");
+                var secondMovedItems = await context.Query.GetItems<DerivedTestEntity>("/root2/gigi");
                 var secondMovedItem = secondMovedItems.FirstOrDefault(x => x.Id == item.Id);
                 Assert.NotNull(secondMovedItem);
 

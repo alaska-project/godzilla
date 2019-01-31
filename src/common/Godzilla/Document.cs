@@ -91,7 +91,7 @@ namespace Godzilla
 
         public async Task<DocumentContainer> Container(string name)
         {
-            var container = _context.Query.GetChild<Container>(_entity, x => x.Name.ToLower() == name.ToLower());
+            var container = await _context.Query.GetChild<Container>(_entity, x => x.Name.ToLower() == name.ToLower());
             if (container == null)
                 container = await _context.Commands.Add(new Container
                 {
@@ -105,34 +105,34 @@ namespace Godzilla
 
         #region Query
 
-        public Document<T> GetParent<T>()
+        public async Task<Document<T>> GetParent<T>()
         {
-            var parent = _context.Query.GetParent<T>(_entity);
+            var parent = await _context.Query.GetParent<T>(_entity);
 
             return CreateDocument(parent);
         }
 
-        public Document<T> GetChild<T>()
+        public async Task<Document<T>> GetChild<T>()
         {
-            var children = GetChildren<T>();
+            var children = await GetChildren<T>();
             return children.FirstOrDefault();
         }
 
-        public Document<T> GetChild<T>(Expression<Func<T, bool>> filter)
+        public async Task<Document<T>> GetChild<T>(Expression<Func<T, bool>> filter)
         {
-            var children = GetChildren<T>(filter);
+            var children = await GetChildren<T>(filter);
             return children.FirstOrDefault();
         }
 
-        public IEnumerable<Document<T>> GetChildren<T>()
+        public async Task<IEnumerable<Document<T>>> GetChildren<T>()
         {
-            var children = _context.Query.GetChildren<T>(_entity);
+            var children = await _context.Query.GetChildren<T>(_entity);
             return CreateDocuments(children);
         }
 
-        public IEnumerable<Document<T>> GetChildren<T>(Expression<Func<T, bool>> filter)
+        public async Task<IEnumerable<Document<T>>> GetChildren<T>(Expression<Func<T, bool>> filter)
         {
-            var children = _context.Query.GetChildren(_entity, filter);
+            var children = await _context.Query.GetChildren(_entity, filter);
             return CreateDocuments(children);
         }
 

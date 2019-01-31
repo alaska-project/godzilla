@@ -12,11 +12,11 @@ namespace Godzilla.Abstractions
         Task<DocumentContainer> Container(string name);
         Task<Document<TItem>> CreateDocument<TItem>(TItem item);
 
-        Document<TItem> GetDocument<TItem>(Guid id);
-        Document<TItem> GetDocument<TItem>(string path);
-        Document<TItem> GetDocument<TItem>(Expression<Func<TItem, bool>> filter);
-        IEnumerable<Document<TItem>> GetDocuments<TItem>(string path);
-        IEnumerable<Document<TItem>> GetDocuments<TItem>(IEnumerable<Guid> id);
-        IEnumerable<Document<TItem>> GetDocuments<TItem>(Expression<Func<TItem, bool>> filter);
+        Task<Document<TItem>> GetDocument<TItem>(Guid id);
+        Task<Document<TItem>> GetDocument<TItem>(string path);
+        Task<Document<TItem>> GetDocument<TItem>(Expression<Func<TItem, bool>> filter);
+        Task<IEnumerable<Document<TItem>>> GetDocuments<TItem>(string path);
+        Task<IEnumerable<Document<TItem>>> GetDocuments<TItem>(IEnumerable<Guid> id);
+        Task<IEnumerable<Document<TItem>>> GetDocuments<TItem>(Expression<Func<TItem, bool>> filter);
     }
 }

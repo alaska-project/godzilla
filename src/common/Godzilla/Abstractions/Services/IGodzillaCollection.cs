@@ -12,9 +12,9 @@ namespace Godzilla.Abstractions.Services
     {
         string CollectionId { get; }
 
-        TItem GetItem(Guid id);
-        IEnumerable<TItem> GetItems(IEnumerable<Guid> id);
-        IEnumerable<TItem> GetItems(IEnumerable<Guid> id, Expression<Func<TItem, bool>> filter);
+        Task<TItem> GetItem(Guid id);
+        Task<IEnumerable<TItem>> GetItems(IEnumerable<Guid> id);
+        Task<IEnumerable<TItem>> GetItems(IEnumerable<Guid> id, Expression<Func<TItem, bool>> filter);
         IQueryable<TItem> AsQueryable();
 
         Task Add(TItem entity);

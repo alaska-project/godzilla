@@ -27,19 +27,19 @@ namespace Godzilla.Collections.Internal
             return _collection.AsQueryable();
         }
 
-        public virtual TItem GetItem(Guid id)
+        public virtual async Task<TItem> GetItem(Guid id)
         {
-            return _collection.GetItem(id);
+            return await _collection.GetItem(id);
         }
 
-        public virtual IEnumerable<TItem> GetItems(IEnumerable<Guid> id)
+        public virtual async Task<IEnumerable<TItem>> GetItems(IEnumerable<Guid> id)
         {
-            return _collection.GetItems(id);
+            return await _collection.GetItems(id);
         }
 
-        public IEnumerable<TItem> GetItems(IEnumerable<Guid> id, Expression<Func<TItem, bool>> filter)
+        public async Task<IEnumerable<TItem>> GetItems(IEnumerable<Guid> id, Expression<Func<TItem, bool>> filter)
         {
-            return _collection.GetItems(id, filter);
+            return await _collection.GetItems(id, filter);
         }
 
         public virtual async Task Add(TItem entity)

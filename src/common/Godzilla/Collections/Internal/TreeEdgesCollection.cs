@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Godzilla.Collections.Internal
 {
@@ -51,14 +52,14 @@ namespace Godzilla.Collections.Internal
                 .Any(x => x.NodeId == nodeId);
         }
 
-        public virtual void DeleteNode(Guid nodeId)
+        public virtual async Task DeleteNode(Guid nodeId)
         {
-            _collection.Delete(x => x.NodeId == nodeId);
+            await _collection.Delete(x => x.NodeId == nodeId);
         }
 
-        public virtual void DeleteNodes(IEnumerable<Guid> nodesId)
+        public virtual async Task DeleteNodes(IEnumerable<Guid> nodesId)
         {
-            _collection.Delete(x => nodesId.Contains(x.NodeId));
+            await _collection.Delete(x => nodesId.Contains(x.NodeId));
         }
 
         public virtual IEnumerable<TreeEdge> GetDescendants(TreeEdge node)
