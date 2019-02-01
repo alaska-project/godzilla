@@ -153,6 +153,21 @@ namespace Godzilla.Mongo.FunctionalTests.Commands
                 Assert.Null(foundItemAfterDelete);
 
                 #endregion
+
+                #region filtered delete
+
+                await context.Commands.Add(new TestEntity()
+                {
+                    Name = "entity-to-delete"
+                });
+
+                Assert.NotNull(await context.Query.GetItem<TestEntity>(x => x.Name == "entity-to-delete"));
+
+                await context.Commands.Delete<TestEntity>(x => x.Name == "entity-to-delete");
+
+                Assert.Null(await context.Query.GetItem<TestEntity>(x => x.Name == "entity-to-delete"));
+
+                #endregion
             }
         }
 
@@ -296,6 +311,21 @@ namespace Godzilla.Mongo.FunctionalTests.Commands
                     .FirstOrDefault(x => x.Id == item.Id);
 
                 Assert.Null(foundItemAfterDelete);
+
+                #endregion
+
+                #region filtered delete
+
+                await context.Commands.Add(new DerivedTestEntity()
+                {
+                    Name = "derived-entity-to-delete"
+                });
+
+                Assert.NotNull(await context.Query.GetItem<DerivedTestEntity>(x => x.Name == "derived-entity-to-delete"));
+
+                await context.Commands.Delete<DerivedTestEntity>(x => x.Name == "derived-entity-to-delete");
+
+                Assert.Null(await context.Query.GetItem<DerivedTestEntity>(x => x.Name == "derived-entity-to-delete"));
 
                 #endregion
             }

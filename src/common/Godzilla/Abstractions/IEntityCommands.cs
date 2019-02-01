@@ -26,6 +26,7 @@ namespace Godzilla.Abstractions
 
         Task Delete<TEntity>(TEntity entity);
         Task Delete<TEntity>(IEnumerable<TEntity> entities);
+        Task Delete<TEntity>(Expression<Func<TEntity, bool>> filter);
 
         Task Move<TEntity>(TEntity entity, Guid newParentId);
         Task Move<TEntity>(TEntity entity, object newParent);

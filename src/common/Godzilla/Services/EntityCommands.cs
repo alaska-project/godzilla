@@ -20,6 +20,7 @@ namespace Godzilla.Services
         private readonly IEntityPropertyResolver<TContext> _propertyResolver;
         private readonly IMediator _mediator;
 
+        private readonly ICollectionService<TContext> _collectionService;
         private readonly ITransactionService<TContext> _transactionService;
         private readonly IEntityCommandsHelper<TContext> _entityCommandsHelper;
 
@@ -27,12 +28,14 @@ namespace Godzilla.Services
             IMediator mediator,
             IEntityPropertyResolver<TContext> propertyResolver,
             ITransactionService<TContext> transactionService,
+            ICollectionService<TContext> collectionService,
             IEntityCommandsHelper<TContext> entityCommandsHelper
             )
         {
             _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
             _propertyResolver = propertyResolver ?? throw new ArgumentNullException(nameof(propertyResolver));
             _transactionService = transactionService ?? throw new ArgumentNullException(nameof(transactionService));
+            _collectionService = collectionService ?? throw new ArgumentNullException(nameof(collectionService));
             _entityCommandsHelper = entityCommandsHelper ?? throw new ArgumentNullException(nameof(entityCommandsHelper));
         } 
 
@@ -145,6 +148,13 @@ namespace Godzilla.Services
 
         #region Delete
 
+        public async Task Delete<TEntity>(Expression<Func<TEntity, bool>> filter)
+        {
+            var request = new DeleteFilteredEntitiesCommand<TContext, TEntity>(filter);
+            var handler = new DeleteFilteredEntitiesCommandHandler<TContext, TEntity>(_mediator, _collectionService);
+            await handler.Handle(request, default(CancellationToken));
+        }
+
         public async Task Delete<TEntity>(TEntity entity)
         {
             await Delete((IEnumerable<TEntity>)new List<TEntity> { entity });
@@ -154,7 +164,7 @@ namespace Godzilla.Services
         {
             await _mediator.Send(new DeleteEntitiesCommand<TContext>(entities.Cast<object>()));
         }
-
+        
         #endregion
 
         #region Move

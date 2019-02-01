@@ -15,6 +15,7 @@ namespace Godzilla.Abstractions.Services
         Task<TItem> GetItem(Guid id);
         Task<IEnumerable<TItem>> GetItems(IEnumerable<Guid> id);
         Task<IEnumerable<TItem>> GetItems(IEnumerable<Guid> id, Expression<Func<TItem, bool>> filter);
+        Task<IEnumerable<TItem>> GetItems(Expression<Func<TItem, bool>> filter);
         IQueryable<TItem> AsQueryable();
 
         Task Add(TItem entity);
@@ -29,6 +30,7 @@ namespace Godzilla.Abstractions.Services
 
         Task Delete(TItem entity);
         Task Delete(IEnumerable<TItem> entities);
+        Task Delete(Expression<Func<TItem, bool>> filter);
 
         Task CreateIndex(IndexDefinition<TItem> index);
     }

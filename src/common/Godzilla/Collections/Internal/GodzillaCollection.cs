@@ -42,6 +42,15 @@ namespace Godzilla.Collections.Internal
             return await _collection.GetItems(id, filter);
         }
 
+        public Task<IEnumerable<TItem>> GetItems(Expression<Func<TItem, bool>> filter)
+        {
+            var items = _collection
+                .AsQueryable()
+                .Where(filter)
+                .ToList();
+            return Task.FromResult<IEnumerable<TItem>>(items);
+        }
+
         public virtual async Task Add(TItem entity)
         {
             await _collection.Add(entity);
@@ -62,9 +71,14 @@ namespace Godzilla.Collections.Internal
             await _collection.Delete(entities);
         }
 
-        public async Task Delete(IEnumerable<Guid> id)
+        public virtual async Task Delete(IEnumerable<Guid> id)
         {
             await _collection.Delete(id);
+        }
+
+        public virtual async Task Delete(Expression<Func<TItem, bool>> filter)
+        {
+            await _collection.Delete(filter);
         }
 
         public virtual async Task Update(TItem entity)
