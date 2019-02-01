@@ -28,6 +28,8 @@ namespace Godzilla.Commands
             var collection = _collectionService.GetCollection<TEntity>();
 
             var entitiesToDelete = await collection.GetItems(request.Filter);
+            if (!entitiesToDelete.Any())
+                return Unit.Value;
 
             var command = new DeleteEntitiesCommand<TContext>(entitiesToDelete.Cast<object>());
 
