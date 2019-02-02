@@ -70,7 +70,7 @@ namespace Godzilla.Commands
 
             var parent = edgesCollection
                 .AsQueryable()
-                .FirstOrDefault(x => x.NodeId == parentId);
+                .FirstOrDefault(x => x.Reference.NodeId == parentId);
 
             if (parent == null)
                 throw new ParentNodeNotFoundException($"Parent node {parentId} not found");
@@ -81,12 +81,12 @@ namespace Godzilla.Commands
         private void ValidateTreeEdges(TreeEdgesCollection edgesCollection, IEnumerable<TreeEdge> treeEdges)
         {
             var newNodesId = treeEdges
-                .Select(x => x.NodeId)
+                .Select(x => x.Reference.NodeId)
                 .ToList();
 
             var existingNodes = edgesCollection.GetNodes(newNodesId);
             if (existingNodes.Any())
-                throw new NodeAlreadyExistsException($"Node {string.Join(", ", existingNodes.Select(x => x.NodeId))} already exists");
+                throw new NodeAlreadyExistsException($"Node {string.Join(", ", existingNodes.Select(x => x.Reference.NodeId))} already exists");
         }
 
         private TreeEdge CreateTreeEdge(object entity, TreeEdge parent, IGodzillaCollection entityCollection)
@@ -97,12 +97,15 @@ namespace Godzilla.Commands
             return new TreeEdge
             {
                 Id = Guid.NewGuid(),
-                NodeId = entityId,
-                NodeName = entityName,
-                ParentId = parent?.NodeId ?? Guid.Empty,
-                CollectionId = entityCollection.CollectionId,
-                Path = _commandsHelper.BuildNamePath(entityName, parent),
-                IdPath = _commandsHelper.BuildIdPath(entityId, parent),
+                Reference = new NodeReference
+                {
+                    NodeId = entityId,
+                    NodeName = entityName,
+                    ParentId = parent?.Reference.NodeId ?? Guid.Empty,
+                    CollectionId = entityCollection.CollectionId,
+                    Path = _commandsHelper.BuildNamePath(entityName, parent),
+                    IdPath = _commandsHelper.BuildIdPath(entityId, parent),
+                }
             };
         }
     }

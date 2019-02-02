@@ -41,12 +41,12 @@ namespace Godzilla.Commands
                 var renameDescendants = edgesCollection.GetDescendants(renameRootNode)
                     .ToList();
 
-                var oldRootPath = renameRootNode.Path;
+                var oldRootPath = renameRootNode.Reference.Path;
                 var newRootPath = _pathBuilder.RenameLeaf(oldRootPath, request.NewName);
 
                 // renameRootNode is set with the instance taken from renameDescendants
                 renameRootNode = renameDescendants.First(x => x.Id == renameRootNode.Id);
-                renameRootNode.NodeName = request.NewName;
+                renameRootNode.Reference.NodeName = request.NewName;
 
                 renameDescendants
                     .ForEach(x => UpdateNodePath(x, oldRootPath, newRootPath));
@@ -65,7 +65,7 @@ namespace Godzilla.Commands
 
         private void UpdateNodePath(TreeEdge node, string oldRootPath, string newRootPath)
         {
-            node.Path = newRootPath + node.Path.Substring(oldRootPath.Length);
+            node.Reference.Path = newRootPath + node.Reference.Path.Substring(oldRootPath.Length);
         }
     }
 }

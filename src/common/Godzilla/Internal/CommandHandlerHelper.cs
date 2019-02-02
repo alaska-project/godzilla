@@ -52,11 +52,11 @@ namespace Godzilla.Internal
         {
             var existingNodes = edgesCollection
                 .AsQueryable()
-                .Where(x => entitiesId.Contains(x.NodeId))
+                .Where(x => entitiesId.Contains(x.Reference.NodeId))
                 .ToList();
 
             var existingNodesId = existingNodes
-                .Select(x => x.NodeId);
+                .Select(x => x.Reference.NodeId);
 
             var missingNodesId = entitiesId
                 .Except(existingNodesId)
@@ -82,13 +82,13 @@ namespace Godzilla.Internal
 
         public string BuildNamePath(string name, TreeEdge parent)
         {
-            var parentPath = parent?.Path ?? _pathBuilder.RootPath;
+            var parentPath = parent?.Reference.Path ?? _pathBuilder.RootPath;
             return _pathBuilder.JoinPath(parentPath, name);
         }
 
         public string BuildIdPath(Guid id, TreeEdge parent)
         {
-            var parentPath = parent?.IdPath ?? _pathBuilder.RootPath;
+            var parentPath = parent?.Reference.IdPath ?? _pathBuilder.RootPath;
             return _pathBuilder.JoinPath(parentPath, id.ToString());
         }
     }

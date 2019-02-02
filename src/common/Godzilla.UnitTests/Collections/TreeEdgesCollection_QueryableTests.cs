@@ -35,11 +35,14 @@ namespace Godzilla.UnitTests.Collections
         {
             var node = new TreeEdge
             {
-                NodeId = Guid.NewGuid()
+                Reference = new NodeReference
+                {
+                    NodeId = Guid.NewGuid()
+                }
             };
 
             await _treeEdgesCollection.Add(node);
-            var nodeExists = _treeEdgesCollection.NodeExists(node.NodeId);
+            var nodeExists = _treeEdgesCollection.NodeExists(node.Reference.NodeId);
             Assert.True(nodeExists);
         }
 

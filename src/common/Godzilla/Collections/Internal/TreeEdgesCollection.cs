@@ -27,14 +27,14 @@ namespace Godzilla.Collections.Internal
         {
             return _collection
                 .AsQueryable()
-                .FirstOrDefault(x => nodeId == x.NodeId);
+                .FirstOrDefault(x => nodeId == x.Reference.NodeId);
         }
 
         public virtual IEnumerable<TreeEdge> GetNodes(IEnumerable<Guid> nodesId)
         {
             return _collection
                 .AsQueryable()
-                .Where(x => nodesId.Contains(x.NodeId))
+                .Where(x => nodesId.Contains(x.Reference.NodeId))
                 .ToList();
         }
 
@@ -42,32 +42,32 @@ namespace Godzilla.Collections.Internal
         {
             return _collection
                 .AsQueryable()
-                .Any(x => nodesId.Contains(x.NodeId));
+                .Any(x => nodesId.Contains(x.Reference.NodeId));
         }
 
         public virtual bool NodeExists(Guid nodeId)
         {
             return _collection
                 .AsQueryable()
-                .Any(x => x.NodeId == nodeId);
+                .Any(x => x.Reference.NodeId == nodeId);
         }
 
         public virtual async Task DeleteNode(Guid nodeId)
         {
-            await _collection.Delete(x => x.NodeId == nodeId);
+            await _collection.Delete(x => x.Reference.NodeId == nodeId);
         }
 
         public virtual async Task DeleteNodes(IEnumerable<Guid> nodesId)
         {
-            await _collection.Delete(x => nodesId.Contains(x.NodeId));
+            await _collection.Delete(x => nodesId.Contains(x.Reference.NodeId));
         }
 
         public virtual IEnumerable<TreeEdge> GetDescendants(TreeEdge node)
         {
-            var path = node.IdPath;
+            var path = node.Reference.IdPath;
             return _collection
                 .AsQueryable()
-                .Where(x => x.IdPath.StartsWith(path))
+                .Where(x => x.Reference.IdPath.StartsWith(path))
                 .ToList();
         }
     }

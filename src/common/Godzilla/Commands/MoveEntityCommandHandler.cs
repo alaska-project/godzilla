@@ -65,11 +65,11 @@ namespace Godzilla.Commands
         {
             foreach(var node in nodesToMove)
             {
-                if (node.ParentId == source.ParentId)
-                    node.ParentId = target.ParentId;
+                if (node.Reference.ParentId == source.Reference.ParentId)
+                    node.Reference.ParentId = target.Reference.ParentId;
 
-                node.Path = _pathBuilder.MovePath(node.Path, source.Path, target.Path);
-                node.IdPath = _pathBuilder.MovePath(node.IdPath, source.IdPath, target.IdPath);
+                node.Reference.Path = _pathBuilder.MovePath(node.Reference.Path, source.Reference.Path, target.Reference.Path);
+                node.Reference.IdPath = _pathBuilder.MovePath(node.Reference.IdPath, source.Reference.IdPath, target.Reference.IdPath);
             }
         }
     }
