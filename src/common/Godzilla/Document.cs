@@ -49,7 +49,7 @@ namespace Godzilla
 
         public async Task UpdateField<TField>(Expression<Func<TEntity, TField>> field, TField value)
         {
-            ChekId(value);
+            ChekId(_entity);
 
             _entity = await _context.Commands.Update(_entity, field, value);
         }
