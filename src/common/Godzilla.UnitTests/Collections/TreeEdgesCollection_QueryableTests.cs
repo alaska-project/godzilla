@@ -17,23 +17,23 @@ namespace Godzilla.UnitTests.Collections
     public class TreeEdgesCollection_QueryableTests
     {
         private readonly Mock<IEntityPropertyResolver<FakeEntityContext>> _propertyResolver = new Mock<IEntityPropertyResolver<FakeEntityContext>>();
-        private readonly InMemoryCollection<FakeEntityContext, TreeEdge> _inMemoryCollection;
-        private readonly TreeEdgesCollection _treeEdgesCollection;
+        private readonly InMemoryCollection<FakeEntityContext, EntityNode> _inMemoryCollection;
+        private readonly EntityNodesCollection _treeEdgesCollection;
 
         public TreeEdgesCollection_QueryableTests()
         {
             _propertyResolver
-                .Setup(x => x.GetEntityId(It.IsAny<TreeEdge>()))
-                .Returns((TreeEdge t) => t.Id);
+                .Setup(x => x.GetEntityId(It.IsAny<EntityNode>()))
+                .Returns((EntityNode t) => t.Id);
 
-            _inMemoryCollection = new InMemoryCollection<FakeEntityContext, TreeEdge>(_propertyResolver.Object, "fake-entity-context");
-            _treeEdgesCollection = new TreeEdgesCollection(_inMemoryCollection);
+            _inMemoryCollection = new InMemoryCollection<FakeEntityContext, EntityNode>(_propertyResolver.Object, "fake-entity-context");
+            _treeEdgesCollection = new EntityNodesCollection(_inMemoryCollection);
         }
 
         [Fact]
         public async Task Node_already_exists()
         {
-            var node = new TreeEdge
+            var node = new EntityNode
             {
                 Reference = new NodeReference
                 {

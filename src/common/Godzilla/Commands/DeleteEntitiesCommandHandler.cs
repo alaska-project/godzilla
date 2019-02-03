@@ -35,7 +35,7 @@ namespace Godzilla.Commands
 
                 _transactionService.StartTransaction();
                 
-                var edgesCollection = _transactionService.GetCollection<TreeEdge, TreeEdgesCollection>();
+                var edgesCollection = _transactionService.GetCollection<EntityNode, EntityNodesCollection>();
 
                 var treeNodes = _commandsHelper.VerifyEntitiesExist(nodesId, edgesCollection);
 
@@ -54,7 +54,7 @@ namespace Godzilla.Commands
             }
         }
 
-        private async Task DeleteEntityAndDescendants(TreeEdge deleteRoot, TreeEdgesCollection edgesCollection)
+        private async Task DeleteEntityAndDescendants(EntityNode deleteRoot, EntityNodesCollection edgesCollection)
         {
             var descendants = edgesCollection.GetDescendants(deleteRoot);
 

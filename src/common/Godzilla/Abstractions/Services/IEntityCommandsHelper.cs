@@ -11,12 +11,12 @@ namespace Godzilla.Abstractions.Services
         where TContext : EntityContext
     {
         Type GetEntityType(IEnumerable<object> entities);
-        IEnumerable<TreeEdge> VerifyEntitiesExist<TEntity>(IEnumerable<TEntity> entities, TreeEdgesCollection edgesCollection);
-        IEnumerable<TreeEdge> VerifyEntitiesExist(IEnumerable<object> entities, TreeEdgesCollection edgesCollection);
-        IEnumerable<TreeEdge> VerifyEntitiesExist(IEnumerable<Guid> entitiesId, TreeEdgesCollection edgesCollection);
+        IEnumerable<EntityNode> VerifyEntitiesExist<TEntity>(IEnumerable<TEntity> entities, EntityNodesCollection edgesCollection);
+        IEnumerable<EntityNode> VerifyEntitiesExist(IEnumerable<object> entities, EntityNodesCollection edgesCollection);
+        IEnumerable<EntityNode> VerifyEntitiesExist(IEnumerable<Guid> entitiesId, EntityNodesCollection edgesCollection);
         IEnumerable<Guid> GetEntitiesId<TEntity>(IEnumerable<TEntity> entities);
         IEnumerable<Guid> GetEntitiesId(IEnumerable<object> entities);
-        string BuildNamePath(string name, TreeEdge parent);
-        string BuildIdPath(Guid id, TreeEdge parent);
+        string BuildNamePath(string name, EntityNode parent);
+        string BuildIdPath(Guid id, EntityNode parent);
     }
 }

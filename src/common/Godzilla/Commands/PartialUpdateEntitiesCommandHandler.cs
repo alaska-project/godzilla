@@ -32,7 +32,7 @@ namespace Godzilla.Commands
                 _transactionService.StartTransaction();
 
                 var entityCollection = _transactionService.GetCollection<TEntity>();
-                var edgesCollection = _transactionService.GetCollection<TreeEdge, TreeEdgesCollection>();
+                var edgesCollection = _transactionService.GetCollection<EntityNode, EntityNodesCollection>();
 
                 _commandsHelper.VerifyEntitiesExist(request.Entities, edgesCollection);
 

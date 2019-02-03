@@ -35,7 +35,7 @@ namespace Godzilla.Commands
             {
                 _transactionService.StartTransaction();
 
-                var edgesCollection = _transactionService.GetCollection<TreeEdge, TreeEdgesCollection>();
+                var edgesCollection = _transactionService.GetCollection<EntityNode, EntityNodesCollection>();
 
                 var renameRootNode = edgesCollection.GetNode(request.EntityId);
                 var renameDescendants = edgesCollection.GetDescendants(renameRootNode)
@@ -63,7 +63,7 @@ namespace Godzilla.Commands
             }
         }
 
-        private void UpdateNodePath(TreeEdge node, string oldRootPath, string newRootPath)
+        private void UpdateNodePath(EntityNode node, string oldRootPath, string newRootPath)
         {
             node.Reference.Path = newRootPath + node.Reference.Path.Substring(oldRootPath.Length);
         }

@@ -38,7 +38,7 @@ namespace Godzilla.Commands
                 _transactionService.StartTransaction();
 
                 var entityCollection = _transactionService.GetCollection(entityType);
-                var edgesCollection = _transactionService.GetCollection<TreeEdge, TreeEdgesCollection>();
+                var edgesCollection = _transactionService.GetCollection<EntityNode, EntityNodesCollection>();
 
                 var parent = GetParentNode(edgesCollection, request.ParentId);
 
@@ -63,7 +63,7 @@ namespace Godzilla.Commands
             }
         }
 
-        private TreeEdge GetParentNode(TreeEdgesCollection edgesCollection, Guid parentId)
+        private EntityNode GetParentNode(EntityNodesCollection edgesCollection, Guid parentId)
         {
             if (parentId == Guid.Empty)
                 return null;
@@ -78,7 +78,7 @@ namespace Godzilla.Commands
             return parent;
         }
 
-        private void ValidateTreeEdges(TreeEdgesCollection edgesCollection, IEnumerable<TreeEdge> treeEdges)
+        private void ValidateTreeEdges(EntityNodesCollection edgesCollection, IEnumerable<EntityNode> treeEdges)
         {
             var newNodesId = treeEdges
                 .Select(x => x.Reference.NodeId)
@@ -89,12 +89,12 @@ namespace Godzilla.Commands
                 throw new NodeAlreadyExistsException($"Node {string.Join(", ", existingNodes.Select(x => x.Reference.NodeId))} already exists");
         }
 
-        private TreeEdge CreateTreeEdge(object entity, TreeEdge parent, IGodzillaCollection entityCollection)
+        private EntityNode CreateTreeEdge(object entity, EntityNode parent, IGodzillaCollection entityCollection)
         {
             var entityId = _propertyResolver.GetEntityId(entity, true);
             var entityName = _propertyResolver.GetEntityName(entity);
 
-            return new TreeEdge
+            return new EntityNode
             {
                 Id = Guid.NewGuid(),
                 Reference = new NodeReference

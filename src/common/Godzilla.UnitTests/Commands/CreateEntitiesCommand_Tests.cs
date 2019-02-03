@@ -19,7 +19,7 @@ namespace Godzilla.UnitTests.Commands
         private Mock<ITransactionService<FakeEntityContext>> _transactionService = new Mock<ITransactionService<FakeEntityContext>>();
         private Mock<IEntityCommandsHelper<FakeEntityContext>> _commandsHelper = new Mock<IEntityCommandsHelper<FakeEntityContext>>();
         private Mock<IEntityPropertyResolver<FakeEntityContext>> _propertyResolver = new Mock<IEntityPropertyResolver<FakeEntityContext>>();
-        private Mock<TreeEdgesCollection> _treeEdgesCollection = new Mock<TreeEdgesCollection>();
+        private Mock<EntityNodesCollection> _treeEdgesCollection = new Mock<EntityNodesCollection>();
         private Mock<IGodzillaCollection> _entityCollection = new Mock<IGodzillaCollection>();
         private Mock<IGodzillaCollection> _derivedEntityCollection = new Mock<IGodzillaCollection>();
 
@@ -34,7 +34,7 @@ namespace Godzilla.UnitTests.Commands
                 .Returns((FakeEntity t, bool g) => t.Id == Guid.Empty && g ? Guid.NewGuid() : t.Id);
 
             _transactionService
-                .Setup(x => x.GetCollection<TreeEdge, TreeEdgesCollection>())
+                .Setup(x => x.GetCollection<EntityNode, EntityNodesCollection>())
                 .Returns(_treeEdgesCollection.Object);
 
             _transactionService
@@ -64,7 +64,7 @@ namespace Godzilla.UnitTests.Commands
 
             _treeEdgesCollection
                 .Setup(x => x.GetNodes(It.IsAny<IEnumerable<Guid>>()))
-                .Returns(new List<TreeEdge>());
+                .Returns(new List<EntityNode>());
 
             //act
             await handler.Handle(request, default(CancellationToken));
@@ -73,7 +73,7 @@ namespace Godzilla.UnitTests.Commands
             _transactionService.Verify(x => x.CommitTransaction(), Times.Once());
             _transactionService.Verify(x => x.AbortTransaction(), Times.Never());
 
-            _treeEdgesCollection.Verify(x => x.Add(It.Is<IEnumerable<TreeEdge>>(t =>
+            _treeEdgesCollection.Verify(x => x.Add(It.Is<IEnumerable<EntityNode>>(t =>
                 t.First().Reference.ParentId == request.ParentId &&
                 t.First().Reference.NodeId == entityId)), Times.Once());
             _entityCollection.Verify(x => x.Add(It.IsAny<object>()), Times.Never());
@@ -94,7 +94,7 @@ namespace Godzilla.UnitTests.Commands
 
             _treeEdgesCollection
                 .Setup(x => x.GetNodes(It.IsAny<IEnumerable<Guid>>()))
-                .Returns(new List<TreeEdge> { new TreeEdge() });
+                .Returns(new List<EntityNode> { new EntityNode() });
             
             //act
             await Assert.ThrowsAsync<EntitiesCreationException>(() => handler.Handle(request, default(CancellationToken)));
@@ -104,7 +104,7 @@ namespace Godzilla.UnitTests.Commands
             _transactionService.Verify(x => x.CommitTransaction(), Times.Never());
             _transactionService.Verify(x => x.AbortTransaction(), Times.Once());
 
-            _treeEdgesCollection.Verify(x => x.Add(It.IsAny<TreeEdge>()), Times.Never());
+            _treeEdgesCollection.Verify(x => x.Add(It.IsAny<EntityNode>()), Times.Never());
             _derivedEntityCollection.Verify(x => x.Add(It.IsAny<object>()), Times.Never());
             _entityCollection.Verify(x => x.Add(It.IsAny<object>()), Times.Never());
         }
@@ -123,7 +123,7 @@ namespace Godzilla.UnitTests.Commands
 
             _treeEdgesCollection
                 .Setup(x => x.GetNodes(It.IsAny<IEnumerable<Guid>>()))
-                .Returns(new List<TreeEdge> { new TreeEdge() });
+                .Returns(new List<EntityNode> { new EntityNode() });
 
             //act
             await Assert.ThrowsAsync<EntitiesCreationException>(() => handler.Handle(request, default(CancellationToken)));
@@ -133,7 +133,7 @@ namespace Godzilla.UnitTests.Commands
             _transactionService.Verify(x => x.CommitTransaction(), Times.Never());
             _transactionService.Verify(x => x.AbortTransaction(), Times.Once());
 
-            _treeEdgesCollection.Verify(x => x.Add(It.IsAny<TreeEdge>()), Times.Never());
+            _treeEdgesCollection.Verify(x => x.Add(It.IsAny<EntityNode>()), Times.Never());
             _entityCollection.Verify(x => x.Add(It.IsAny<object>()), Times.Never());
         }
 
@@ -151,7 +151,7 @@ namespace Godzilla.UnitTests.Commands
 
             _treeEdgesCollection
                 .Setup(x => x.GetNodes(It.IsAny<IEnumerable<Guid>>()))
-                .Returns(new List<TreeEdge>());
+                .Returns(new List<EntityNode>());
 
             //act
             await handler.Handle(request, default(CancellationToken));
@@ -160,7 +160,7 @@ namespace Godzilla.UnitTests.Commands
             _transactionService.Verify(x => x.CommitTransaction(), Times.Once());
             _transactionService.Verify(x => x.AbortTransaction(), Times.Never());
 
-            _treeEdgesCollection.Verify(x => x.Add(It.Is<IEnumerable<TreeEdge>>(t =>
+            _treeEdgesCollection.Verify(x => x.Add(It.Is<IEnumerable<EntityNode>>(t =>
                 t.First().Reference.ParentId == request.ParentId &&
                 t.First().Reference.NodeId == entityId)), Times.Once());
             _entityCollection.Verify(x => x.Add(request.Entities), Times.Once());
@@ -180,7 +180,7 @@ namespace Godzilla.UnitTests.Commands
 
             _treeEdgesCollection
                 .Setup(x => x.GetNodes(It.IsAny<IEnumerable<Guid>>()))
-                .Returns(new List<TreeEdge>());
+                .Returns(new List<EntityNode>());
 
             //act
             await handler.Handle(request, default(CancellationToken));
@@ -189,7 +189,7 @@ namespace Godzilla.UnitTests.Commands
             _transactionService.Verify(x => x.CommitTransaction(), Times.Once());
             _transactionService.Verify(x => x.AbortTransaction(), Times.Never());
 
-            _treeEdgesCollection.Verify(x => x.Add(It.Is<IEnumerable<TreeEdge>>(t =>
+            _treeEdgesCollection.Verify(x => x.Add(It.Is<IEnumerable<EntityNode>>(t =>
                 t.First().Reference.ParentId == request.ParentId &&
                 t.First().Reference.NodeId != Guid.Empty)), Times.Once());
             _entityCollection.Verify(x => x.Add(request.Entities), Times.Once());

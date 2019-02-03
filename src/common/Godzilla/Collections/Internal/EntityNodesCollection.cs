@@ -9,28 +9,28 @@ using System.Threading.Tasks;
 
 namespace Godzilla.Collections.Internal
 {
-    internal class TreeEdgesCollection : GodzillaCollection<TreeEdge>,
-        ITreeEdgesCollection
+    internal class EntityNodesCollection : GodzillaCollection<EntityNode>,
+        IEntityNodesCollection
     {
         /// <summary>
         /// For testing purpose only
         /// </summary>
-        internal TreeEdgesCollection()
+        internal EntityNodesCollection()
             : base(null)
         { }
 
-        public TreeEdgesCollection(IDatabaseCollection<TreeEdge> collection)
+        public EntityNodesCollection(IDatabaseCollection<EntityNode> collection)
             : base(collection)
         { }
 
-        public virtual TreeEdge GetNode(Guid nodeId)
+        public virtual EntityNode GetNode(Guid nodeId)
         {
             return _collection
                 .AsQueryable()
                 .FirstOrDefault(x => nodeId == x.Reference.NodeId);
         }
 
-        public virtual IEnumerable<TreeEdge> GetNodes(IEnumerable<Guid> nodesId)
+        public virtual IEnumerable<EntityNode> GetNodes(IEnumerable<Guid> nodesId)
         {
             return _collection
                 .AsQueryable()
@@ -62,7 +62,7 @@ namespace Godzilla.Collections.Internal
             await _collection.Delete(x => nodesId.Contains(x.Reference.NodeId));
         }
 
-        public virtual IEnumerable<TreeEdge> GetDescendants(TreeEdge node)
+        public virtual IEnumerable<EntityNode> GetDescendants(EntityNode node)
         {
             var path = node.Reference.IdPath;
             return _collection

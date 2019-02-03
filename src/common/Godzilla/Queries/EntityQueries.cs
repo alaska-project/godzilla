@@ -133,9 +133,9 @@ namespace Godzilla.Queries
                 childrenCollection.GetItems(childrenNodes, filter));
         }
 
-        private TreeEdgesCollection GetTreeEdgesCollection()
+        private EntityNodesCollection GetTreeEdgesCollection()
         {
-            return _collectionService.GetCollection<TreeEdge, TreeEdgesCollection>();
+            return _collectionService.GetCollection<EntityNode, EntityNodesCollection>();
         }
 
         private IGodzillaCollection<TEntity> GetCollection<TEntity>()

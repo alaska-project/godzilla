@@ -6,14 +6,14 @@ using System.Threading.Tasks;
 
 namespace Godzilla.Abstractions.Collections
 {
-    internal interface ITreeEdgesCollection
+    internal interface IEntityNodesCollection
     {
-        TreeEdge GetNode(Guid nodeId);
-        IEnumerable<TreeEdge> GetNodes(IEnumerable<Guid> nodesId);
+        EntityNode GetNode(Guid nodeId);
+        IEnumerable<EntityNode> GetNodes(IEnumerable<Guid> nodesId);
         bool ExistsAny(IEnumerable<Guid> nodesId);
         bool NodeExists(Guid nodeId);
         Task DeleteNode(Guid nodeId);
         Task DeleteNodes(IEnumerable<Guid> nodesId);
-        IEnumerable<TreeEdge> GetDescendants(TreeEdge node);
+        IEnumerable<EntityNode> GetDescendants(EntityNode node);
     }
 }

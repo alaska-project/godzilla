@@ -35,7 +35,7 @@ namespace Godzilla.Commands
             {
                 _transactionService.StartTransaction();
 
-                var edgesCollection = _transactionService.GetCollection<TreeEdge, TreeEdgesCollection>();
+                var edgesCollection = _transactionService.GetCollection<EntityNode, EntityNodesCollection>();
 
                 var moveTargetNode = edgesCollection.GetNode(request.NewParentId);
                 if (moveTargetNode == null)
@@ -61,7 +61,7 @@ namespace Godzilla.Commands
             }
         }
 
-        private void MoveNodes(IEnumerable<TreeEdge> nodesToMove, TreeEdge source, TreeEdge target)
+        private void MoveNodes(IEnumerable<EntityNode> nodesToMove, EntityNode source, EntityNode target)
         {
             foreach(var node in nodesToMove)
             {

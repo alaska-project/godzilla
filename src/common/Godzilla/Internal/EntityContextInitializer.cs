@@ -28,12 +28,12 @@ namespace Godzilla.Internal
 
         private void InitializeCommonIndexes(IEntityConfigurator configurator)
         {
-            configurator.DefineIndex(new IndexDefinition<TreeEdge>
+            configurator.DefineIndex(new IndexDefinition<EntityNode>
             {
                 Name = "path_asc",
-                Fields = new List<IndexField<TreeEdge>>
+                Fields = new List<IndexField<EntityNode>>
                 {
-                    new IndexField<TreeEdge>(x => x.Reference.Path, Abstractions.Infrastructure.IndexSortOrder.Asc)
+                    new IndexField<EntityNode>(x => x.Reference.Path, Abstractions.Infrastructure.IndexSortOrder.Asc)
                 },
                 Options = new IndexOptions
                 {
@@ -41,12 +41,12 @@ namespace Godzilla.Internal
                 }
             });
 
-            configurator.DefineIndex(new IndexDefinition<TreeEdge>
+            configurator.DefineIndex(new IndexDefinition<EntityNode>
             {
                 Name = "parentId_asc",
-                Fields = new List<IndexField<TreeEdge>>
+                Fields = new List<IndexField<EntityNode>>
                 {
-                    new IndexField<TreeEdge>(x => x.Reference.ParentId, Abstractions.Infrastructure.IndexSortOrder.Asc)
+                    new IndexField<EntityNode>(x => x.Reference.ParentId, Abstractions.Infrastructure.IndexSortOrder.Asc)
                 },
                 Options = new IndexOptions
                 {
@@ -54,12 +54,12 @@ namespace Godzilla.Internal
                 }
             });
 
-            configurator.DefineIndex(new IndexDefinition<TreeEdge>
+            configurator.DefineIndex(new IndexDefinition<EntityNode>
             {
                 Name = "idPath_asc",
-                Fields = new List<IndexField<TreeEdge>>
+                Fields = new List<IndexField<EntityNode>>
                 {
-                    new IndexField<TreeEdge>(x => x.Reference.IdPath, Abstractions.Infrastructure.IndexSortOrder.Asc)
+                    new IndexField<EntityNode>(x => x.Reference.IdPath, Abstractions.Infrastructure.IndexSortOrder.Asc)
                 },
                 Options = new IndexOptions
                 {
@@ -67,12 +67,12 @@ namespace Godzilla.Internal
                 }
             });
 
-            configurator.DefineIndex(new IndexDefinition<TreeEdge>
+            configurator.DefineIndex(new IndexDefinition<EntityNode>
             {
                 Name = "nodeId_asc",
-                Fields = new List<IndexField<TreeEdge>>
+                Fields = new List<IndexField<EntityNode>>
                 {
-                    new IndexField<TreeEdge>(x => x.Reference.NodeId, Abstractions.Infrastructure.IndexSortOrder.Asc)
+                    new IndexField<EntityNode>(x => x.Reference.NodeId, Abstractions.Infrastructure.IndexSortOrder.Asc)
                 },
                 Options = new IndexOptions
                 {

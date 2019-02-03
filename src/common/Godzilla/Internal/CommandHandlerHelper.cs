@@ -36,19 +36,19 @@ namespace Godzilla.Internal
             return entityTypes.First().Key;
         }
 
-        public IEnumerable<TreeEdge> VerifyEntitiesExist<TEntity>(IEnumerable<TEntity> entities, TreeEdgesCollection edgesCollection)
+        public IEnumerable<EntityNode> VerifyEntitiesExist<TEntity>(IEnumerable<TEntity> entities, EntityNodesCollection edgesCollection)
         {
             return VerifyEntitiesExist(entities.Cast<object>(), edgesCollection);
         }
 
-        public IEnumerable<TreeEdge> VerifyEntitiesExist(IEnumerable<object> entities, TreeEdgesCollection edgesCollection)
+        public IEnumerable<EntityNode> VerifyEntitiesExist(IEnumerable<object> entities, EntityNodesCollection edgesCollection)
         {
             var entitiesId = GetEntitiesId(entities);
 
             return VerifyEntitiesExist(entitiesId, edgesCollection);
         }
 
-        public IEnumerable<TreeEdge> VerifyEntitiesExist(IEnumerable<Guid> entitiesId, TreeEdgesCollection edgesCollection)
+        public IEnumerable<EntityNode> VerifyEntitiesExist(IEnumerable<Guid> entitiesId, EntityNodesCollection edgesCollection)
         {
             var existingNodes = edgesCollection
                 .AsQueryable()
@@ -80,13 +80,13 @@ namespace Godzilla.Internal
                 .ToList();
         }
 
-        public string BuildNamePath(string name, TreeEdge parent)
+        public string BuildNamePath(string name, EntityNode parent)
         {
             var parentPath = parent?.Reference.Path ?? _pathBuilder.RootPath;
             return _pathBuilder.JoinPath(parentPath, name);
         }
 
-        public string BuildIdPath(Guid id, TreeEdge parent)
+        public string BuildIdPath(Guid id, EntityNode parent)
         {
             var parentPath = parent?.Reference.IdPath ?? _pathBuilder.RootPath;
             return _pathBuilder.JoinPath(parentPath, id.ToString());

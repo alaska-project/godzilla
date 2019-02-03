@@ -18,7 +18,7 @@ namespace Godzilla.UnitTests.Commands
         private Mock<ITransactionService<FakeEntityContext>> _transactionService = new Mock<ITransactionService<FakeEntityContext>>();
         private Mock<IEntityPropertyResolver<FakeEntityContext>> _propertyResolver = new Mock<IEntityPropertyResolver<FakeEntityContext>>();
         private Mock<IEntityCommandsHelper<FakeEntityContext>> _commandsHelper = new Mock<IEntityCommandsHelper<FakeEntityContext>>();
-        private Mock<TreeEdgesCollection> _treeEdgesCollection = new Mock<TreeEdgesCollection>();
+        private Mock<EntityNodesCollection> _treeEdgesCollection = new Mock<EntityNodesCollection>();
         private Mock<IGodzillaCollection> _entityCollection = new Mock<IGodzillaCollection>();
         private Mock<IGodzillaCollection> _derivedEntityCollection = new Mock<IGodzillaCollection>();
 
@@ -33,7 +33,7 @@ namespace Godzilla.UnitTests.Commands
                 .Returns((FakeEntity t, bool g) => t.Id == Guid.Empty && g ? Guid.NewGuid() : t.Id);
 
             _transactionService
-                .Setup(x => x.GetCollection<TreeEdge, TreeEdgesCollection>())
+                .Setup(x => x.GetCollection<EntityNode, EntityNodesCollection>())
                 .Returns(_treeEdgesCollection.Object);
 
             _transactionService
