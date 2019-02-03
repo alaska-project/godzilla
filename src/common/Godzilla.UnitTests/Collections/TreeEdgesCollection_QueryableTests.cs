@@ -37,12 +37,12 @@ namespace Godzilla.UnitTests.Collections
             {
                 Reference = new NodeReference
                 {
-                    NodeId = Guid.NewGuid()
+                    EntityId = Guid.NewGuid()
                 }
             };
 
             await _treeEdgesCollection.Add(node);
-            var nodeExists = _treeEdgesCollection.NodeExists(node.Reference.NodeId);
+            var nodeExists = _treeEdgesCollection.NodeExists(node.Reference.EntityId);
             Assert.True(nodeExists);
         }
 

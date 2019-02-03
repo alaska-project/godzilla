@@ -52,11 +52,11 @@ namespace Godzilla.Internal
         {
             var existingNodes = edgesCollection
                 .AsQueryable()
-                .Where(x => entitiesId.Contains(x.Reference.NodeId))
+                .Where(x => entitiesId.Contains(x.Reference.EntityId))
                 .ToList();
 
             var existingNodesId = existingNodes
-                .Select(x => x.Reference.NodeId);
+                .Select(x => x.Reference.EntityId);
 
             var missingNodesId = entitiesId
                 .Except(existingNodesId)

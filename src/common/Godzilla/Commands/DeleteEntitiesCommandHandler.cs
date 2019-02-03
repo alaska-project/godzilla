@@ -63,14 +63,14 @@ namespace Godzilla.Commands
             foreach (var entityGroup in groupedEntities)
             {
                 var entitiesIdToDelete = entityGroup
-                    .Select(x => x.Reference.NodeId)
+                    .Select(x => x.Reference.EntityId)
                     .ToList();
 
                 var entityCollection = _transactionService.GetCollection(typeof(object), entityGroup.Key);
                 await entityCollection.Delete(entitiesIdToDelete);
             }
 
-            await edgesCollection.DeleteNodes(descendants.Select(x => x.Reference.NodeId));
+            await edgesCollection.DeleteNodes(descendants.Select(x => x.Reference.EntityId));
         }
     }
 }

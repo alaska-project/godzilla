@@ -70,7 +70,7 @@ namespace Godzilla.Commands
 
             var parent = edgesCollection
                 .AsQueryable()
-                .FirstOrDefault(x => x.Reference.NodeId == parentId);
+                .FirstOrDefault(x => x.Reference.EntityId == parentId);
 
             if (parent == null)
                 throw new ParentNodeNotFoundException($"Parent node {parentId} not found");
@@ -81,12 +81,12 @@ namespace Godzilla.Commands
         private void ValidateTreeEdges(EntityNodesCollection edgesCollection, IEnumerable<EntityNode> treeEdges)
         {
             var newNodesId = treeEdges
-                .Select(x => x.Reference.NodeId)
+                .Select(x => x.Reference.EntityId)
                 .ToList();
 
             var existingNodes = edgesCollection.GetNodes(newNodesId);
             if (existingNodes.Any())
-                throw new NodeAlreadyExistsException($"Node {string.Join(", ", existingNodes.Select(x => x.Reference.NodeId))} already exists");
+                throw new NodeAlreadyExistsException($"Node {string.Join(", ", existingNodes.Select(x => x.Reference.EntityId))} already exists");
         }
 
         private EntityNode CreateTreeEdge(object entity, EntityNode parent, IGodzillaCollection entityCollection)
@@ -99,9 +99,9 @@ namespace Godzilla.Commands
                 Id = Guid.NewGuid(),
                 Reference = new NodeReference
                 {
-                    NodeId = entityId,
+                    EntityId = entityId,
                     NodeName = entityName,
-                    ParentId = parent?.Reference.NodeId ?? Guid.Empty,
+                    ParentId = parent?.Reference.EntityId ?? Guid.Empty,
                     CollectionId = entityCollection.CollectionId,
                     Path = _commandsHelper.BuildNamePath(entityName, parent),
                     IdPath = _commandsHelper.BuildIdPath(entityId, parent),

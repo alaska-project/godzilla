@@ -32,6 +32,15 @@ namespace Godzilla.Collections.Internal
             return await _collection.GetItem(id);
         }
 
+        public virtual Task<TItem> GetItem(Expression<Func<TItem, bool>> filter)
+        {
+            var item = _collection
+                .AsQueryable()
+                .Where(filter)
+                .FirstOrDefault();
+            return Task.FromResult(item);
+        }
+
         public virtual async Task<IEnumerable<TItem>> GetItems(IEnumerable<Guid> id)
         {
             return await _collection.GetItems(id);
@@ -42,7 +51,7 @@ namespace Godzilla.Collections.Internal
             return await _collection.GetItems(id, filter);
         }
 
-        public Task<IEnumerable<TItem>> GetItems(Expression<Func<TItem, bool>> filter)
+        public virtual Task<IEnumerable<TItem>> GetItems(Expression<Func<TItem, bool>> filter)
         {
             var items = _collection
                 .AsQueryable()

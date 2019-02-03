@@ -72,7 +72,36 @@ namespace Godzilla.Internal
                 Name = "nodeId_asc",
                 Fields = new List<IndexField<EntityNode>>
                 {
-                    new IndexField<EntityNode>(x => x.Reference.NodeId, Abstractions.Infrastructure.IndexSortOrder.Asc)
+                    new IndexField<EntityNode>(x => x.Reference.EntityId, Abstractions.Infrastructure.IndexSortOrder.Asc)
+                },
+                Options = new IndexOptions
+                {
+                    Unique = true,
+                }
+            });
+
+            configurator.DefineIndex(new IndexDefinition<EntitySecurityRule>
+            {
+                Name = "entityId_asc",
+                Fields = new List<IndexField<EntitySecurityRule>>
+                {
+                    new IndexField<EntitySecurityRule>(x => x.EntityId, Abstractions.Infrastructure.IndexSortOrder.Asc)
+                },
+                Options = new IndexOptions
+                {
+                    Unique = false,
+                }
+            });
+
+            configurator.DefineIndex(new IndexDefinition<EntitySecurityRule>
+            {
+                Name = "uniqueSecurityRule_asc",
+                Fields = new List<IndexField<EntitySecurityRule>>
+                {
+                    new IndexField<EntitySecurityRule>(x => x.EntityId, Abstractions.Infrastructure.IndexSortOrder.Asc),
+                    new IndexField<EntitySecurityRule>(x => x.Subject.SubjectId, Abstractions.Infrastructure.IndexSortOrder.Asc),
+                    new IndexField<EntitySecurityRule>(x => x.Subject.SubjectType, Abstractions.Infrastructure.IndexSortOrder.Asc),
+                    new IndexField<EntitySecurityRule>(x => x.Rule.Right, Abstractions.Infrastructure.IndexSortOrder.Asc),
                 },
                 Options = new IndexOptions
                 {

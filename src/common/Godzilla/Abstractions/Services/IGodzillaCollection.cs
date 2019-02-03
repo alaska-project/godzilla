@@ -13,6 +13,7 @@ namespace Godzilla.Abstractions.Services
         string CollectionId { get; }
 
         Task<TItem> GetItem(Guid id);
+        Task<TItem> GetItem(Expression<Func<TItem, bool>> filter);
         Task<IEnumerable<TItem>> GetItems(IEnumerable<Guid> id);
         Task<IEnumerable<TItem>> GetItems(IEnumerable<Guid> id, Expression<Func<TItem, bool>> filter);
         Task<IEnumerable<TItem>> GetItems(Expression<Func<TItem, bool>> filter);
