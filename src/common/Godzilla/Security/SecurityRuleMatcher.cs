@@ -40,7 +40,7 @@ namespace Godzilla.Security
                     .First(x => x.Rule.Right == permission);
 
             var isGranted = ruleToApply.Rule.Type == RuleType.Allow;
-            return new EvaluateResult(node.Reference.EntityId, permission, isGranted);
+            return new EvaluateResult(node.Reference.EntityId, permission, isGranted, ruleToApply);
         }
     }
 }

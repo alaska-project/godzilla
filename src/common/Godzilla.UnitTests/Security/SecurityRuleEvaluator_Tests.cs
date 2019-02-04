@@ -89,7 +89,7 @@ namespace Godzilla.UnitTests.Security
                     It.IsAny<EntityNode>(),
                     It.IsAny<IEnumerable<EntityNodeRuleContainer>>(),
                     It.IsAny<Guid>()))
-                .Returns(new EvaluateResult(entityId, SecurityRight.Read, true));
+                .Returns(new EvaluateResult(entityId, SecurityRight.Read, true, null));
 
             var results = await _evaluator.Evaluate(new List<Guid> { entityId }, SecurityRight.Read);
 
@@ -123,7 +123,7 @@ namespace Godzilla.UnitTests.Security
                     It.IsAny<EntityNode>(),
                     It.IsAny<IEnumerable<EntityNodeRuleContainer>>(),
                     It.IsAny<Guid>()))
-                .Returns(new EvaluateResult(entityId, SecurityRight.Read, false));
+                .Returns(new EvaluateResult(entityId, SecurityRight.Read, false, null));
 
             var results = await _evaluator.Evaluate(new List<Guid> { entityId }, SecurityRight.Read);
 

@@ -12,7 +12,7 @@ namespace Godzilla.DomainModels
         public SecurityRule Rule { get; set; }
     }
 
-    public class SecurityRule : IEquatable<SecurityRule>
+    internal class SecurityRule : IEquatable<SecurityRule>
     {
         public Guid Right { get; set; }
         public int Type { get; set; }
@@ -27,7 +27,7 @@ namespace Godzilla.DomainModels
         }
     }
 
-    public class RuleSubject : IEquatable<RuleSubject>
+    internal class RuleSubject : IEquatable<RuleSubject>
     {
         public string SubjectId { get; set; }
         public int SubjectType { get; set; }
@@ -40,20 +40,20 @@ namespace Godzilla.DomainModels
         }
     }
 
-    public static class RuleType
+    internal static class RuleType
     {
         public static readonly int Allow = 0;
         public static readonly int Deny = 1;
     }
 
-    public static class SubjectType
+    internal static class SubjectType
     {
         public static readonly int WellKnownIdentity = 0;
         public static readonly int User = 1;
         public static readonly int Group = 2;
     }
 
-    public static class SecurityRight
+    internal static class SecurityRight
     {
         public static readonly Guid Read = new Guid("ec98809d-5e89-4148-98c4-00ad8d11d050");
         public static readonly Guid Create = new Guid("6871cdb1-b647-4ad9-9b09-5242826c2bcb");
@@ -69,7 +69,7 @@ namespace Godzilla.DomainModels
         };
     }
 
-    public static class WellKnownIdentities
+    internal static class WellKnownIdentities
     {
         public const string Everyone = "ba6ebb6b-3073-4121-9a06-0ad36d82a8a7";
         public const string Anonymous = "bbb1487b-20e1-4e29-8650-0606b0d4d714";

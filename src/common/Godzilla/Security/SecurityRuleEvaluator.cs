@@ -37,7 +37,7 @@ namespace Godzilla.Security
             if (!UseAuthorization ||
                 _securityContext.IsAdministrator())
                 return entitiesId
-                    .Select(x => new EvaluateResult(x, permission, true));
+                    .Select(x => new EvaluateResult(x, permission, true, null));
 
             var appliableSubjects = _securityContext.GetApplyableSubjects();
 
