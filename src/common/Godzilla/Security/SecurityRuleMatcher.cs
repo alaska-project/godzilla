@@ -23,8 +23,11 @@ namespace Godzilla.Security
         {
             var filteredRules = rules
                 .Where(x =>
-                    x.SecurityRule.EntityId == node.EntityId ||
-                    x.SecurityRule.Rule.Inherit)
+                    x.SecurityRule.Rule.Right == permission &&
+                    (
+                        x.SecurityRule.EntityId == node.EntityId ||
+                        x.SecurityRule.Rule.Inherit
+                    ))
                 .ToList();
 
             var ruleToApply = filteredRules

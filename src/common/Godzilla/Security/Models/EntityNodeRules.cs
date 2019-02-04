@@ -24,7 +24,7 @@ namespace Godzilla.Security.Models
             SecurityRule = securityRule;
             NodeIdPath = ruleNode.IdPath.Substring(
                 0,
-                ruleNode.IdPath.IndexOf(ruleNode.EntityId.ToString() + ruleNode.EntityId.ToString().Length)
+                ruleNode.IdPath.IndexOf(ruleNode.EntityId.ToString()) + ruleNode.EntityId.ToString().Length
                 );
         }
 
