@@ -12,17 +12,32 @@ namespace Godzilla.DomainModels
         public SecurityRule Rule { get; set; }
     }
 
-    public class SecurityRule
+    public class SecurityRule : IEquatable<SecurityRule>
     {
         public Guid Right { get; set; }
         public int Type { get; set; }
         public bool Inherit { get; set; }
+
+        public bool Equals(SecurityRule other)
+        {
+            return
+                Right.Equals(other.Right) &&
+                Type.Equals(other.Type) &&
+                Inherit.Equals(other.Inherit);
+        }
     }
 
-    public class RuleSubject
+    public class RuleSubject : IEquatable<RuleSubject>
     {
         public string SubjectId { get; set; }
         public int SubjectType { get; set; }
+
+        public bool Equals(RuleSubject other)
+        {
+            return
+                SubjectId.Equals(other.SubjectId) &&
+                SubjectType == other.SubjectType;
+        }
     }
 
     public static class RuleType

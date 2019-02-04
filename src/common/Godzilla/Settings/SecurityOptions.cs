@@ -16,17 +16,17 @@ namespace Godzilla.Settings
 
         public IEnumerable<string> AdminRoles { get; set; } = new List<string> { "admin", "administrator" };
 
-        private static IEnumerable<EntitySecurityRule> CreateDefaultAllowRule()
+        internal static IEnumerable<EntitySecurityRule> CreateDefaultAllowRule()
         {
             return CreateDefaultRule(RuleType.Allow, SecurityRight.All);
         }
 
-        private static IEnumerable<EntitySecurityRule> CreateDefaultDenyRule()
+        internal static IEnumerable<EntitySecurityRule> CreateDefaultDenyRule()
         {
             return CreateDefaultRule(RuleType.Deny, SecurityRight.All);
         }
 
-        private static IEnumerable<EntitySecurityRule> CreateDefaultRule(int roleType, IEnumerable<Guid> rights)
+        internal static IEnumerable<EntitySecurityRule> CreateDefaultRule(int roleType, IEnumerable<Guid> rights)
         {
             return rights
                 .Select(x => new EntitySecurityRule
