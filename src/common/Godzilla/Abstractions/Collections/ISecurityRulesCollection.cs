@@ -9,7 +9,7 @@ namespace Godzilla.Abstractions.Collections
     internal interface ISecurityRulesCollection
     {
         Task<EntitySecurityRule> GetRule(Guid entityId, RuleSubject subject, SecurityRule rule);
-        Task<IEnumerable<EntitySecurityRule>> GetRules(IEnumerable<Guid> entityIds, IEnumerable<RuleSubject> subjects);
+        Task<IEnumerable<EntitySecurityRule>> GetRules(IEnumerable<Guid> entityIds, IEnumerable<RuleSubject> subjects, IEnumerable<Guid> rights);
         Task SetRule(Guid entityId, RuleSubject subject, SecurityRule rule);
         Task DeleteRule(Guid entityId, RuleSubject subject, SecurityRule rule);
         Task DeleteEntityRule(Guid entityId);

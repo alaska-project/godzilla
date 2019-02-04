@@ -18,6 +18,7 @@ namespace Godzilla.Abstractions.Services
         string AddChild(string path, string name);
         string GetParentPath(string path);
         string GetLeafName(string path);
+        IEnumerable<string> GetSegments(string path);
         int GetPathLevel(string path);
         Regex GetDescendantsRegex(string path, int depth);
         bool IsAncestorPath(string value, string descendantPath);

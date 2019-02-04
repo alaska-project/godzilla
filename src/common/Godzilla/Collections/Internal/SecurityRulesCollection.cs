@@ -17,26 +17,29 @@ namespace Godzilla.Collections.Internal
             : base(collection)
         { }
 
-        public async Task<IEnumerable<EntitySecurityRule>> GetRules(IEnumerable<Guid> entityIds, IEnumerable<RuleSubject> subjects)
+        public async Task<IEnumerable<EntitySecurityRule>> GetRules(IEnumerable<Guid> entityIds, IEnumerable<RuleSubject> subjects, IEnumerable<Guid> rights)
         {
             var wellKnownSubjectsId = FilterSubjectId(subjects, SubjectType.WellKnownIdentity);
             var userSubjectsId = FilterSubjectId(subjects, SubjectType.User);
             var groupSubjectsId = FilterSubjectId(subjects, SubjectType.Group);
 
             return await GetItems(x =>
-                entityIds.Contains(x.EntityId) && 
+                entityIds.Contains(x.EntityId) &&
+                rights.Contains(x.Rule.Right) &&
                 (
-                    x.Subject.SubjectType == SubjectType.WellKnownIdentity &&
-                    wellKnownSubjectsId.Contains(x.Subject.SubjectId)
-                ) ||
-                (
-                    x.Subject.SubjectType == SubjectType.User &&
-                    userSubjectsId.Contains(x.Subject.SubjectId)
-                ) ||
-                (
-                    x.Subject.SubjectType == SubjectType.Group &&
-                    groupSubjectsId.Contains(x.Subject.SubjectId)
-                ));
+                    (
+                        x.Subject.SubjectType == SubjectType.WellKnownIdentity &&
+                        wellKnownSubjectsId.Contains(x.Subject.SubjectId)
+                    ) ||
+                    (
+                        x.Subject.SubjectType == SubjectType.User &&
+                        userSubjectsId.Contains(x.Subject.SubjectId)
+                    ) ||
+                    (
+                        x.Subject.SubjectType == SubjectType.Group &&
+                        groupSubjectsId.Contains(x.Subject.SubjectId)
+                    ))
+                );
         }
 
         public async Task SetRule(Guid entityId, RuleSubject subject, SecurityRule rule)

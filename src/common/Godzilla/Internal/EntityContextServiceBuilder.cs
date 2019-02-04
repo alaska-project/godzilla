@@ -2,6 +2,7 @@
 using Godzilla.Abstractions.Services;
 using Godzilla.Commands;
 using Godzilla.Queries;
+using Godzilla.Security;
 using Godzilla.Services;
 using Godzilla.Settings;
 using MediatR;
@@ -22,13 +23,13 @@ namespace Godzilla.Internal
             this.services = services;
         }
 
-        public IServiceCollection Build()
+        public IEntityContextServiceCollection<TContext> Build()
         {
             AddLibraries();
             AddCoreServices();
             AddCommandHandlers();
             AddInternalServices();
-            return services;
+            return new EntityContextServiceCollection<TContext>(services);
         }
 
         private void AddCoreServices()
@@ -43,6 +44,10 @@ namespace Godzilla.Internal
                 .AddTransient<ITransactionService<TContext>, TransactionService<TContext>>()
                 .AddScoped<IEntityContextServices<TContext>, EntityContextServices<TContext>>()
                 .AddScoped<IEntityCommandsHelper<TContext>, CommandHandlerHelper<TContext>>()
+                .AddScoped<ISecurityRulesFinder<TContext>, SecurityRulesFinder<TContext>>()
+                .AddScoped<ISecurityRuleEvaluator<TContext>, SecurityRuleEvaluator<TContext>>()
+                .AddScoped<ISecurityContext<TContext>, SecurityContext<TContext>>()
+                .AddScoped<ISecurityRuleMatcher<TContext>, SecurityRuleMatcher<TContext>>()
                 .AddScoped<TContext>();
         }
 

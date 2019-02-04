@@ -21,7 +21,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Godzilla.Mongo", "src\provi
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Godzilla.UnitTests", "src\common\Godzilla.UnitTests\Godzilla.UnitTests.csproj", "{49110507-C95E-4C28-B7BC-09B413F1B137}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Godzilla.Mongo.FunctionalTests", "src\providers\Godzilla.Mongo.FunctionalTests\Godzilla.Mongo.FunctionalTests.csproj", "{A8DF7689-900E-411E-A562-43E8A61CE2FA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Godzilla.Mongo.FunctionalTests", "src\providers\Godzilla.Mongo.FunctionalTests\Godzilla.Mongo.FunctionalTests.csproj", "{A8DF7689-900E-411E-A562-43E8A61CE2FA}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "extensions", "extensions", "{D63B2F3C-BA18-4332-B39D-D414F35F6E59}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Godzilla.AspNetCore", "src\extensions\Godzilla.AspNetCore\Godzilla.AspNetCore.csproj", "{7C27908B-6EBF-4798-9409-B7D67425682C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -53,6 +57,10 @@ Global
 		{A8DF7689-900E-411E-A562-43E8A61CE2FA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A8DF7689-900E-411E-A562-43E8A61CE2FA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A8DF7689-900E-411E-A562-43E8A61CE2FA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7C27908B-6EBF-4798-9409-B7D67425682C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7C27908B-6EBF-4798-9409-B7D67425682C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7C27908B-6EBF-4798-9409-B7D67425682C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7C27908B-6EBF-4798-9409-B7D67425682C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -66,6 +74,8 @@ Global
 		{2B3D8401-1503-486F-86F7-9A9BB86292C7} = {729292D8-96C0-4267-AFD1-4A6EBA2589EF}
 		{49110507-C95E-4C28-B7BC-09B413F1B137} = {59583001-A7A8-46C3-9F89-2150682DB33C}
 		{A8DF7689-900E-411E-A562-43E8A61CE2FA} = {729292D8-96C0-4267-AFD1-4A6EBA2589EF}
+		{D63B2F3C-BA18-4332-B39D-D414F35F6E59} = {AD4A47B1-5344-438B-B384-C4B178772580}
+		{7C27908B-6EBF-4798-9409-B7D67425682C} = {D63B2F3C-BA18-4332-B39D-D414F35F6E59}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {1F514669-3A1F-46A9-86D8-604DB0B72E86}

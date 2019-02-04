@@ -3,6 +3,7 @@ using Godzilla.Abstractions.Services;
 using Godzilla.Extensions;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -80,6 +81,14 @@ namespace Godzilla.Services
             return path
                 .GetLastSegment(PathSeparator)
                 .ToLower();
+        }
+
+        public IEnumerable<string> GetSegments(string path)
+        {
+            return path
+                .Split(PathSeparator)
+                .Where(x => !string.IsNullOrEmpty(x))
+                .ToList();
         }
 
         public int GetPathLevel(string path)

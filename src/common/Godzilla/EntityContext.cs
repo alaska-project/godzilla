@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 [assembly: InternalsVisibleTo("MediatR")]
 [assembly: InternalsVisibleTo("MediatR.Extensions.Microsoft.DependencyInjection")]
 [assembly: InternalsVisibleTo("DynamicProxyGenAssembly2")]
+[assembly: InternalsVisibleTo("Godzilla.AspNetCore")]
 [assembly: InternalsVisibleTo("Godzilla.UnitTests")]
 namespace Godzilla
 {

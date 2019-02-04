@@ -12,10 +12,11 @@ namespace Godzilla.DomainModels
         public SecurityRule Rule { get; set; }
     }
 
-    internal class SecurityRule
+    public class SecurityRule
     {
         public Guid Right { get; set; }
         public int Type { get; set; }
+        public bool Inherit { get; set; }
     }
 
     public class RuleSubject
@@ -43,6 +44,14 @@ namespace Godzilla.DomainModels
         public static readonly Guid Create = new Guid("6871cdb1-b647-4ad9-9b09-5242826c2bcb");
         public static readonly Guid Update = new Guid("9e4d7101-601c-46da-8994-d3666e8c7f6d");
         public static readonly Guid Delete = new Guid("1b7f310e-27ad-4886-ba7c-929a61e3515e");
+
+        public static IEnumerable<Guid> All => new List<Guid>
+        {
+            Read,
+            Create,
+            Update,
+            Delete
+        };
     }
 
     public static class WellKnownIdentities
