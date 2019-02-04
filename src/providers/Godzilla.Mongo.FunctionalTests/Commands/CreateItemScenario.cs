@@ -37,21 +37,21 @@ namespace Godzilla.Mongo.FunctionalTests.Commands
 
                 #endregion
 
-                #region AsQueryable retreive
+                //#region AsQueryable retreive
 
-                var foundItem = context.Query
-                    .AsQueryable<TestEntity>()
-                    .FirstOrDefault(x => x.Id == item.Id);
+                //var foundItem = context.Query
+                //    .AsQueryable<TestEntity>()
+                //    .FirstOrDefault(x => x.Id == item.Id);
                 
-                Assert.NotNull(foundItem);
-                Assert.Equal(item.Id, foundItem.Id);
-                Assert.Equal(item.Name, foundItem.Name);
+                //Assert.NotNull(foundItem);
+                //Assert.Equal(item.Id, foundItem.Id);
+                //Assert.Equal(item.Name, foundItem.Name);
 
-                #endregion
+                //#endregion
 
                 #region GetItem retreive
 
-                foundItem = await context.Query.GetItem<TestEntity>(item.Id);
+                var foundItem = await context.Query.GetItem<TestEntity>(item.Id);
                 Assert.NotNull(foundItem);
                 Assert.Equal(item.Id, foundItem.Id);
                 Assert.Equal(item.Name, foundItem.Name);
@@ -146,9 +146,8 @@ namespace Godzilla.Mongo.FunctionalTests.Commands
 
                 await context.Commands.Delete(rootItem2);
 
-                var foundItemAfterDelete = context.Query
-                    .AsQueryable<TestEntity>()
-                    .FirstOrDefault(x => x.Id == item.Id);
+                var foundItemAfterDelete = await context.Query
+                    .GetItem<TestEntity>(item.Id);
 
                 Assert.Null(foundItemAfterDelete);
 
@@ -196,22 +195,22 @@ namespace Godzilla.Mongo.FunctionalTests.Commands
 
                 #endregion
 
-                #region AsQueryable retreive
+                //#region AsQueryable retreive
 
-                Assert.NotEqual(Guid.Empty, item.Id);
-                var foundItem = context.Query
-                    .AsQueryable<DerivedTestEntity>()
-                    .FirstOrDefault(x => x.Id == item.Id);
+                //Assert.NotEqual(Guid.Empty, item.Id);
+                //var foundItem = context.Query
+                //    .AsQueryable<DerivedTestEntity>()
+                //    .FirstOrDefault(x => x.Id == item.Id);
 
-                Assert.NotNull(foundItem);
-                Assert.Equal(item.Id, foundItem.Id);
-                Assert.Equal(item.Name, foundItem.Name);
+                //Assert.NotNull(foundItem);
+                //Assert.Equal(item.Id, foundItem.Id);
+                //Assert.Equal(item.Name, foundItem.Name);
 
-                #endregion
+                //#endregion
 
                 #region GetItem retreive
 
-                foundItem = await context.Query.GetItem<DerivedTestEntity>(item.Id);
+                var foundItem = await context.Query.GetItem<DerivedTestEntity>(item.Id);
                 Assert.NotNull(foundItem);
                 Assert.Equal(item.Id, foundItem.Id);
                 Assert.Equal(item.Name, foundItem.Name);
@@ -306,9 +305,8 @@ namespace Godzilla.Mongo.FunctionalTests.Commands
 
                 await context.Commands.Delete(rootItem2);
 
-                var foundItemAfterDelete = context.Query
-                    .AsQueryable<DerivedTestEntity>()
-                    .FirstOrDefault(x => x.Id == item.Id);
+                var foundItemAfterDelete = await context.Query
+                    .GetItem<DerivedTestEntity>(item.Id);
 
                 Assert.Null(foundItemAfterDelete);
 

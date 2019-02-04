@@ -28,11 +28,11 @@ namespace Godzilla.Queries
             _pathBuilder = pathBuilder ?? throw new ArgumentNullException(nameof(pathBuilder));
         }
         
-        public IQueryable<TEntity> AsQueryable<TEntity>()
-        {
-            return GetCollection<TEntity>()
-                .AsQueryable();
-        }
+        //public IQueryable<TEntity> AsQueryable<TEntity>()
+        //{
+        //    return GetCollection<TEntity>()
+        //        .AsQueryable();
+        //}
 
         public async Task<TEntity> GetItem<TEntity>(string path)
         {
