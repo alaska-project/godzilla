@@ -8,7 +8,7 @@ using Xunit;
 
 namespace Godzilla.Mongo.FunctionalTests.Commands
 {
-    public class CreateItemScenario : MongoGodzillaScenarioBase
+    public class ManageItemsScenario : MongoGodzillaScenarioBase
     {
         [Fact]
         public async Task Create_item()
