@@ -38,7 +38,7 @@ namespace Godzilla.Security
         private EntityNodeRules GetEntityRules(EntityNode node, IEnumerable<EntitySecurityRule> securityRules)
         {
             var matchingRules = securityRules
-                .Where(x => node.Reference.IdPath.Contains(x.EntityId.ToString()))
+                .Where(x => node.IdPath.Contains(x.EntityId.ToString()))
                 .Select(x => new EntityNodeRuleContainer(node, x))
                 .ToList();
 
@@ -55,7 +55,7 @@ namespace Godzilla.Security
         private IEnumerable<Guid> GetNodesIdAndAncestorsId(IEnumerable<EntityNode> entityNodes)
         {
             return entityNodes
-                .SelectMany(x => _pathBuilder.GetSegments(x.Reference.IdPath))
+                .SelectMany(x => _pathBuilder.GetSegments(x.IdPath))
                 .Distinct()
                 .Select(x => new Guid(x))
                 .ToList();

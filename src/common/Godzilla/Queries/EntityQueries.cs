@@ -45,8 +45,8 @@ namespace Godzilla.Queries
             var normalizedPath = _pathBuilder.NormalizePath(path);
             var nodesId = GetTreeEdgesCollection()
                 .AsQueryable()
-                .Where(x => x.Reference.Path == normalizedPath)
-                .Select(x => x.Reference.EntityId)
+                .Where(x => x.Path == normalizedPath)
+                .Select(x => x.EntityId)
                 .ToList();
 
             return await GetCollection<TEntity>()
@@ -89,13 +89,13 @@ namespace Godzilla.Queries
             var itemNode = GetTreeEdgesCollection()
                 .AsQueryable()
                 .FirstOrDefault(x =>
-                    x.Reference.EntityId == itemId &&
-                    x.Reference.CollectionId == parentCollection.CollectionId);
+                    x.EntityId == itemId &&
+                    x.CollectionId == parentCollection.CollectionId);
 
-            if (itemNode == null || itemNode.Reference.ParentId == Guid.Empty)
+            if (itemNode == null || itemNode.ParentId == Guid.Empty)
                 return default(TParent);
 
-            return await parentCollection.GetItem(itemNode.Reference.ParentId);
+            return await parentCollection.GetItem(itemNode.ParentId);
         }
 
         public async Task<TChild> GetChild<TChild>(object entity)
@@ -123,9 +123,9 @@ namespace Godzilla.Queries
             var childrenNodes = GetTreeEdgesCollection()
                 .AsQueryable()
                 .Where(x =>
-                    x.Reference.ParentId == parentId &&
-                    x.Reference.CollectionId == childrenCollection.CollectionId)
-                .Select(x => x.Reference.EntityId)
+                    x.ParentId == parentId &&
+                    x.CollectionId == childrenCollection.CollectionId)
+                .Select(x => x.EntityId)
                 .ToList();
 
             return await (filter == null ? 

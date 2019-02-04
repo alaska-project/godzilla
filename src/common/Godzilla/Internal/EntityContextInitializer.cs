@@ -33,7 +33,7 @@ namespace Godzilla.Internal
                 Name = "path_asc",
                 Fields = new List<IndexField<EntityNode>>
                 {
-                    new IndexField<EntityNode>(x => x.Reference.Path, Abstractions.Infrastructure.IndexSortOrder.Asc)
+                    new IndexField<EntityNode>(x => x.Path, Abstractions.Infrastructure.IndexSortOrder.Asc)
                 },
                 Options = new IndexOptions
                 {
@@ -46,7 +46,7 @@ namespace Godzilla.Internal
                 Name = "parentId_asc",
                 Fields = new List<IndexField<EntityNode>>
                 {
-                    new IndexField<EntityNode>(x => x.Reference.ParentId, Abstractions.Infrastructure.IndexSortOrder.Asc)
+                    new IndexField<EntityNode>(x => x.ParentId, Abstractions.Infrastructure.IndexSortOrder.Asc)
                 },
                 Options = new IndexOptions
                 {
@@ -59,7 +59,7 @@ namespace Godzilla.Internal
                 Name = "idPath_asc",
                 Fields = new List<IndexField<EntityNode>>
                 {
-                    new IndexField<EntityNode>(x => x.Reference.IdPath, Abstractions.Infrastructure.IndexSortOrder.Asc)
+                    new IndexField<EntityNode>(x => x.IdPath, Abstractions.Infrastructure.IndexSortOrder.Asc)
                 },
                 Options = new IndexOptions
                 {
@@ -72,7 +72,7 @@ namespace Godzilla.Internal
                 Name = "nodeId_asc",
                 Fields = new List<IndexField<EntityNode>>
                 {
-                    new IndexField<EntityNode>(x => x.Reference.EntityId, Abstractions.Infrastructure.IndexSortOrder.Asc)
+                    new IndexField<EntityNode>(x => x.EntityId, Abstractions.Infrastructure.IndexSortOrder.Asc)
                 },
                 Options = new IndexOptions
                 {

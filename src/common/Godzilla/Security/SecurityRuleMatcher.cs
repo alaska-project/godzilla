@@ -23,7 +23,7 @@ namespace Godzilla.Security
         {
             var filteredRules = rules
                 .Where(x =>
-                    x.SecurityRule.EntityId == node.Reference.EntityId ||
+                    x.SecurityRule.EntityId == node.EntityId ||
                     x.SecurityRule.Rule.Inherit)
                 .ToList();
 
@@ -40,7 +40,7 @@ namespace Godzilla.Security
                     .First(x => x.Rule.Right == permission);
 
             var isGranted = ruleToApply.Rule.Type == RuleType.Allow;
-            return new EvaluateResult(node.Reference.EntityId, permission, isGranted, ruleToApply);
+            return new EvaluateResult(node.EntityId, permission, isGranted, ruleToApply);
         }
     }
 }

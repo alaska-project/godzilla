@@ -22,9 +22,9 @@ namespace Godzilla.Security.Models
         public EntityNodeRuleContainer(EntityNode ruleNode, EntitySecurityRule securityRule)
         {
             SecurityRule = securityRule;
-            NodeIdPath = ruleNode.Reference.IdPath.Substring(
+            NodeIdPath = ruleNode.IdPath.Substring(
                 0,
-                ruleNode.Reference.IdPath.IndexOf(ruleNode.Reference.EntityId.ToString() + ruleNode.Reference.EntityId.ToString().Length)
+                ruleNode.IdPath.IndexOf(ruleNode.EntityId.ToString() + ruleNode.EntityId.ToString().Length)
                 );
         }
 

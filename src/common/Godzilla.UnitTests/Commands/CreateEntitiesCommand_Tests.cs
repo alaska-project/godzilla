@@ -74,8 +74,8 @@ namespace Godzilla.UnitTests.Commands
             _transactionService.Verify(x => x.AbortTransaction(), Times.Never());
 
             _treeEdgesCollection.Verify(x => x.Add(It.Is<IEnumerable<EntityNode>>(t =>
-                t.First().Reference.ParentId == request.ParentId &&
-                t.First().Reference.EntityId == entityId)), Times.Once());
+                t.First().ParentId == request.ParentId &&
+                t.First().EntityId == entityId)), Times.Once());
             _entityCollection.Verify(x => x.Add(It.IsAny<object>()), Times.Never());
             _derivedEntityCollection.Verify(x => x.Add(request.Entities), Times.Once());
         }
@@ -161,8 +161,8 @@ namespace Godzilla.UnitTests.Commands
             _transactionService.Verify(x => x.AbortTransaction(), Times.Never());
 
             _treeEdgesCollection.Verify(x => x.Add(It.Is<IEnumerable<EntityNode>>(t =>
-                t.First().Reference.ParentId == request.ParentId &&
-                t.First().Reference.EntityId == entityId)), Times.Once());
+                t.First().ParentId == request.ParentId &&
+                t.First().EntityId == entityId)), Times.Once());
             _entityCollection.Verify(x => x.Add(request.Entities), Times.Once());
         }
 
@@ -190,8 +190,8 @@ namespace Godzilla.UnitTests.Commands
             _transactionService.Verify(x => x.AbortTransaction(), Times.Never());
 
             _treeEdgesCollection.Verify(x => x.Add(It.Is<IEnumerable<EntityNode>>(t =>
-                t.First().Reference.ParentId == request.ParentId &&
-                t.First().Reference.EntityId != Guid.Empty)), Times.Once());
+                t.First().ParentId == request.ParentId &&
+                t.First().EntityId != Guid.Empty)), Times.Once());
             _entityCollection.Verify(x => x.Add(request.Entities), Times.Once());
         }
 

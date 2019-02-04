@@ -58,19 +58,19 @@ namespace Godzilla.Commands
         {
             var descendants = edgesCollection.GetDescendants(deleteRoot);
 
-            var groupedEntities = descendants.GroupBy(x => x.Reference.CollectionId);
+            var groupedEntities = descendants.GroupBy(x => x.CollectionId);
 
             foreach (var entityGroup in groupedEntities)
             {
                 var entitiesIdToDelete = entityGroup
-                    .Select(x => x.Reference.EntityId)
+                    .Select(x => x.EntityId)
                     .ToList();
 
                 var entityCollection = _transactionService.GetCollection(typeof(object), entityGroup.Key);
                 await entityCollection.Delete(entitiesIdToDelete);
             }
 
-            await edgesCollection.DeleteNodes(descendants.Select(x => x.Reference.EntityId));
+            await edgesCollection.DeleteNodes(descendants.Select(x => x.EntityId));
         }
     }
 }

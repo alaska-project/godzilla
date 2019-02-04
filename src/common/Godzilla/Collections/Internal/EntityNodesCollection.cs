@@ -27,14 +27,14 @@ namespace Godzilla.Collections.Internal
         {
             return _collection
                 .AsQueryable()
-                .FirstOrDefault(x => nodeId == x.Reference.EntityId);
+                .FirstOrDefault(x => nodeId == x.EntityId);
         }
 
         public virtual IEnumerable<EntityNode> GetNodes(IEnumerable<Guid> nodesId)
         {
             return _collection
                 .AsQueryable()
-                .Where(x => nodesId.Contains(x.Reference.EntityId))
+                .Where(x => nodesId.Contains(x.EntityId))
                 .ToList();
         }
 
@@ -42,32 +42,32 @@ namespace Godzilla.Collections.Internal
         {
             return _collection
                 .AsQueryable()
-                .Any(x => nodesId.Contains(x.Reference.EntityId));
+                .Any(x => nodesId.Contains(x.EntityId));
         }
 
         public virtual bool NodeExists(Guid nodeId)
         {
             return _collection
                 .AsQueryable()
-                .Any(x => x.Reference.EntityId == nodeId);
+                .Any(x => x.EntityId == nodeId);
         }
 
         public virtual async Task DeleteNode(Guid nodeId)
         {
-            await _collection.Delete(x => x.Reference.EntityId == nodeId);
+            await _collection.Delete(x => x.EntityId == nodeId);
         }
 
         public virtual async Task DeleteNodes(IEnumerable<Guid> nodesId)
         {
-            await _collection.Delete(x => nodesId.Contains(x.Reference.EntityId));
+            await _collection.Delete(x => nodesId.Contains(x.EntityId));
         }
 
         public virtual IEnumerable<EntityNode> GetDescendants(EntityNode node)
         {
-            var path = node.Reference.IdPath;
+            var path = node.IdPath;
             return _collection
                 .AsQueryable()
-                .Where(x => x.Reference.IdPath.StartsWith(path))
+                .Where(x => x.IdPath.StartsWith(path))
                 .ToList();
         }
     }
