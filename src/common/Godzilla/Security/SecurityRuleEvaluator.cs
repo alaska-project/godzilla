@@ -44,32 +44,8 @@ namespace Godzilla.Security
             var rules = await _rulesFinder.GetRules(entitiesId, appliableSubjects, permission);
 
             return rules
-                .Select(x => EvaluateRule(x.Node, x.Rules, permission))
+                .Select(x => _rulesMatcher.EvaluateRule(x.Node, x.Rules, permission))
                 .ToList();
-        }
-
-        public EvaluateResult EvaluateRule(EntityNode node, IEnumerable<EntityNodeRuleContainer> rules, Guid permission)
-        {
-            var filteredRules = rules
-                .Where(x =>
-                    x.SecurityRule.EntityId == node.Reference.EntityId ||
-                    x.SecurityRule.Rule.Inherit)
-                .ToList();
-
-            var ruleToApply = filteredRules
-                //order from most specific to the most generic
-                .OrderByDescending(x => x.NodeIdPath.Length)
-                //deny rule wins over allow rule
-                .ThenBy(x => x.SecurityRule.Rule.Type == RuleType.Deny ? 0 : 1)
-                .Select(x => x.SecurityRule)
-                .FirstOrDefault();
-
-            if (ruleToApply == null)
-                ruleToApply = _securityOptions.DefaultSecurityRules
-                    .First(x => x.Rule.Right == permission);
-
-            var isGranted = ruleToApply.Rule.Type == RuleType.Allow;
-            return new EvaluateResult(node.Reference.EntityId, permission, isGranted);
         }
     }
 }
