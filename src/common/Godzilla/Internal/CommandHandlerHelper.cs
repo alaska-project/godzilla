@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Godzilla.Internal
 {
@@ -15,13 +16,16 @@ namespace Godzilla.Internal
     {
         private readonly IEntityPropertyResolver<TContext> _propertyResolver;
         private readonly IPathBuilder<TContext> _pathBuilder;
+        private readonly ISecurityRuleEvaluator<TContext> _securityEvaluator;
 
         public CommandHandlerHelper(
             IEntityPropertyResolver<TContext> propertyResolver,
-            IPathBuilder<TContext> pathBuilder)
+            IPathBuilder<TContext> pathBuilder,
+            ISecurityRuleEvaluator<TContext> securityEvaluator)
         {
             _propertyResolver = propertyResolver ?? throw new ArgumentNullException(nameof(propertyResolver));
             _pathBuilder = pathBuilder ?? throw new ArgumentNullException(nameof(pathBuilder));
+            _securityEvaluator = securityEvaluator ?? throw new ArgumentNullException(nameof(securityEvaluator));
         }
         
         public Type GetEntityType(IEnumerable<object> entities)
@@ -36,19 +40,25 @@ namespace Godzilla.Internal
             return entityTypes.First().Key;
         }
 
-        public IEnumerable<EntityNode> VerifyEntitiesExist<TEntity>(IEnumerable<TEntity> entities, EntityNodesCollection edgesCollection)
+        public async Task<EntityNode> VerifyEntity(Guid entitiyId, EntityNodesCollection edgesCollection, Guid permission)
         {
-            return VerifyEntitiesExist(entities.Cast<object>(), edgesCollection);
+            var entities = await VerifyEntities(new List<Guid> { entitiyId }, edgesCollection, permission);
+            return entities.FirstOrDefault();
         }
 
-        public IEnumerable<EntityNode> VerifyEntitiesExist(IEnumerable<object> entities, EntityNodesCollection edgesCollection)
+        public async Task<IEnumerable<EntityNode>> VerifyEntities<TEntity>(IEnumerable<TEntity> entities, EntityNodesCollection edgesCollection, Guid permission)
+        {
+            return await VerifyEntities(entities.Cast<object>(), edgesCollection, permission);
+        }
+
+        public async Task<IEnumerable<EntityNode>> VerifyEntities(IEnumerable<object> entities, EntityNodesCollection edgesCollection, Guid permission)
         {
             var entitiesId = GetEntitiesId(entities);
 
-            return VerifyEntitiesExist(entitiesId, edgesCollection);
+            return await VerifyEntities(entitiesId, edgesCollection, permission);
         }
-
-        public IEnumerable<EntityNode> VerifyEntitiesExist(IEnumerable<Guid> entitiesId, EntityNodesCollection edgesCollection)
+        
+        public async Task<IEnumerable<EntityNode>> VerifyEntities(IEnumerable<Guid> entitiesId, EntityNodesCollection edgesCollection, Guid permission)
         {
             var existingNodes = edgesCollection
                 .AsQueryable()
@@ -65,7 +75,16 @@ namespace Godzilla.Internal
             if (missingNodesId.Any())
                 throw new EntitiesNotFoundException($"Entities not found {string.Join(", ", missingNodesId)}");
 
+            await VerifyEntitiesAuthorization(entitiesId, permission);
+
             return existingNodes;
+        }
+
+        public async Task VerifyRootNodePermission(Guid permission)
+        {
+            var result = await _securityEvaluator.EvaluateRoot(permission);
+            if (!result.IsRightGranted)
+                throw new UnauthorizedOperationException($"Unauthorized access right {permission} for root entity");
         }
 
         public IEnumerable<Guid> GetEntitiesId<TEntity>(IEnumerable<TEntity> entities)
@@ -79,7 +98,7 @@ namespace Godzilla.Internal
                 .Select(x => _propertyResolver.GetEntityId(x, false))
                 .ToList();
         }
-
+        
         public string BuildNamePath(string name, EntityNode parent)
         {
             var parentPath = parent?.Path ?? _pathBuilder.RootPath;
@@ -90,6 +109,17 @@ namespace Godzilla.Internal
         {
             var parentPath = parent?.IdPath ?? _pathBuilder.RootPath;
             return _pathBuilder.JoinPath(parentPath, id.ToString());
+        }
+
+        private async Task VerifyEntitiesAuthorization(IEnumerable<Guid> entitiesId, Guid permission)
+        {
+            var evaluateResults = await _securityEvaluator.Evaluate(entitiesId, permission);
+            var unauthorizedEntities = evaluateResults
+                .Where(x => !x.IsRightGranted)
+                .ToList();
+
+            if (unauthorizedEntities.Any())
+                throw new UnauthorizedOperationException($"Unauthorized access right {permission} for entities {string.Join(", ", unauthorizedEntities.Select(x => x.EntityId))}");
         }
     }
 }

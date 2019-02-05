@@ -37,7 +37,7 @@ namespace Godzilla.Commands
 
                 var edgesCollection = _transactionService.GetCollection<EntityNode, EntityNodesCollection>();
 
-                var renameRootNode = edgesCollection.GetNode(request.EntityId);
+                var renameRootNode = await _commandsHelper.VerifyEntity(request.EntityId, edgesCollection, SecurityRight.Rename);
                 var renameDescendants = edgesCollection.GetDescendants(renameRootNode)
                     .ToList();
 

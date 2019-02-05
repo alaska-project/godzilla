@@ -37,13 +37,14 @@ namespace Godzilla.Commands
 
                 var edgesCollection = _transactionService.GetCollection<EntityNode, EntityNodesCollection>();
 
-                var moveTargetNode = edgesCollection.GetNode(request.NewParentId);
+                var moveTargetNode = await _commandsHelper.VerifyEntity(request.NewParentId, edgesCollection, SecurityRight.Create);
                 if (moveTargetNode == null)
                     throw new NodeNotFoundException($"Target node {request.NewParentId} not found");
 
-                var moveSourceNode = edgesCollection.GetNode(request.EntityId);
+                var moveSourceNode = await _commandsHelper.VerifyEntity(request.EntityId, edgesCollection, SecurityRight.Move);
                 if (moveSourceNode == null)
                     throw new NodeNotFoundException($"Source node {request.EntityId} not found");
+
                 var nodesToMove = edgesCollection.GetDescendants(moveSourceNode)
                     .ToList();
 

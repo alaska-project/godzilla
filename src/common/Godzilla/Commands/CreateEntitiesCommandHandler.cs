@@ -40,7 +40,7 @@ namespace Godzilla.Commands
                 var entityCollection = _transactionService.GetCollection(entityType);
                 var edgesCollection = _transactionService.GetCollection<EntityNode, EntityNodesCollection>();
 
-                var parent = GetParentNode(edgesCollection, request.ParentId);
+                var parent = await GetParentNode(edgesCollection, request.ParentId);
 
                 var treeEdges = request.Entities
                     .Select(x => CreateTreeEdge(x, parent, entityCollection))
@@ -63,15 +63,15 @@ namespace Godzilla.Commands
             }
         }
 
-        private EntityNode GetParentNode(EntityNodesCollection edgesCollection, Guid parentId)
+        private async Task<EntityNode> GetParentNode(EntityNodesCollection edgesCollection, Guid parentId)
         {
             if (parentId == Guid.Empty)
+            {
+                await _commandsHelper.VerifyRootNodePermission(SecurityRight.Create);
                 return null;
+            }
 
-            var parent = edgesCollection
-                .AsQueryable()
-                .FirstOrDefault(x => x.EntityId == parentId);
-
+            var parent = await _commandsHelper.VerifyEntity(parentId, edgesCollection, SecurityRight.Create);
             if (parent == null)
                 throw new ParentNodeNotFoundException($"Parent node {parentId} not found");
 

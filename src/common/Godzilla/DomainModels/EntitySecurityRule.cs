@@ -58,6 +58,8 @@ namespace Godzilla.DomainModels
         public static readonly Guid Read = new Guid("ec98809d-5e89-4148-98c4-00ad8d11d050");
         public static readonly Guid Create = new Guid("6871cdb1-b647-4ad9-9b09-5242826c2bcb");
         public static readonly Guid Update = new Guid("9e4d7101-601c-46da-8994-d3666e8c7f6d");
+        public static readonly Guid Rename = new Guid("b94bbcc3-e844-4231-8d80-e73092751837");
+        public static readonly Guid Move = new Guid("32f32999-8223-4b3d-afe3-40af5c471493");
         public static readonly Guid Delete = new Guid("1b7f310e-27ad-4886-ba7c-929a61e3515e");
 
         public static IEnumerable<Guid> All => new List<Guid>
@@ -65,6 +67,8 @@ namespace Godzilla.DomainModels
             Read,
             Create,
             Update,
+            Rename,
+            Move,
             Delete
         };
     }

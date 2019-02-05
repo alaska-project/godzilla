@@ -3,6 +3,7 @@ using Godzilla.Abstractions.Services;
 using Godzilla.DomainModels;
 using Godzilla.Security;
 using Godzilla.Security.Models;
+using Godzilla.Settings;
 using Moq;
 using System;
 using System.Collections.Generic;
@@ -28,6 +29,38 @@ namespace Godzilla.UnitTests.Security
                 _rulesMatcher.Object,
                 _securityContext.Object,
                 _securityOptions.Object);
+        }
+
+        [Fact]
+        public async Task EvaluateRootDefaultAllow()
+        {
+            _securityOptions
+                .Setup(x => x.UseAuthorization)
+                .Returns(true);
+
+            _securityOptions
+                .Setup(x => x.DefaultSecurityRules)
+                .Returns(SecurityOptions<FakeEntityContext>.CreateDefaultAllowRule());
+
+            var result = await _evaluator.EvaluateRoot(SecurityRight.Read);
+
+            Assert.True(result.IsRightGranted);
+        }
+
+        [Fact]
+        public async Task EvaluateRootDefaultDeny()
+        {
+            _securityOptions
+                .Setup(x => x.UseAuthorization)
+                .Returns(true);
+
+            _securityOptions
+                .Setup(x => x.DefaultSecurityRules)
+                .Returns(SecurityOptions<FakeEntityContext>.CreateDefaultDenyRule());
+
+            var result = await _evaluator.EvaluateRoot(SecurityRight.Read);
+
+            Assert.False(result.IsRightGranted);
         }
 
         [Fact]

@@ -37,7 +37,7 @@ namespace Godzilla.Commands
                 
                 var edgesCollection = _transactionService.GetCollection<EntityNode, EntityNodesCollection>();
 
-                var treeNodes = _commandsHelper.VerifyEntitiesExist(nodesId, edgesCollection);
+                var treeNodes = await _commandsHelper.VerifyEntities(nodesId, edgesCollection, SecurityRight.Delete);
 
                 foreach (var treeNode in treeNodes)
                 {

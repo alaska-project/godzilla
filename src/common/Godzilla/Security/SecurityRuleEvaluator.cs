@@ -32,6 +32,25 @@ namespace Godzilla.Security
 
         private bool UseAuthorization => _securityOptions?.UseAuthorization ?? false;
 
+        public Task<EvaluateResult> EvaluateRoot(Guid permission)
+        {
+            if (!UseAuthorization ||
+                _securityContext.IsAdministrator())
+                return Task.FromResult(new EvaluateResult(Guid.Empty, permission, true, null));
+
+            var defaultRule = _securityOptions
+                .DefaultSecurityRules
+                .First(x => x.Rule.Right == permission);
+
+            var result = new EvaluateResult(
+                Guid.Empty,
+                permission,
+                defaultRule.Rule.Type == RuleType.Allow,
+                null);
+
+            return Task.FromResult(result);
+        }
+
         public async Task<IEnumerable<EvaluateResult>> Evaluate(IEnumerable<Guid> entitiesId, Guid permission)
         {
             if (!UseAuthorization ||
