@@ -12,11 +12,9 @@ namespace Godzilla
 {
     public static class AspNetCoreDependencyInjectionExtensions
     {
-        public static IEntityContextServiceCollection<TContext> AddAuthorization<TContext>(this IEntityContextServiceCollection<TContext> services)
+        public static IEntityContextServiceCollection<TContext> AddMvcAuthentication<TContext>(this IEntityContextServiceCollection<TContext> services)
             where TContext : EntityContext
         {
-            EntityContextServiceBuilder<TContext>.SecurityOptions.UseAuthorization = true;
-
             services.Services
                 .AddSingleton<IHttpContextAccessor, HttpContextAccessor>()
                 .AddScoped<ISecurityContextProvider<TContext>, AspNetCoreSecurityProvider<TContext>>();

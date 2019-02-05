@@ -17,15 +17,14 @@ namespace Godzilla.Internal
         where TContext : EntityContext
     {
         private readonly IGodzillaServiceBuilder _builder;
+        private readonly SecurityOptions<TContext> _securityOptions;
 
-        public EntityContextServiceBuilder(IGodzillaServiceBuilder builder)
+        public EntityContextServiceBuilder(IGodzillaServiceBuilder builder, SecurityOptions<TContext> securityOptions)
         {
             _builder = builder;
-            SecurityOptions = new SecurityOptions<TContext>();
+            _securityOptions = securityOptions ?? throw new ArgumentNullException(nameof(securityOptions));
         }
-
-        internal static SecurityOptions<TContext> SecurityOptions;
-
+        
         public IEntityContextServiceCollection<TContext> Build()
         {
             AddLibraries();
@@ -59,7 +58,7 @@ namespace Godzilla.Internal
                 .AddScoped<ISecurityRuleEvaluator<TContext>, SecurityRuleEvaluator<TContext>>()
                 .AddScoped<ISecurityContext<TContext>, SecurityContext<TContext>>()
                 .AddScoped<ISecurityRuleMatcher<TContext>, SecurityRuleMatcher<TContext>>()
-                .AddSingleton<ISecurityOptions<TContext>>(SecurityOptions);
+                .AddSingleton<ISecurityOptions<TContext>>(_securityOptions);
         }
 
         private void AddCommandHandlers()

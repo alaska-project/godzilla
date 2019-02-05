@@ -31,8 +31,9 @@ namespace Godzilla.Mongo.FunctionalTests
                     opt.UseMongoDb(
                             _runner.ConnectionString,
                             Configuration["Godzilla:Database"]);
+                    opt.UseAuthorization();
                 })
-                .AddAuthorization();
+                .AddMvcAuthentication();
         }
     }
 }

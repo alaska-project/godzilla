@@ -21,10 +21,12 @@ namespace Godzilla
         public static IEntityContextServiceCollection<TContext> AddEntityContext<TContext>(this IGodzillaServiceBuilder builder, Action<EntityContextOptionsBuilder<TContext>> optionsBuilder = null)
             where TContext : EntityContext
         {
-            var optionsBuilderObj = new EntityContextOptionsBuilder<TContext>(builder);
+            var securityOptions = new SecurityOptions<TContext>();
+
+            var optionsBuilderObj = new EntityContextOptionsBuilder<TContext>(builder, securityOptions);
             optionsBuilder?.Invoke(optionsBuilderObj);
 
-            return new EntityContextServiceBuilder<TContext>(builder)
+            return new EntityContextServiceBuilder<TContext>(builder, securityOptions)
                 .Build();
         }
     }
