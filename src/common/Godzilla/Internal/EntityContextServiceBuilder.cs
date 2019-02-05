@@ -16,12 +16,15 @@ namespace Godzilla.Internal
     internal class EntityContextServiceBuilder<TContext>
         where TContext : EntityContext
     {
-        private readonly IServiceCollection services;
+        private readonly IGodzillaServiceBuilder _builder;
 
-        public EntityContextServiceBuilder(IServiceCollection services)
+        public EntityContextServiceBuilder(IGodzillaServiceBuilder builder)
         {
-            this.services = services;
+            _builder = builder;
+            SecurityOptions = new SecurityOptions<TContext>();
         }
+
+        internal static SecurityOptions<TContext> SecurityOptions;
 
         public IEntityContextServiceCollection<TContext> Build()
         {
@@ -29,12 +32,14 @@ namespace Godzilla.Internal
             AddCoreServices();
             AddCommandHandlers();
             AddInternalServices();
-            return new EntityContextServiceCollection<TContext>(services);
+            AddSecurityServices();
+
+            return new EntityContextServiceCollection<TContext>(_builder.Services);
         }
 
         private void AddCoreServices()
         {
-            services
+            _builder.Services
                 .AddSingleton<IGodzillaOptions<TContext>, GodzillaOptions<TContext>>()
                 .AddScoped<ICollectionInitializer, CollectionInitializer>()
                 .AddScoped<IPathBuilder<TContext>, PathBuilder<TContext>>()
@@ -44,16 +49,22 @@ namespace Godzilla.Internal
                 .AddTransient<ITransactionService<TContext>, TransactionService<TContext>>()
                 .AddScoped<IEntityContextServices<TContext>, EntityContextServices<TContext>>()
                 .AddScoped<IEntityCommandsHelper<TContext>, CommandHandlerHelper<TContext>>()
+                .AddScoped<TContext>();
+        }
+
+        private void AddSecurityServices()
+        {
+            _builder.Services
                 .AddScoped<ISecurityRulesFinder<TContext>, SecurityRulesFinder<TContext>>()
                 .AddScoped<ISecurityRuleEvaluator<TContext>, SecurityRuleEvaluator<TContext>>()
                 .AddScoped<ISecurityContext<TContext>, SecurityContext<TContext>>()
                 .AddScoped<ISecurityRuleMatcher<TContext>, SecurityRuleMatcher<TContext>>()
-                .AddScoped<TContext>();
+                .AddSingleton<ISecurityOptions<TContext>>(SecurityOptions);
         }
 
         private void AddCommandHandlers()
         {
-            services
+            _builder.Services
                 .AddTransient<IRequestHandler<CreateEntitiesCommand<TContext>, IEnumerable<object>>, CreateEntitiesCommandHandler<TContext>>()
                 .AddTransient<IRequestHandler<UpdateEntitiesCommand<TContext>, IEnumerable<object>>, UpdateEntitiesCommandHandler<TContext>>()
                 //.AddTransient(typeof(IRequestHandler<PartialUpdateEntitiesCommand<,,>, PartialUpdateEntitiesCommandHandler<,,>>))
@@ -64,7 +75,7 @@ namespace Godzilla.Internal
 
         private void AddInternalServices()
         {
-            services
+            _builder.Services
                 .AddSingleton<EntityContextInitializer<TContext>>()
                 .AddScoped<EntityConfigurator<TContext>>()
                 .AddScoped<EntityQueries<TContext>>()
@@ -73,7 +84,7 @@ namespace Godzilla.Internal
 
         private void AddLibraries()
         {
-            services
+            _builder.Services
                 .AddMediatR();
         }
     }

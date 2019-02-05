@@ -37,9 +37,10 @@ namespace Godzilla.DemoWebApp
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
             services
+                .AddGodzilla()
                 .AddEntityContext<DemoEntityContext>(opt => 
                 {
-                    opt.UseMongoDb<DemoEntityContext>(
+                    opt.UseMongoDb(
                             Configuration["Godzilla:ConnectionString"], 
                             Configuration["Godzilla:Database"]);
                 });

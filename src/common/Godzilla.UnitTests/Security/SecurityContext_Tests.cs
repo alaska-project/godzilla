@@ -13,6 +13,7 @@ namespace Godzilla.UnitTests.Security
     public class SecurityContext_Tests
     {
         private SecurityContext<FakeEntityContext> _securityContext;
+        private Mock<ISecurityImpersonationService> _impersonationService = new Mock<ISecurityImpersonationService>();
         private Mock<ISecurityOptions<FakeEntityContext>> _securityOptions = new Mock<ISecurityOptions<FakeEntityContext>>();
         private Mock<ISecurityContextProvider<FakeEntityContext>> _securityContextProvider = new Mock<ISecurityContextProvider<FakeEntityContext>>();
 
@@ -30,7 +31,11 @@ namespace Godzilla.UnitTests.Security
                 .Setup(x => x.DefaultSecurityRules)
                 .Returns(() => SecurityOptions<FakeEntityContext>.CreateDefaultAllowRule());
 
-            _securityContext = new SecurityContext<FakeEntityContext>(_securityOptions.Object, _securityContextProvider.Object);
+            _impersonationService
+                .Setup(x => x.ImpersonatedPrincipal)
+                .Returns((ImpersonatedPrincipal)null);
+
+            _securityContext = new SecurityContext<FakeEntityContext>(_securityOptions.Object, _impersonationService.Object, _securityContextProvider.Object);
         }
 
         [Fact]
@@ -39,6 +44,10 @@ namespace Godzilla.UnitTests.Security
             _securityContextProvider
                 .Setup(x => x.IsAuthenticated)
                 .Returns(false);
+
+            _impersonationService
+                .Setup(x => x.ImpersonatedPrincipal)
+                .Returns((ImpersonatedPrincipal)null);
 
             var result = _securityContext
                 .GetApplyableSubjects();
@@ -68,6 +77,10 @@ namespace Godzilla.UnitTests.Security
             _securityContextProvider
                 .Setup(x => x.UserId)
                 .Returns("User1");
+
+            _impersonationService
+                .Setup(x => x.ImpersonatedPrincipal)
+                .Returns((ImpersonatedPrincipal)null);
 
             var result = _securityContext
                 .GetApplyableSubjects();
@@ -103,6 +116,10 @@ namespace Godzilla.UnitTests.Security
                 .Setup(x => x.GetRoles())
                 .Returns(new List<string> { "admin" });
 
+            _impersonationService
+                .Setup(x => x.ImpersonatedPrincipal)
+                .Returns((ImpersonatedPrincipal)null);
+
             var isAdmin = _securityContext.IsAdministrator();
             Assert.True(isAdmin);
         }
@@ -118,19 +135,82 @@ namespace Godzilla.UnitTests.Security
                 .Setup(x => x.GetRoles())
                 .Returns(new List<string> { "user" });
 
+            _impersonationService
+                .Setup(x => x.ImpersonatedPrincipal)
+                .Returns((ImpersonatedPrincipal)null);
+
             var isAdmin = _securityContext.IsAdministrator();
             Assert.False(isAdmin);
         }
 
         [Fact]
-        public void AnonymoudNotAdmin()
+        public void AnonymousNotAdmin()
         {
             _securityContextProvider
                 .Setup(x => x.IsAuthenticated)
                 .Returns(false);
 
+            _impersonationService
+                .Setup(x => x.ImpersonatedPrincipal)
+                .Returns((ImpersonatedPrincipal)null);
+
             var isAdmin = _securityContext.IsAdministrator();
             Assert.False(isAdmin);
+        }
+
+        [Fact]
+        public void ImpersonatedAdmin()
+        {
+            _impersonationService
+                .Setup(x => x.ImpersonatedPrincipal)
+                .Returns(new ImpersonatedPrincipal(true, ""));
+
+            var isAdmin = _securityContext.IsAdministrator();
+            Assert.True(isAdmin);
+        }
+
+        [Fact]
+        public void ImpersonatedAnonymousNonAdmin()
+        {
+            _impersonationService
+                .Setup(x => x.ImpersonatedPrincipal)
+                .Returns(new ImpersonatedPrincipal(false, ""));
+
+            var isAdmin = _securityContext.IsAdministrator();
+            var isAuthenticated = _securityContext.IsAuthenticated();
+
+            Assert.False(isAdmin);
+            Assert.False(isAuthenticated);
+        }
+
+        [Fact]
+        public void ImpersonatedAnonymous()
+        {
+            _impersonationService
+                .Setup(x => x.ImpersonatedPrincipal)
+                .Returns(new ImpersonatedPrincipal(false, ""));
+
+            var isAdmin = _securityContext.IsAdministrator();
+            var isAuthenticated = _securityContext.IsAuthenticated();
+
+            Assert.False(isAdmin);
+            Assert.False(isAuthenticated);
+        }
+
+        [Fact]
+        public void ImpersonatedUser()
+        {
+            _impersonationService
+                .Setup(x => x.ImpersonatedPrincipal)
+                .Returns(new ImpersonatedPrincipal(false, "User1"));
+
+            var isAdmin = _securityContext.IsAdministrator();
+            var isAuthenticated = _securityContext.IsAuthenticated();
+            var userId = _securityContext.GetUserId();
+
+            Assert.False(isAdmin);
+            Assert.True(isAuthenticated);
+            Assert.Equal("User1", userId);
         }
     }
 }

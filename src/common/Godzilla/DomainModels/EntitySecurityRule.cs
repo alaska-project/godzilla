@@ -27,7 +27,7 @@ namespace Godzilla.DomainModels
         }
     }
 
-    internal class RuleSubject : IEquatable<RuleSubject>
+    public class RuleSubject : IEquatable<RuleSubject>
     {
         public string SubjectId { get; set; }
         public int SubjectType { get; set; }

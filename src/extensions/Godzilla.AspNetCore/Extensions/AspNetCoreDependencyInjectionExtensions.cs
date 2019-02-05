@@ -1,6 +1,8 @@
 ﻿using Godzilla.Abstractions;
 using Godzilla.AspNetCore.Security;
+using Godzilla.Internal;
 using Godzilla.Settings;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
@@ -13,10 +15,10 @@ namespace Godzilla
         public static IEntityContextServiceCollection<TContext> AddEntityContextAuthorization<TContext>(this IEntityContextServiceCollection<TContext> services)
             where TContext : EntityContext
         {
-            var options = new SecurityOptions<TContext>();
+            EntityContextServiceBuilder<TContext>.SecurityOptions.UseAuthorization = true;
 
             services.Services
-                .AddSingleton<ISecurityOptions<TContext>>(options)
+                .AddSingleton<IHttpContextAccessor, HttpContextAccessor>()
                 .AddScoped<ISecurityContextProvider<TContext>, AspNetCoreSecurityProvider<TContext>>();
 
             return services;

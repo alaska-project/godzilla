@@ -13,17 +13,20 @@ namespace Godzilla.Security
     {
         private ISecurityOptions<TContext> _securityOptions;
         private ISecurityContextProvider<TContext> _securityContextProvider;
+        private ISecurityImpersonationService _impersonationService;
 
         public SecurityContext(ISecurityOptions<TContext> securityOptions,
-            ISecurityContextProvider<TContext> securityContextProvider)
+            ISecurityImpersonationService impersonationService,
+            ISecurityContextProvider<TContext> securityContextProvider = null)
         {
             _securityOptions = securityOptions ?? throw new ArgumentNullException(nameof(securityOptions));
+            _impersonationService = impersonationService ?? throw new ArgumentNullException(nameof(impersonationService));
             _securityContextProvider = securityContextProvider;
         }
 
         public IEnumerable<RuleSubject> GetApplyableSubjects()
         {
-            if (!_securityContextProvider.IsAuthenticated)
+            if (!IsAuthenticated())
             {
                 return new List<RuleSubject>
                 {
@@ -55,13 +58,32 @@ namespace Godzilla.Security
                 new RuleSubject
                 {
                     SubjectType = SubjectType.User,
-                    SubjectId = _securityContextProvider.UserId,
+                    SubjectId = GetUserId(),
                 },
             };
         }
 
+        public bool IsAuthenticated()
+        {
+            if (_impersonationService.ImpersonatedPrincipal != null)
+                return _impersonationService.ImpersonatedPrincipal.IsAuthenticated;
+
+            return _securityContextProvider.IsAuthenticated;
+        }
+
+        public string GetUserId()
+        {
+            if (_impersonationService.ImpersonatedPrincipal != null)
+                return _impersonationService.ImpersonatedPrincipal.UserId;
+
+            return _securityContextProvider.UserId;
+        }
+        
         public bool IsAdministrator()
         {
+            if (_impersonationService.ImpersonatedPrincipal != null)
+                return _impersonationService.ImpersonatedPrincipal.IsAdmin;
+
             return _securityContextProvider.IsAuthenticated &&
                 _securityContextProvider.GetRoles().Intersect(_securityOptions.AdminRoles).Any();
         }

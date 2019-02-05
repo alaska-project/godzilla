@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Godzilla.Abstractions;
+using Microsoft.Extensions.DependencyInjection;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,6 +15,9 @@ namespace Godzilla.Mongo.FunctionalTests.Commands
         public async Task Create_item()
         {
             using (var server = CreateServerWithAuthentication())
+            using (server.Host.Services
+                .GetRequiredService<ISecurityImpersonationService>()
+                .ImpersonateUser("User1"))
             {
                 var context = GetEntityContext<TestEntityContext>(server);
 
@@ -173,6 +178,9 @@ namespace Godzilla.Mongo.FunctionalTests.Commands
         public async Task Create_derived_item()
         {
             using (var server = CreateServerWithAuthentication())
+            using (server.Host.Services
+                .GetRequiredService<ISecurityImpersonationService>()
+                .ImpersonateUser("User1"))
             {
                 var context = GetEntityContext<TestEntityContext>(server);
 

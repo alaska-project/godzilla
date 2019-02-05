@@ -18,14 +18,17 @@ namespace Godzilla.Queries
         private readonly ICollectionService<TContext> _collectionService;
         private readonly IEntityPropertyResolver<TContext> _propertyResolver;
         private readonly IPathBuilder<TContext> _pathBuilder;
+        private readonly ISecurityRuleEvaluator<TContext> _securityEvaluator;
 
         public EntityQueries(ICollectionService<TContext> collectionService,
             IEntityPropertyResolver<TContext> propertyResolver,
-            IPathBuilder<TContext> pathBuilder)
+            IPathBuilder<TContext> pathBuilder,
+            ISecurityRuleEvaluator<TContext> securityEvaluator)
         {
             _collectionService = collectionService ?? throw new ArgumentNullException(nameof(collectionService));
             _propertyResolver = propertyResolver ?? throw new ArgumentNullException(nameof(propertyResolver));
             _pathBuilder = pathBuilder ?? throw new ArgumentNullException(nameof(pathBuilder));
+            _securityEvaluator = securityEvaluator ?? throw new ArgumentNullException(nameof(securityEvaluator));
         }
         
         //public IQueryable<TEntity> AsQueryable<TEntity>()
@@ -49,36 +52,46 @@ namespace Godzilla.Queries
                 .Select(x => x.EntityId)
                 .ToList();
 
+            var filteredNodes = await FilterAllowedNodes(nodesId);
+
             return await GetCollection<TEntity>()
-                .GetItems(nodesId);
+                .GetItems(filteredNodes);
         }
 
         public async Task<TEntity> GetItem<TEntity>(Guid id)
         {
+            var filteredNodes = await FilterAllowedNodes(new List<Guid> { id });
+            if (!filteredNodes.Any())
+                return default(TEntity);
+
+            var filteredNode = filteredNodes.FirstOrDefault();
             return await GetCollection<TEntity>()
-                .GetItem(id);
+                .GetItem(filteredNode);
         }
 
         public async Task<TItem> GetItem<TItem>(Expression<Func<TItem, bool>> filter)
         {
-            return await Task.FromResult(GetCollection<TItem>()
-                .AsQueryable()
-                .Where(filter)
-                .FirstOrDefault());
+            var results = await GetItems<TItem>(filter);
+            return results.FirstOrDefault();
         }
         
         public async Task<IEnumerable<TEntity>> GetItems<TEntity>(IEnumerable<Guid> id)
         {
+            var filteredNodes = await FilterAllowedNodes(id);
+
             return await GetCollection<TEntity>()
-                .GetItems(id);
+                .GetItems(filteredNodes);
         }
 
-        public Task<IEnumerable<TItem>> GetItems<TItem>(Expression<Func<TItem, bool>> filter)
+        public async Task<IEnumerable<TItem>> GetItems<TItem>(Expression<Func<TItem, bool>> filter)
         {
-            return Task.FromResult<IEnumerable<TItem>>(GetCollection<TItem>()
+            var entities = GetCollection<TItem>()
                 .AsQueryable()
                 .Where(filter)
-                .ToList());
+                .ToList();
+
+            var filteredNodes = await FilterAllowedNodes(entities);
+            return filteredNodes;
         }
 
         public async Task<TParent> GetParent<TParent>(object entity)
@@ -95,7 +108,11 @@ namespace Godzilla.Queries
             if (itemNode == null || itemNode.ParentId == Guid.Empty)
                 return default(TParent);
 
-            return await parentCollection.GetItem(itemNode.ParentId);
+            var filteredNodes = await FilterAllowedNodes(new List<Guid> { itemNode.ParentId });
+            if (!filteredNodes.Any())
+                return default(TParent);
+
+            return await parentCollection.GetItem(filteredNodes.First());
         }
 
         public async Task<TChild> GetChild<TChild>(object entity)
@@ -128,9 +145,34 @@ namespace Godzilla.Queries
                 .Select(x => x.EntityId)
                 .ToList();
 
+            var filteredChildNodes = await FilterAllowedNodes(childrenNodes);
+
             return await (filter == null ? 
-                childrenCollection.GetItems(childrenNodes) :
-                childrenCollection.GetItems(childrenNodes, filter));
+                childrenCollection.GetItems(filteredChildNodes) :
+                childrenCollection.GetItems(filteredChildNodes, filter));
+        }
+
+        private async Task<IEnumerable<TEntity>> FilterAllowedNodes<TEntity>(IEnumerable<TEntity> entities)
+        {
+            var entitiesId = entities
+                .Select(x => _propertyResolver.GetEntityId(x))
+                .ToList();
+
+            var allowedEntitiesId = await FilterAllowedNodes(entitiesId);
+
+            return entities
+                .Where(x => allowedEntitiesId.Contains(_propertyResolver.GetEntityId(x)))
+                .ToList();
+        }
+
+        private async Task<IEnumerable<Guid>> FilterAllowedNodes(IEnumerable<Guid> nodesId)
+        {
+            var evaluateResults = await _securityEvaluator.Evaluate(nodesId, SecurityRight.Read);
+
+            return evaluateResults
+                .Where(x => x.IsRightGranted)
+                .Select(x => x.EntityId)
+                .ToList();
         }
 
         private EntityNodesCollection GetTreeEdgesCollection()

@@ -13,7 +13,7 @@ namespace Godzilla.Mongo
 {
     public static class MongoEntityContextOptionsBuilderExtensions
     {
-        public static void UseMongoDb<TContext>(this EntityContextOptionsBuilder builder, 
+        public static void UseMongoDb<TContext>(this EntityContextOptionsBuilder<TContext> builder, 
             string connectionString, 
             string database)
             where TContext : EntityContext
@@ -25,7 +25,8 @@ namespace Godzilla.Mongo
                 ConnectionString = connectionString,
                 DatabaseName = database,
             };
-            builder.Services
+            builder.Builder
+                .Services
                 .AddSingleton(options)
                 .AddTransient<IDatabaseTransactionManager<TContext>, MongoDatabaseTransactionManager<TContext>>()
                 .AddScoped<IDatabaseCollectionProvider<TContext>, MongoDatabaseCollectionProvider<TContext>>()

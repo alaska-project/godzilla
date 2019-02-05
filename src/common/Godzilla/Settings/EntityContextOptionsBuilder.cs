@@ -1,17 +1,19 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Godzilla.Abstractions;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace Godzilla
 {
-    public class EntityContextOptionsBuilder
+    public class EntityContextOptionsBuilder<TContext>
+        where TContext : EntityContext
     {
-        internal EntityContextOptionsBuilder(IServiceCollection services)
+        internal EntityContextOptionsBuilder(IGodzillaServiceBuilder builder)
         {
-            Services = services ?? throw new ArgumentNullException(nameof(services));
+            Builder = builder ?? throw new ArgumentNullException(nameof(builder));
         }
 
-        public IServiceCollection Services { get; }
+        public IGodzillaServiceBuilder Builder { get; }
     }
 }

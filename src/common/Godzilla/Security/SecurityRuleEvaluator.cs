@@ -27,7 +27,7 @@ namespace Godzilla.Security
             _rulesFinder = rulesFinder ?? throw new ArgumentNullException(nameof(rulesFinder));
             _rulesMatcher = rulesMatcher ?? throw new ArgumentNullException(nameof(rulesMatcher));
             _securityContext = securityContext ?? throw new ArgumentNullException(nameof(securityContext));
-            _securityOptions = securityOptions;
+            _securityOptions = securityOptions ?? throw new ArgumentNullException(nameof(securityOptions));
         }
 
         private bool UseAuthorization => _securityOptions?.UseAuthorization ?? false;
