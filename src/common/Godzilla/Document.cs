@@ -29,6 +29,20 @@ namespace Godzilla
 
         #region Commands
 
+        public async Task SetPermissions(RuleSubject subject, IEnumerable<SecurityRule> rules)
+        {
+            ChekId(_entity);
+
+            await _context.Commands.SetEntityPermissions(Id, subject, rules);
+        }
+
+        public async Task ClearPermissions(RuleSubject subject)
+        {
+            ChekId(_entity);
+
+            await _context.Commands.ClearEntityPermissions(Id, subject);
+        }
+
         public async Task Delete()
         {
             ChekId(_entity);

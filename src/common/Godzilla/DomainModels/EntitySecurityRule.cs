@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace Godzilla.DomainModels
@@ -12,8 +13,18 @@ namespace Godzilla.DomainModels
         public SecurityRule Rule { get; set; }
     }
 
-    internal class SecurityRule : IEquatable<SecurityRule>
+    public class SecurityRule : IEquatable<SecurityRule>
     {
+        internal SecurityRule()
+        { }
+
+        internal SecurityRule(Guid right, int type, bool inherit)
+        {
+            Right = right;
+            Type = type;
+            Inherit = inherit;
+        }
+
         public Guid Right { get; set; }
         public int Type { get; set; }
         public bool Inherit { get; set; }
@@ -25,10 +36,85 @@ namespace Godzilla.DomainModels
                 Type.Equals(other.Type) &&
                 Inherit.Equals(other.Inherit);
         }
+
+        #region Allow Rules
+
+        public static SecurityRule AllowRead(bool inherit)
+        {
+            return new SecurityRule(SecurityRight.Read, RuleType.Allow, inherit);
+        }
+
+        public static SecurityRule AllowMove(bool inherit)
+        {
+            return new SecurityRule(SecurityRight.Move, RuleType.Allow, inherit);
+        }
+
+        public static SecurityRule AllowRename(bool inherit)
+        {
+            return new SecurityRule(SecurityRight.Rename, RuleType.Allow, inherit);
+        }
+
+        public static SecurityRule AllowUpdate(bool inherit)
+        {
+            return new SecurityRule(SecurityRight.Update, RuleType.Allow, inherit);
+        }
+
+        public static SecurityRule AllowDelete(bool inherit)
+        {
+            return new SecurityRule(SecurityRight.Delete, RuleType.Allow, inherit);
+        }
+
+        public static IEnumerable<SecurityRule> AllowAll(bool inherit)
+        {
+            return SecurityRight.All
+                .Select(x => new SecurityRule(x, RuleType.Allow, inherit))
+                .ToList();
+        }
+
+        #endregion
+
+        #region Deny Rules
+
+        public static SecurityRule DenyRead(bool inherit)
+        {
+            return new SecurityRule(SecurityRight.Read, RuleType.Deny, inherit);
+        }
+
+        public static SecurityRule DenyMove(bool inherit)
+        {
+            return new SecurityRule(SecurityRight.Move, RuleType.Deny, inherit);
+        }
+
+        public static SecurityRule DenyRename(bool inherit)
+        {
+            return new SecurityRule(SecurityRight.Rename, RuleType.Deny, inherit);
+        }
+
+        public static SecurityRule DenyUpdate(bool inherit)
+        {
+            return new SecurityRule(SecurityRight.Update, RuleType.Deny, inherit);
+        }
+
+        public static SecurityRule DenyDelete(bool inherit)
+        {
+            return new SecurityRule(SecurityRight.Delete, RuleType.Deny, inherit);
+        }
+
+        public static IEnumerable<SecurityRule> DenyAll(bool inherit)
+        {
+            return SecurityRight.All
+                .Select(x => new SecurityRule(x, RuleType.Deny, inherit))
+                .ToList();
+        }
+
+        #endregion
     }
 
     public class RuleSubject : IEquatable<RuleSubject>
     {
+        internal RuleSubject()
+        { }
+
         public string SubjectId { get; set; }
         public int SubjectType { get; set; }
 
@@ -37,6 +123,15 @@ namespace Godzilla.DomainModels
             return
                 SubjectId.Equals(other.SubjectId) &&
                 SubjectType == other.SubjectType;
+        }
+
+        public static RuleSubject User(string userId)
+        {
+            return new RuleSubject
+            {
+                SubjectId = userId,
+                SubjectType = DomainModels.SubjectType.User,
+            };
         }
     }
 
@@ -61,6 +156,7 @@ namespace Godzilla.DomainModels
         public static readonly Guid Rename = new Guid("b94bbcc3-e844-4231-8d80-e73092751837");
         public static readonly Guid Move = new Guid("32f32999-8223-4b3d-afe3-40af5c471493");
         public static readonly Guid Delete = new Guid("1b7f310e-27ad-4886-ba7c-929a61e3515e");
+        public static readonly Guid Administer = new Guid("ef383f3f-70ba-426c-86df-2d622916bdb3");
 
         public static IEnumerable<Guid> All => new List<Guid>
         {
@@ -69,7 +165,8 @@ namespace Godzilla.DomainModels
             Update,
             Rename,
             Move,
-            Delete
+            Delete,
+            Administer
         };
     }
 

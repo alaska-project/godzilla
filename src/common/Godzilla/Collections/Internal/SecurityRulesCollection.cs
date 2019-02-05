@@ -42,6 +42,12 @@ namespace Godzilla.Collections.Internal
                 );
         }
 
+        public async Task SetRules(Guid entityId, RuleSubject subject, IEnumerable<SecurityRule> rules)
+        {
+            foreach (var rule in rules)
+                await SetRule(entityId, subject, rule);
+        }
+
         public async Task SetRule(Guid entityId, RuleSubject subject, SecurityRule rule)
         {
             var entityRule = await GetRule(entityId, subject, rule);
@@ -58,6 +64,14 @@ namespace Godzilla.Collections.Internal
                 Subject = subject,
                 Rule = rule,
             });
+        }
+
+        public async Task ClearRules(Guid entityId, RuleSubject subject)
+        {
+            await Delete(x =>
+                x.EntityId == entityId &&
+                x.Subject.SubjectId == subject.SubjectId &&
+                x.Subject.SubjectType == subject.SubjectType);
         }
 
         public async Task DeleteRule(Guid entityId, RuleSubject subject, SecurityRule rule)

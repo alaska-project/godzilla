@@ -70,7 +70,8 @@ namespace Godzilla.Internal
                 //.AddTransient(typeof(IRequestHandler<PartialUpdateEntitiesCommand<,,>, PartialUpdateEntitiesCommandHandler<,,>>))
                 .AddTransient<IRequestHandler<MoveEntityCommand<TContext>, Unit>, MoveEntityCommandHandler<TContext>>()
                 .AddTransient<IRequestHandler<RenameEntityCommand<TContext>, Unit>, RenameEntityCommandHandler<TContext>>()
-                .AddTransient<IRequestHandler<DeleteEntitiesCommand<TContext>, Unit>, DeleteEntitiesCommandHandler<TContext>>();
+                .AddTransient<IRequestHandler<DeleteEntitiesCommand<TContext>, Unit>, DeleteEntitiesCommandHandler<TContext>>()
+                .AddTransient<IRequestHandler<SetPermissionsCommand<TContext>, Unit>, SetPermissionsCommandHandler<TContext>>();
         }
 
         private void AddInternalServices()

@@ -84,6 +84,9 @@ namespace Godzilla.Security
             if (_impersonationService.ImpersonatedPrincipal != null)
                 return _impersonationService.ImpersonatedPrincipal.IsAdmin;
 
+            if (_securityContextProvider == null)
+                return true;
+
             return _securityContextProvider.IsAuthenticated &&
                 _securityContextProvider.GetRoles().Intersect(_securityOptions.AdminRoles).Any();
         }

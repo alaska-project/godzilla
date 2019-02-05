@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Godzilla.DomainModels;
+using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Text;
@@ -6,6 +7,8 @@ using System.Threading.Tasks;
 
 namespace Godzilla.Abstractions
 {
+    public enum EntityPermissionType { Allow, Deny }
+
     public interface IEntityCommands
     {
         Task<TEntity> Add<TEntity>(TEntity entity);
@@ -34,5 +37,9 @@ namespace Godzilla.Abstractions
 
         Task Rename<TEntity>(TEntity entity, string newName);
         Task Rename(Guid entityId, string newName);
+
+        Task SetEntityPermission(Guid entityId, RuleSubject subject, SecurityRule rule);
+        Task SetEntityPermissions(Guid entityId, RuleSubject subject, IEnumerable<SecurityRule> rules);
+        Task ClearEntityPermissions(Guid entityId, RuleSubject subject);
     }
 }

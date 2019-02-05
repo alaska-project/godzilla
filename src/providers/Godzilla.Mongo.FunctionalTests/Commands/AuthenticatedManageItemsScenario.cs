@@ -1,4 +1,5 @@
 ﻿using Godzilla.Abstractions;
+using Godzilla.DomainModels;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
@@ -146,6 +147,22 @@ namespace Godzilla.Mongo.FunctionalTests.Commands
 
                 #endregion
 
+                #region permissions
+
+                await context.Commands.SetEntityPermission(rootItem2.Id, RuleSubject.User("User1"), SecurityRule.DenyRead(true));
+
+                var readDeniedItem = await context.Query.GetItem<TestEntity>(rootItem2.Id);
+
+                Assert.Null(readDeniedItem);
+
+                await context.Commands.ClearEntityPermissions(rootItem2.Id, RuleSubject.User("User1"));
+
+                readDeniedItem = await context.Query.GetItem<TestEntity>(rootItem2.Id);
+
+                Assert.NotNull(readDeniedItem);
+
+                #endregion
+
                 #region delete
 
                 await context.Commands.Delete(rootItem2);
@@ -228,7 +245,7 @@ namespace Godzilla.Mongo.FunctionalTests.Commands
                 Assert.Contains(foundItems, x => x.Name == item.Name);
 
                 #endregion
-
+                
                 #region GetChild retreive
 
                 foundItem = await context.Query.GetChild<DerivedTestEntity>(rootItem);
@@ -305,6 +322,22 @@ namespace Godzilla.Mongo.FunctionalTests.Commands
                 var secondMovedItems = await context.Query.GetItems<DerivedTestEntity>("/root2/gigi");
                 var secondMovedItem = secondMovedItems.FirstOrDefault(x => x.Id == item.Id);
                 Assert.NotNull(secondMovedItem);
+
+                #endregion
+
+                #region permissions
+
+                await context.Commands.SetEntityPermission(rootItem2.Id, RuleSubject.User("User1"), SecurityRule.DenyRead(true));
+
+                var readDeniedItem = await context.Query.GetItem<TestEntity>(rootItem2.Id);
+
+                Assert.Null(readDeniedItem);
+
+                await context.Commands.ClearEntityPermissions(rootItem2.Id, RuleSubject.User("User1"));
+
+                readDeniedItem = await context.Query.GetItem<TestEntity>(rootItem2.Id);
+
+                Assert.NotNull(readDeniedItem);
 
                 #endregion
 

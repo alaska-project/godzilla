@@ -1,6 +1,7 @@
 ﻿using Godzilla.Abstractions;
 using Godzilla.Abstractions.Services;
 using Godzilla.Commands;
+using Godzilla.DomainModels;
 using MediatR;
 using System;
 using System.Collections.Generic;
@@ -200,6 +201,28 @@ namespace Godzilla.Services
         public async Task Rename(Guid entityId, string newName)
         {
             await _mediator.Send(new RenameEntityCommand<TContext>(entityId, newName));
+        }
+
+        #endregion
+
+        #region Permissions
+
+        public async Task SetEntityPermission(Guid entityId, RuleSubject subject, SecurityRule rule)
+        {
+            await SetEntityPermissions(entityId, subject, new List<SecurityRule> { rule });
+        }
+
+        public async Task SetEntityPermissions(Guid entityId, RuleSubject subject, IEnumerable<SecurityRule> rules)
+        {
+            await _mediator.Send(new SetPermissionsCommand<TContext>(
+                    entityId,
+                    subject,
+                    rules));
+        }
+
+        public async Task ClearEntityPermissions(Guid entityId, RuleSubject subject)
+        {
+            await SetEntityPermissions(entityId, subject, null);
         }
 
         #endregion
