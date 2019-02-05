@@ -32,7 +32,7 @@ namespace Godzilla.Mongo.FunctionalTests
                             _runner.ConnectionString,
                             Configuration["Godzilla:Database"]);
                 })
-                .AddEntityContextAuthorization();
+                .AddAuthorization();
         }
     }
 }
