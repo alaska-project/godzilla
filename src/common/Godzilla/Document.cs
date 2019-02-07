@@ -126,6 +126,16 @@ namespace Godzilla
             return CreateDocument(parent);
         }
 
+        public async Task<Document<T>> GetOrCreateChild<T>(Func<T> childCreator)
+        {
+            var child = await GetChild<T>();
+            if (child != null)
+                return child;
+
+            var childValue = childCreator();
+            return await AddChild(childValue);
+        }
+
         public async Task<Document<T>> GetChild<T>()
         {
             var children = await GetChildren<T>();
