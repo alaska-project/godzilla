@@ -24,7 +24,7 @@ namespace Godzilla
 
         #region Aggregate
 
-        protected virtual async Task<DocumentAggregate<TEntity>> GetAggregate(Guid id)
+        protected virtual async Task<TAggregate> GetAggregate(Guid id)
         {
             var document = await GetDocument(id);
             return document == null ?
@@ -32,7 +32,7 @@ namespace Godzilla
                 CreateAggregateInstance(document);
         }
 
-        protected virtual async Task<DocumentAggregate<TEntity>> GetAggregate(string path)
+        protected virtual async Task<TAggregate> GetAggregate(string path)
         {
             var document = await GetDocument(path);
             return document == null ?
@@ -40,7 +40,7 @@ namespace Godzilla
                 CreateAggregateInstance(document);
         }
 
-        protected virtual async Task<DocumentAggregate<TEntity>> GetAggregate(Expression<Func<TEntity, bool>> filter)
+        protected virtual async Task<TAggregate> GetAggregate(Expression<Func<TEntity, bool>> filter)
         {
             var document = await GetDocument(filter);
             return document == null ?
@@ -48,7 +48,7 @@ namespace Godzilla
                 CreateAggregateInstance(document);
         }
 
-        protected virtual async Task<IEnumerable<DocumentAggregate<TEntity>>> GetAggregates()
+        protected virtual async Task<IEnumerable<TAggregate>> GetAggregates()
         {
             var documents = await GetDocuments();
             return documents
@@ -56,7 +56,7 @@ namespace Godzilla
                 .ToList();
         }
 
-        protected virtual async Task<IEnumerable<DocumentAggregate<TEntity>>> GetAggregates(IEnumerable<Guid> id)
+        protected virtual async Task<IEnumerable<TAggregate>> GetAggregates(IEnumerable<Guid> id)
         {
             var documents = await GetDocuments(id);
             return documents
@@ -64,7 +64,7 @@ namespace Godzilla
                 .ToList();
         }
 
-        protected virtual async Task<IEnumerable<DocumentAggregate<TEntity>>> GetAggregates(Expression<Func<TEntity, bool>> filter)
+        protected virtual async Task<IEnumerable<TAggregate>> GetAggregates(Expression<Func<TEntity, bool>> filter)
         {
             var documents = await GetDocuments(filter);
             return documents
