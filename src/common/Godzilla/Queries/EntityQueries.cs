@@ -96,6 +96,9 @@ namespace Godzilla.Queries
 
         public async Task<TParent> GetParent<TParent>(object entity)
         {
+            if (entity == null)
+                throw new ArgumentNullException(nameof(entity));
+
             var itemId = _propertyResolver.GetEntityId(entity);
             var parentCollection = GetCollection<TParent>();
 
@@ -140,6 +143,9 @@ namespace Godzilla.Queries
 
         public async Task<IEnumerable<TChild>> GetChildren<TChild>(object entity, IEnumerable<Guid> id)
         {
+            if (entity == null)
+                throw new ArgumentNullException(nameof(entity));
+
             var parentId = _propertyResolver.GetEntityId(entity);
             var childrenCollection = GetCollection<TChild>();
 
@@ -158,6 +164,9 @@ namespace Godzilla.Queries
 
         public async Task<IEnumerable<TChild>> GetChildren<TChild>(object entity, Expression<Func<TChild, bool>> filter)
         {
+            if (entity == null)
+                throw new ArgumentNullException(nameof(entity));
+
             var parentId = _propertyResolver.GetEntityId(entity);
             var childrenCollection = GetCollection<TChild>();
 
