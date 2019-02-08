@@ -19,7 +19,9 @@ namespace Godzilla.Abstractions
         Task<TParent> GetParent<TParent>(object entity);
         Task<TChild> GetChild<TChild>(object entity);
         Task<TChild> GetChild<TChild>(object entity, Expression<Func<TChild, bool>> filter);
+        Task<TChild> GetChild<TChild>(object entity, Guid entityId);
         Task<IEnumerable<TChild>> GetChildren<TChild>(object entity);
         Task<IEnumerable<TChild>> GetChildren<TChild>(object entity, Expression<Func<TChild, bool>> filter);
+        Task<IEnumerable<TChild>> GetChildren<TChild>(object entity, IEnumerable<Guid> id);
     }
 }

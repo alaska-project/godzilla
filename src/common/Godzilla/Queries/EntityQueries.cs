@@ -127,9 +127,33 @@ namespace Godzilla.Queries
                 .FirstOrDefault();
         }
 
+        public async Task<TChild> GetChild<TChild>(object entity, Guid entityId)
+        {
+            return (await GetChildren<TChild>(entity, new List<Guid> { entityId }))
+                .FirstOrDefault();
+        }
+
         public async Task<IEnumerable<TChild>> GetChildren<TChild>(object entity)
         {
-            return await GetChildren<TChild>(entity, null);
+            return await GetChildren<TChild>(entity, (Expression<Func<TChild, bool>>)null);
+        }
+
+        public async Task<IEnumerable<TChild>> GetChildren<TChild>(object entity, IEnumerable<Guid> id)
+        {
+            var parentId = _propertyResolver.GetEntityId(entity);
+            var childrenCollection = GetCollection<TChild>();
+
+            var childrenNodes = GetTreeEdgesCollection()
+                .AsQueryable()
+                .Where(x =>
+                    id.Contains(x.EntityId) &&
+                    x.ParentId == parentId &&
+                    x.CollectionId == childrenCollection.CollectionId)
+                .Select(x => x.EntityId)
+                .ToList();
+
+            var filteredChildNodes = await FilterAllowedNodes(childrenNodes);
+            return await childrenCollection.GetItems(filteredChildNodes);
         }
 
         public async Task<IEnumerable<TChild>> GetChildren<TChild>(object entity, Expression<Func<TChild, bool>> filter)
