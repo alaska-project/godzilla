@@ -39,6 +39,7 @@ namespace Godzilla
             entityContextServices.Initializer.Initialize(this, entityContextServices.Configurator);
         }
 
+        internal INotificationService NotificationService => _entityContextServices.NotificationService;
         internal IEntityPropertyResolver Resolver => _entityContextServices.PropertyResolver;
         public IEntityCommands Commands => _entityContextServices.Commands;
         public IEntityQueries Query => _entityContextServices.Queries;

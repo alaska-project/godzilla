@@ -14,13 +14,15 @@ namespace Godzilla
 
         private readonly EntityContext _context;
         private TEntity _entity;
-        
+
         internal Document(EntityContext context, TEntity entity)
         {
             _context = context ?? throw new ArgumentNullException(nameof(context));
             _entity = entity;
             Id = context.Resolver.GetEntityId(entity);
         }
+
+        internal EntityContext Context => _context;
 
         public Guid Id { get; }
         public TEntity Value => _entity;
@@ -158,6 +160,44 @@ namespace Godzilla
         {
             var children = await _context.Query.GetChildren(_entity, filter);
             return CreateDocuments(children);
+        }
+
+        #endregion
+
+        #region Comparsions
+
+        public override bool Equals(object obj)
+        {
+            if (obj == null || !(obj is Document<TEntity>))
+                return false;
+
+            if (Object.ReferenceEquals(this, obj))
+                return true;
+
+            if (this.GetType() != obj.GetType())
+                return false;
+
+            var item = (Document<TEntity>)obj;
+
+            return item.Id.Equals(this.Id);
+        }
+
+        public override int GetHashCode()
+        {
+            return Id.GetHashCode();
+        }
+
+        public static bool operator ==(Document<TEntity> left, Document<TEntity> right)
+        {
+            if (Object.Equals(left, null))
+                return (Object.Equals(right, null)) ? true : false;
+            else
+                return left.Equals(right);
+        }
+
+        public static bool operator !=(Document<TEntity> left, Document<TEntity> right)
+        {
+            return !(left == right);
         }
 
         #endregion

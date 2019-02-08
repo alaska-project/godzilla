@@ -1,6 +1,7 @@
 ﻿using Godzilla.Abstractions;
 using Godzilla.Abstractions.Services;
 using Godzilla.Commands;
+using Godzilla.Notifications;
 using Godzilla.Queries;
 using Godzilla.Security;
 using Godzilla.Services;
@@ -48,6 +49,7 @@ namespace Godzilla.Internal
                 .AddTransient<ITransactionService<TContext>, TransactionService<TContext>>()
                 .AddScoped<IEntityContextServices<TContext>, EntityContextServices<TContext>>()
                 .AddScoped<IEntityCommandsHelper<TContext>, CommandHandlerHelper<TContext>>()
+                .AddScoped<INotificationService<TContext>, MediatorNotificationService<TContext>>()
                 .AddScoped<TContext>();
         }
 
