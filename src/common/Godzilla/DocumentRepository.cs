@@ -7,8 +7,9 @@ using System.Threading.Tasks;
 
 namespace Godzilla
 {
-    public abstract class DocumentRepository<TContext, TEntity>
+    public abstract class DocumentRepository<TContext, TEntity, TAggregate>
         where TContext : EntityContext
+        where TAggregate : DocumentAggregate<TEntity>
     {
         #region Init
 
@@ -71,10 +72,9 @@ namespace Godzilla
                 .ToList();
         }
 
-        protected virtual DocumentAggregate<TEntity> CreateAggregateInstance(Document<TEntity> document)
+        protected virtual TAggregate CreateAggregateInstance(Document<TEntity> document)
         {
-            return (DocumentAggregate<TEntity>)
-                Activator.CreateInstance(typeof(DocumentAggregate<TEntity>), new object[] { document });
+            return (TAggregate) Activator.CreateInstance(typeof(TAggregate), new object[] { document });
         }
 
         #endregion
