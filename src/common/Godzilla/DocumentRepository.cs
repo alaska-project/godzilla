@@ -29,7 +29,7 @@ namespace Godzilla
             var document = await GetDocument(id);
             return document == null ?
                 null :
-                CreateAggregateInstance(document);
+                await CreateAggregateInstance(document);
         }
 
         protected virtual async Task<TAggregate> GetAggregate(string path)
@@ -37,7 +37,7 @@ namespace Godzilla
             var document = await GetDocument(path);
             return document == null ?
                 null :
-                CreateAggregateInstance(document);
+                await CreateAggregateInstance(document);
         }
 
         protected virtual async Task<TAggregate> GetAggregate(Expression<Func<TEntity, bool>> filter)
@@ -45,36 +45,39 @@ namespace Godzilla
             var document = await GetDocument(filter);
             return document == null ?
                 null :
-                CreateAggregateInstance(document);
+                await CreateAggregateInstance(document);
         }
 
         protected virtual async Task<IEnumerable<TAggregate>> GetAggregates()
         {
             var documents = await GetDocuments();
-            return documents
-                .Select(x => CreateAggregateInstance(x))
-                .ToList();
+            return await CreateAggregateInstances(documents);
         }
 
         protected virtual async Task<IEnumerable<TAggregate>> GetAggregates(IEnumerable<Guid> id)
         {
             var documents = await GetDocuments(id);
-            return documents
-                .Select(x => CreateAggregateInstance(x))
-                .ToList();
+            return await CreateAggregateInstances(documents);
         }
 
         protected virtual async Task<IEnumerable<TAggregate>> GetAggregates(Expression<Func<TEntity, bool>> filter)
         {
             var documents = await GetDocuments(filter);
-            return documents
-                .Select(x => CreateAggregateInstance(x))
-                .ToList();
+            return await CreateAggregateInstances(documents);
         }
 
-        protected virtual TAggregate CreateAggregateInstance(Document<TEntity> document)
+        protected virtual Task<TAggregate> CreateAggregateInstance(Document<TEntity> document)
         {
-            return (TAggregate) Activator.CreateInstance(typeof(TAggregate), new object[] { document });
+            var aggregate = (TAggregate) Activator.CreateInstance(typeof(TAggregate), new object[] { document });
+            return Task.FromResult(aggregate);
+        }
+
+        private async Task<IEnumerable<TAggregate>> CreateAggregateInstances(IEnumerable<Document<TEntity>> documents)
+        {
+            var aggregates = new List<TAggregate>();
+            foreach (var document in documents)
+                aggregates.Add(await CreateAggregateInstance(document));
+            return aggregates;
         }
 
         #endregion
@@ -110,7 +113,7 @@ namespace Godzilla
         {
             return await Context.Documents.GetDocuments(filter);
         }
-
+        
         #endregion
 
         #region Entity
