@@ -46,7 +46,7 @@ namespace Godzilla.Queries
         public async Task<IEnumerable<TEntity>> GetItems<TEntity>(string path)
         {
             var normalizedPath = _pathBuilder.NormalizePath(path);
-            var nodesId = GetTreeEdgesCollection()
+            var nodesId = GetEntityNodesCollection()
                 .AsQueryable()
                 .Where(x => x.Path == normalizedPath)
                 .Select(x => x.EntityId)
@@ -99,14 +99,19 @@ namespace Godzilla.Queries
             if (entity == null)
                 throw new ArgumentNullException(nameof(entity));
 
+            var nodesCollection = GetEntityNodesCollection();
             var itemId = _propertyResolver.GetEntityId(entity);
-            var parentCollection = GetCollection<TParent>();
+            var itemNode = nodesCollection.GetNode(itemId);
 
-            var itemNode = GetTreeEdgesCollection()
+            var parentEntityId = itemNode.ParentId;
+            var parentCollection = GetCollection<TParent>();
+            var parentCollectionId = parentCollection.CollectionId;
+
+            var parentNode = nodesCollection
                 .AsQueryable()
                 .FirstOrDefault(x =>
-                    x.EntityId == itemId &&
-                    x.CollectionId == parentCollection.CollectionId);
+                    x.EntityId == parentEntityId &&
+                    x.CollectionId == parentCollectionId);
 
             if (itemNode == null || itemNode.ParentId == Guid.Empty)
                 return default(TParent);
@@ -148,13 +153,14 @@ namespace Godzilla.Queries
 
             var parentId = _propertyResolver.GetEntityId(entity);
             var childrenCollection = GetCollection<TChild>();
+            var childrenCollectionId = childrenCollection.CollectionId;
 
-            var childrenNodes = GetTreeEdgesCollection()
+            var childrenNodes = GetEntityNodesCollection()
                 .AsQueryable()
                 .Where(x =>
                     id.Contains(x.EntityId) &&
                     x.ParentId == parentId &&
-                    x.CollectionId == childrenCollection.CollectionId)
+                    x.CollectionId == childrenCollectionId)
                 .Select(x => x.EntityId)
                 .ToList();
 
@@ -169,12 +175,13 @@ namespace Godzilla.Queries
 
             var parentId = _propertyResolver.GetEntityId(entity);
             var childrenCollection = GetCollection<TChild>();
+            var childrenCollectionId = childrenCollection.CollectionId;
 
-            var childrenNodes = GetTreeEdgesCollection()
+            var childrenNodes = GetEntityNodesCollection()
                 .AsQueryable()
                 .Where(x =>
                     x.ParentId == parentId &&
-                    x.CollectionId == childrenCollection.CollectionId)
+                    x.CollectionId == childrenCollectionId)
                 .Select(x => x.EntityId)
                 .ToList();
 
@@ -208,7 +215,7 @@ namespace Godzilla.Queries
                 .ToList();
         }
 
-        private EntityNodesCollection GetTreeEdgesCollection()
+        private EntityNodesCollection GetEntityNodesCollection()
         {
             return _collectionService.GetCollection<EntityNode, EntityNodesCollection>();
         }

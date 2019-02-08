@@ -23,4 +23,10 @@ namespace Godzilla.Mongo.FunctionalTests
     {
         public string SecondName { get; set; }
     }
+
+    public class OtherTestEntity
+    {
+        public Guid Id { get; set; }
+        public string Name { get; set; }
+    }
 }

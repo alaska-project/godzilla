@@ -17,6 +17,9 @@ namespace Godzilla
 
         internal Document(EntityContext context, TEntity entity)
         {
+            if (entity == null)
+                throw new ArgumentNullException(nameof(entity));
+
             _context = context ?? throw new ArgumentNullException(nameof(context));
             _entity = entity;
             Id = context.Resolver.GetEntityId(entity);
@@ -125,7 +128,9 @@ namespace Godzilla
         {
             var parent = await _context.Query.GetParent<T>(_entity);
 
-            return CreateDocument(parent);
+            return parent == null ? 
+                null : 
+                CreateDocument(parent);
         }
 
         public async Task<Document<T>> GetOrCreateChild<T>(Func<T> childCreator)
@@ -237,6 +242,9 @@ namespace Godzilla
 
         private Document<T> CreateDocument<T>(T value)
         {
+            if (value == null)
+                throw new ArgumentNullException(nameof(value));
+
             return new Document<T>(_context, value);
         }
 

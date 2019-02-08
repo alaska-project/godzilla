@@ -72,6 +72,27 @@ namespace Godzilla.Mongo.FunctionalTests.Commands
 
                 #endregion
 
+                #region Get Parent
+
+                var parent = await context.Query.GetParent<TestEntity>(foundItem);
+                Assert.NotNull(parent);
+                Assert.Equal(rootItem.Id, parent.Id);
+
+                #endregion
+
+                #region OtherTestEntity
+
+                await context.Commands.Add(new OtherTestEntity(), rootItem);
+
+                var otherItem = await context.Query.GetChild<OtherTestEntity>(rootItem);
+                Assert.NotNull(otherItem);
+
+                var otherItemParent = await context.Query.GetParent<TestEntity>(otherItem);
+                Assert.NotNull(otherItemParent);
+                Assert.Equal(rootItem.Id, otherItemParent.Id);
+
+                #endregion
+
                 #region filtered GetChild retreive
 
                 foundItem = await context.Query.GetChild<TestEntity>(rootItem, x => x.Name == "gigio");
@@ -240,6 +261,14 @@ namespace Godzilla.Mongo.FunctionalTests.Commands
                 Assert.NotNull(foundItem);
                 Assert.Equal(item.Id, foundItem.Id);
                 Assert.Equal(item.Name, foundItem.Name);
+
+                #endregion
+
+                #region Get Parent
+
+                var parent = await context.Query.GetParent<TestEntity>(foundItem);
+                Assert.NotNull(parent);
+                Assert.Equal(rootItem.Id, parent.Id);
 
                 #endregion
 
