@@ -150,6 +150,12 @@ namespace Godzilla
             return children.FirstOrDefault();
         }
 
+        public async Task<Document<T>> GetChild<T>(Guid entityId)
+        {
+            var children = await GetChildren<T>(new List<Guid> { entityId });
+            return children.FirstOrDefault();
+        }
+
         public async Task<IEnumerable<Document<T>>> GetChildren<T>()
         {
             var children = await _context.Query.GetChildren<T>(_entity);
@@ -159,6 +165,12 @@ namespace Godzilla
         public async Task<IEnumerable<Document<T>>> GetChildren<T>(Expression<Func<T, bool>> filter)
         {
             var children = await _context.Query.GetChildren(_entity, filter);
+            return CreateDocuments(children);
+        }
+
+        public async Task<IEnumerable<Document<T>>> GetChildren<T>(IEnumerable<Guid> ids)
+        {
+            var children = await _context.Query.GetChildren<T>(_entity, ids);
             return CreateDocuments(children);
         }
 
