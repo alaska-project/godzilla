@@ -24,9 +24,10 @@ namespace Godzilla
 
         #region Events
 
-        protected async Task PublishEvent(object @event, CancellationToken cancellationToken = default(CancellationToken))
+        protected Task PublishEvent(object @event, CancellationToken cancellationToken = default(CancellationToken))
         {
-            await Document.Context.NotificationService.PublishEvent(@event, cancellationToken);
+            throw new NotImplementedException();
+            //await Document.Context.NotificationService.PublishEvent(@event, cancellationToken);
         }
 
         #endregion

@@ -1,4 +1,7 @@
 ﻿using Godzilla.Abstractions.Infrastructure;
+using Godzilla.Events.Providers;
+using Godzilla.Events.Queue;
+using Godzilla.Mongo.EventQueue;
 using Godzilla.Mongo.Infrastructure;
 using Godzilla.Mongo.Services;
 using Godzilla.Mongo.Settings;
@@ -11,11 +14,14 @@ using System.Text;
 
 namespace Godzilla.Mongo
 {
+    public enum EventQueueType { InMemory, Mongo }
+
     public static class MongoEntityContextOptionsBuilderExtensions
     {
         public static void UseMongoDb<TContext>(this EntityContextOptionsBuilder<TContext> builder, 
             string connectionString, 
-            string database)
+            string database,
+            EventQueueType eventQueueType = EventQueueType.InMemory)
             where TContext : EntityContext
         {
             RegisterConventions(MongoDB.Bson.GuidRepresentation.Standard);
@@ -30,7 +36,38 @@ namespace Godzilla.Mongo
                 .AddSingleton(options)
                 .AddTransient<IDatabaseTransactionManager<TContext>, MongoDatabaseTransactionManager<TContext>>()
                 .AddScoped<IDatabaseCollectionProvider<TContext>, MongoDatabaseCollectionProvider<TContext>>()
-                .AddScoped<MongoDatabaseFactory<TContext>>();
+                .AddScoped<MongoDatabaseFactory<TContext>>()
+                .AddEventQueue<TContext>(eventQueueType);
+        }
+
+        private static IServiceCollection AddEventQueue<TContext>(this IServiceCollection services, EventQueueType eventQueueType)
+            where TContext : EntityContext
+        {
+            switch (eventQueueType)
+            {
+                case EventQueueType.InMemory:
+                    return services.AddInMemoryEventQueue<TContext>();
+                case EventQueueType.Mongo:
+                    return services.AddMongoEventQueue<TContext>();
+                default:
+                    throw new NotImplementedException($"Event queue {eventQueueType} not implemented");
+            }
+        }
+
+        private static IServiceCollection AddInMemoryEventQueue<TContext>(this IServiceCollection services)
+            where TContext : EntityContext
+        {
+            return services
+                .AddSingleton<IEventQueueProvider<TContext>, InMemoryEventQueueProvider<TContext>>()
+                .AddSingleton<IEventQueue<TContext>, DefaultEventQueue<TContext>>();
+        }
+
+        private static IServiceCollection AddMongoEventQueue<TContext>(this IServiceCollection services)
+            where TContext : EntityContext
+        {
+            return services
+                .AddSingleton<IEventQueueProvider<TContext>, MongoEventQueueProvider<TContext>>()
+                .AddSingleton<IEventQueue<TContext>, DefaultEventQueue<TContext>>();
         }
 
         private static void RegisterConventions(MongoDB.Bson.GuidRepresentation? guidRepresentation)

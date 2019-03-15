@@ -17,6 +17,6 @@ namespace Godzilla.Abstractions
         IEntityPropertyResolver PropertyResolver { get; }
         IEntityConfigurator Configurator { get; }
         IEntityContextInitializer Initializer { get; }
-        INotificationService NotificationService { get; }
+        IEntityNotificationService NotificationService { get; }
     }
 }

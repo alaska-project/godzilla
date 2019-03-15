@@ -11,6 +11,8 @@ namespace Godzilla.Services
 {
     internal class DocumentService : IDocumentService
     {
+        #region Init
+
         private readonly EntityContext _context;
         private readonly IEntityQueries _queries;
         private readonly IEntityCommands _commands;
@@ -24,6 +26,10 @@ namespace Godzilla.Services
             _queries = queries ?? throw new ArgumentNullException(nameof(queries));
             _commands = commands ?? throw new ArgumentNullException(nameof(commands));
         }
+
+        #endregion
+
+        #region Documents Get
 
         public async Task<DocumentContainer> Container(string name)
         {
@@ -79,6 +85,22 @@ namespace Godzilla.Services
             return NewDocuments(items);
         }
 
+        #endregion
+
+        #region Document Subscribe
+
+        public IDisposable SubscribeDocument<TItem>(Guid id, Action<DocumentResult<TItem>> callback)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IDisposable SubscribeDocument<TItem>(Guid id, Func<DocumentResult<TItem>, Task> callback)
+        {
+            throw new NotImplementedException();
+        }
+
+        #endregion
+
         #region Conversions
 
         private IEnumerable<Document<T>> NewDocuments<T>(IEnumerable<T> values)
@@ -95,7 +117,7 @@ namespace Godzilla.Services
                 null :
                 new Document<T>(_context, value);
         }
-
+        
         #endregion
     }
 }

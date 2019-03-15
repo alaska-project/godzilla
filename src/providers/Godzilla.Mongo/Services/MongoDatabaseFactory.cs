@@ -27,6 +27,11 @@ namespace Godzilla.Mongo.Services
             return client.GetDatabase(DatabaseName);
         }
 
+        public IMongoCollection<TItem> GetMongoCollection<TItem>(string collectionId)
+        {
+            return GetMongoCollection<TItem, TItem>(collectionId);
+        }
+
         public IMongoCollection<TItem> GetMongoCollection<TItem, TBaseItem>(string collectionId)
             where TItem : TBaseItem
         {
