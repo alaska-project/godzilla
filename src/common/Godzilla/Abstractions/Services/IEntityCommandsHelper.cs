@@ -11,6 +11,7 @@ namespace Godzilla.Abstractions.Services
     internal interface IEntityCommandsHelper<TContext>
         where TContext : EntityContext
     {
+        Task PublishEntityEvent<TEvent>(TEvent eventData);
         Type GetEntityType(IEnumerable<object> entities);
         Task<IEnumerable<EntityNode>> VerifyEntities<TEntity>(IEnumerable<TEntity> entities, EntityNodesCollection edgesCollection, Guid permission);
         Task<IEnumerable<EntityNode>> VerifyEntities(IEnumerable<object> entities, EntityNodesCollection edgesCollection, Guid permission);
@@ -19,6 +20,7 @@ namespace Godzilla.Abstractions.Services
         Task VerifyRootNodePermission(Guid permission);
         IEnumerable<Guid> GetEntitiesId<TEntity>(IEnumerable<TEntity> entities);
         IEnumerable<Guid> GetEntitiesId(IEnumerable<object> entities);
+        Guid GetEntityId(object entity);
         string BuildNamePath(string name, EntityNode parent);
         string BuildIdPath(Guid id, EntityNode parent);
     }

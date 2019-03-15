@@ -1,4 +1,5 @@
-﻿using Godzilla.Abstractions.Collections;
+﻿using Godzilla.Abstractions;
+using Godzilla.Abstractions.Collections;
 using Godzilla.Abstractions.Services;
 using Godzilla.Collections.Internal;
 using Godzilla.DomainModels;
@@ -17,17 +18,25 @@ namespace Godzilla.Internal
         private readonly IEntityPropertyResolver<TContext> _propertyResolver;
         private readonly IPathBuilder<TContext> _pathBuilder;
         private readonly ISecurityRuleEvaluator<TContext> _securityEvaluator;
+        private readonly IEntityNotificationService<TContext> _notificationService;
 
         public CommandHandlerHelper(
             IEntityPropertyResolver<TContext> propertyResolver,
             IPathBuilder<TContext> pathBuilder,
-            ISecurityRuleEvaluator<TContext> securityEvaluator)
+            ISecurityRuleEvaluator<TContext> securityEvaluator,
+            IEntityNotificationService<TContext> notificationService)
         {
             _propertyResolver = propertyResolver ?? throw new ArgumentNullException(nameof(propertyResolver));
             _pathBuilder = pathBuilder ?? throw new ArgumentNullException(nameof(pathBuilder));
             _securityEvaluator = securityEvaluator ?? throw new ArgumentNullException(nameof(securityEvaluator));
+            _notificationService = notificationService;
         }
-        
+
+        public async Task PublishEntityEvent<TEvent>(TEvent eventData)
+        {
+            await _notificationService.PublishEntityEvent(eventData);
+        }
+
         public Type GetEntityType(IEnumerable<object> entities)
         {
             var entityTypes = entities
@@ -86,7 +95,7 @@ namespace Godzilla.Internal
             if (!result.IsRightGranted)
                 throw new UnauthorizedOperationException($"Unauthorized access right {permission} for root entity");
         }
-
+        
         public IEnumerable<Guid> GetEntitiesId<TEntity>(IEnumerable<TEntity> entities)
         {
             return GetEntitiesId(entities.Cast<object>());
@@ -95,10 +104,15 @@ namespace Godzilla.Internal
         public IEnumerable<Guid> GetEntitiesId(IEnumerable<object> entities)
         {
             return entities
-                .Select(x => _propertyResolver.GetEntityId(x, false))
+                .Select(x => GetEntityId(x))
                 .ToList();
         }
-        
+
+        public Guid GetEntityId(object entity)
+        {
+            return _propertyResolver.GetEntityId(entity, false);
+        }
+
         public string BuildNamePath(string name, EntityNode parent)
         {
             var parentPath = parent?.Path ?? _pathBuilder.RootPath;

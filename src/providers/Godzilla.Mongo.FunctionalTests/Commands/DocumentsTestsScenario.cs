@@ -3,6 +3,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -32,8 +33,10 @@ namespace Godzilla.Mongo.FunctionalTests.Commands
                 using (context.Documents.SubscribeDocument(root.Id, callback))
                 {
                     await root.UpdateField(x => x.Val2, "val2");
-                }
 
+                    Thread.Sleep(500);
+                }
+                
                 Assert.Single(callbacks);
 
                 await root.Delete();

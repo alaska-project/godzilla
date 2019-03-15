@@ -39,7 +39,10 @@ namespace Godzilla.Events.Queue
 
         private void InvokeCallback(EventQueueSubscription<TContext> subscription, EventData @event)
         {
-            Task.Run(() => subscription.Callback(@event)).ConfigureAwait(false);
+            Task.Run(() =>
+            {
+                subscription.Callback(@event);
+            });
         }
 
         public IDisposable SubscribeEvent(string eventCategory, Action<EventData> callback)

@@ -2,6 +2,7 @@
 using Godzilla.Collections.Internal;
 using Godzilla.DomainModels;
 using Godzilla.Exceptions;
+using Godzilla.Notifications.Events;
 using MediatR;
 using System;
 using System.Collections.Generic;
@@ -38,13 +39,17 @@ namespace Godzilla.Commands
                 var edgesCollection = _transactionService.GetCollection<EntityNode, EntityNodesCollection>();
 
                 var treeNodes = await _commandsHelper.VerifyEntities(nodesId, edgesCollection, SecurityRight.Delete);
+                var deletedNodes = new List<EntityNode>();
 
                 foreach (var treeNode in treeNodes)
                 {
-                    await DeleteEntityAndDescendants(treeNode, edgesCollection);
+                    deletedNodes.AddRange(await DeleteEntityAndDescendants(treeNode, edgesCollection));
                 }
                 
                 _transactionService.CommitTransaction();
+
+                await NotifyEntitiesDeletion(deletedNodes);
+
                 return Unit.Value;
             }
             catch (Exception e)
@@ -54,7 +59,7 @@ namespace Godzilla.Commands
             }
         }
 
-        private async Task DeleteEntityAndDescendants(EntityNode deleteRoot, EntityNodesCollection edgesCollection)
+        private async Task<IEnumerable<EntityNode>> DeleteEntityAndDescendants(EntityNode deleteRoot, EntityNodesCollection edgesCollection)
         {
             var descendants = edgesCollection.GetDescendants(deleteRoot);
 
@@ -71,6 +76,20 @@ namespace Godzilla.Commands
             }
 
             await edgesCollection.DeleteNodes(descendants.Select(x => x.EntityId));
+
+            return descendants;
+        }
+
+        private async Task NotifyEntitiesDeletion(IEnumerable<EntityNode> nodes)
+        {
+            foreach (var node in nodes)
+            {
+                await _commandsHelper.PublishEntityEvent(new EntityDeletedEvent
+                {
+                    EntityId = node.EntityId,
+                    ParentId = node.ParentId,
+                });
+            }
         }
     }
 }

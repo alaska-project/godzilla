@@ -2,6 +2,7 @@
 using Godzilla.Collections.Internal;
 using Godzilla.DomainModels;
 using Godzilla.Exceptions;
+using Godzilla.Notifications.Events;
 using MediatR;
 using System;
 using System.Collections.Generic;
@@ -54,6 +55,8 @@ namespace Godzilla.Commands
 
                 _transactionService.CommitTransaction();
 
+                await NotifyEntitiesCreation(request.Entities, parent);
+
                 return request.Entities;
             }
             catch (Exception e)
@@ -87,6 +90,18 @@ namespace Godzilla.Commands
             var existingNodes = edgesCollection.GetNodes(newNodesId);
             if (existingNodes.Any())
                 throw new NodeAlreadyExistsException($"Node {string.Join(", ", existingNodes.Select(x => x.EntityId))} already exists");
+        }
+
+        private async Task NotifyEntitiesCreation(IEnumerable<object> entities, EntityNode parent)
+        {
+            foreach (var entity in entities)
+            {
+                await _commandsHelper.PublishEntityEvent(new EntityCreatedEvent
+                {
+                    EntityId = _commandsHelper.GetEntityId(entity),
+                    ParentId = parent?.EntityId ?? Guid.Empty,
+                });
+            }
         }
 
         private EntityNode CreateTreeEdge(object entity, EntityNode parent, IGodzillaCollection entityCollection)

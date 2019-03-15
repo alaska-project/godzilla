@@ -89,16 +89,30 @@ namespace Godzilla.Services
 
         #region Document Subscribe
 
-        public IDisposable SubscribeDocument<TItem>(Guid id, Action<DocumentResult<TItem>> callback)
+        public IDisposable SubscribeDocument<TItem>(Guid entityId, Action<DocumentResult<TItem>> callback)
         {
-            throw new NotImplementedException();
+            return _context.NotificationService.SubscribeEntityEvent(entityId, async () =>
+            {
+                var documentResult = await CreateDocumentResult<TItem>(entityId);
+                callback.Invoke(documentResult);
+            });
         }
 
-        public IDisposable SubscribeDocument<TItem>(Guid id, Func<DocumentResult<TItem>, Task> callback)
+        public IDisposable SubscribeDocument<TItem>(Guid entityId, Func<DocumentResult<TItem>, Task> callback)
         {
-            throw new NotImplementedException();
+            return _context.NotificationService.SubscribeEntityEvent(entityId, async () => 
+            {
+                var documentResult = await CreateDocumentResult<TItem>(entityId);
+                await callback.Invoke(documentResult);
+            });
         }
 
+        private async Task<DocumentResult<TItem>> CreateDocumentResult<TItem>(Guid entityId)
+        {
+            var document = await GetDocument<TItem>(entityId);
+            return new DocumentResult<TItem>(document != null, document);
+        }
+        
         #endregion
 
         #region Conversions

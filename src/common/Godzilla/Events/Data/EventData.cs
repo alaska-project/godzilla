@@ -6,9 +6,10 @@ namespace Godzilla.Events.Data
 {
     public class EventData
     {
-        DateTime EventTime { get; set; }
+        public Guid EventId { get; set; }
+        public DateTime EventTime { get; set; }
         public string EventCategory { get; set; }
-        public string EventId { get; set; }
-        public object Data { get; set; }
+        public string EventType { get; set; }
+        public string Data { get; set; }
     }
 }

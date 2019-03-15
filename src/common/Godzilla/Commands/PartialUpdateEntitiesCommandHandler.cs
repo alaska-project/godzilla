@@ -2,6 +2,7 @@
 using Godzilla.Collections.Internal;
 using Godzilla.DomainModels;
 using Godzilla.Exceptions;
+using Godzilla.Notifications.Events;
 using MediatR;
 using System;
 using System.Collections.Generic;
@@ -42,12 +43,25 @@ namespace Godzilla.Commands
 
                 var entities = await entityCollection.GetItems(request.Entities);
 
+                await NotifyEntitiesUpdate(entities);
+
                 return entities;
             }
             catch (Exception e)
             {
                 _transactionService.AbortTransaction();
                 throw new EntitiesUpdateException("Entities update failed", e);
+            }
+        }
+
+        private async Task NotifyEntitiesUpdate(IEnumerable<TEntity> entities)
+        {
+            foreach (var entity in entities)
+            {
+                await _commandsHelper.PublishEntityEvent(new EntityUpdatedEvent
+                {
+                    EntityId = _commandsHelper.GetEntityId(entity),
+                });
             }
         }
     }
