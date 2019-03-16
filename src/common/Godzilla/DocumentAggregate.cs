@@ -22,15 +22,15 @@ namespace Godzilla
 
         #endregion
 
-        #region Events
+        //#region Events
 
-        protected Task PublishEvent(object @event, CancellationToken cancellationToken = default(CancellationToken))
-        {
-            throw new NotImplementedException();
-            //await Document.Context.NotificationService.PublishEvent(@event, cancellationToken);
-        }
+        //protected Task PublishEvent(object @event, CancellationToken cancellationToken = default(CancellationToken))
+        //{
+        //    throw new NotImplementedException();
+        //    //await Document.Context.NotificationService.PublishEvent(@event, cancellationToken);
+        //}
 
-        #endregion
+        //#endregion
 
         #region Comparsion
 
