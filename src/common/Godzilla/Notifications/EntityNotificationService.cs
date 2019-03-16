@@ -14,7 +14,7 @@ namespace Godzilla.Notifications
     internal class EntityNotificationService<TContext> : IEntityNotificationService<TContext>, IDisposable
         where TContext : EntityContext
     {
-        private const string EventNotificationsCategory = "event_notifications";
+        private const string EventNotificationsCategory = "entity_notifications";
         private readonly ConcurrentEntitySubscriptionsDictionary<TContext> _subscriptions = new ConcurrentEntitySubscriptionsDictionary<TContext>();
         private readonly IEventQueue<TContext> _eventQueue;
         private readonly IDisposable _eventQueueSubscription;
