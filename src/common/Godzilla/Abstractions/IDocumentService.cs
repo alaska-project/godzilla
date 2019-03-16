@@ -20,6 +20,8 @@ namespace Godzilla.Abstractions
         Task<IEnumerable<Document<TItem>>> GetDocuments<TItem>(Expression<Func<TItem, bool>> filter);
 
         IDisposable SubscribeDocument<TItem>(Guid id, Action<DocumentResult<TItem>> callback);
+        IDisposable SubscribeDocument<TItem>(Guid entityId, Action<DocumentResult<TItem>> callback, bool getInitialValue);
         IDisposable SubscribeDocument<TItem>(Guid id, Func<DocumentResult<TItem>, Task> callback);
+        IDisposable SubscribeDocument<TItem>(Guid id, Func<DocumentResult<TItem>, Task> callback, bool getInitialValue);
     }
 }

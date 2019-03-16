@@ -40,6 +40,20 @@ namespace Godzilla.Mongo.FunctionalTests.Commands
                 
                 Assert.Equal(2, callbacks.Count);
 
+                callbacks.Clear();
+
+                Assert.Empty(callbacks);
+
+                using (context.Documents.SubscribeDocument(root.Id, callback, true))
+                {
+                    await root.UpdateField(x => x.Val2, "val2");
+                    await root.UpdateField(x => x.Val2, "val3");
+
+                    Thread.Sleep(500);
+                }
+
+                Assert.Equal(3, callbacks.Count);
+
                 await root.Delete();
             }
         }

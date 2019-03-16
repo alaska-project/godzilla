@@ -91,6 +91,21 @@ namespace Godzilla.Services
 
         public IDisposable SubscribeDocument<TItem>(Guid entityId, Action<DocumentResult<TItem>> callback)
         {
+            return SubscribeDocument(entityId, callback, false);
+        }
+
+        public IDisposable SubscribeDocument<TItem>(Guid entityId, Action<DocumentResult<TItem>> callback, bool getInitialValue)
+        {
+            if (getInitialValue)
+            {
+                Task.Run(async () =>
+                {
+                    var documentResult = await CreateDocumentResult<TItem>(entityId);
+                    callback.Invoke(documentResult);
+                })
+                .ConfigureAwait(false);
+            }
+
             return _context.NotificationService.SubscribeEntityEvent(entityId, async () =>
             {
                 var documentResult = await CreateDocumentResult<TItem>(entityId);
@@ -100,6 +115,21 @@ namespace Godzilla.Services
 
         public IDisposable SubscribeDocument<TItem>(Guid entityId, Func<DocumentResult<TItem>, Task> callback)
         {
+            return SubscribeDocument(entityId, callback, false);
+        }
+
+        public IDisposable SubscribeDocument<TItem>(Guid entityId, Func<DocumentResult<TItem>, Task> callback, bool getInitialValue)
+        {
+            if (getInitialValue)
+            {
+                Task.Run(async () => 
+                {
+                    var documentResult = await CreateDocumentResult<TItem>(entityId);
+                    await callback.Invoke(documentResult);
+                })
+                .ConfigureAwait(false);
+            }
+
             return _context.NotificationService.SubscribeEntityEvent(entityId, async () => 
             {
                 var documentResult = await CreateDocumentResult<TItem>(entityId);
