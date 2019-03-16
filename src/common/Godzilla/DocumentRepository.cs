@@ -24,6 +24,17 @@ namespace Godzilla
 
         #region Aggregate
 
+        protected virtual async Task<TAggregate> GetOrCreateAggregate(Expression<Func<TEntity, bool>> filter, Func<TEntity> entityInitialization)
+        {
+            var aggregate = await GetAggregate(filter);
+            if (aggregate != null)
+                return aggregate;
+
+            var newEntity = entityInitialization();
+            var newDocument = await Context.Documents.CreateDocument(newEntity);
+            return await CreateAggregateInstance(newDocument);
+        }
+
         protected virtual async Task<TAggregate> GetAggregate(Guid id)
         {
             var document = await GetDocument(id);
