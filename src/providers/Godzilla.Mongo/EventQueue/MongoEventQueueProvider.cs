@@ -1,5 +1,6 @@
 ﻿using Godzilla.Abstractions.Infrastructure;
 using Godzilla.Events.Data;
+using Godzilla.Mongo.Abstractions;
 using Godzilla.Mongo.Services;
 using MongoDB.Bson;
 using MongoDB.Driver;
@@ -18,18 +19,19 @@ namespace Godzilla.Mongo.EventQueue
         private readonly IMongoCollection<EventRecord> _eventsCollection;
         private EventReceivedHandler _eventReceivedHandler;
         private bool _isWatching = false;
+        private MongoCollectionWatcherBase<EventRecord> _collectionWatcher;
 
         public MongoEventQueueProvider(MongoDatabaseFactory<TContext> databaseFactory)
         {
             _databaseFactory = databaseFactory;
             _eventsCollection = databaseFactory.GetMongoCollection<EventRecord>("_Events");
         }
-        
+
         public async Task PublishEvent(EventData @event)
         {
             await _eventsCollection.InsertOneAsync(new EventRecord
             {
-                Id = Guid.NewGuid(),
+                Id = ObjectId.GenerateNewId(),
                 Data = @event,
             });
         }
@@ -39,38 +41,40 @@ namespace Godzilla.Mongo.EventQueue
             get { return _eventReceivedHandler; }
             set
             {
-                lock (this)
-                {
-                    WatchCollection(_eventsCollection);
-                    _eventReceivedHandler = value;
-                }
+                WatchCollection(_eventsCollection);
+                _eventReceivedHandler = value;
             }
         }
 
         private void WatchCollection(IMongoCollection<EventRecord> collection)
         {
-            if (_isWatching)
-                return;
-
-            _isWatching = true;
-
-            var options = new ChangeStreamOptions()
+            lock (this)
             {
-                FullDocument = ChangeStreamFullDocumentOption.UpdateLookup
-            };
+                if (_isWatching)
+                    return;
 
-            var pipeline = new EmptyPipelineDefinition<ChangeStreamDocument<EventRecord>>().Match("{ operationType: { $in: [ 'insert' ] } }");
-
-            var changesCursor = collection
-                .Watch(pipeline, options)
-                .ToEnumerable()
-                .GetEnumerator();
-
-            while (changesCursor.MoveNext())
-            {
-                var eventData = changesCursor.Current.FullDocument.Data;
-                _eventReceivedHandler?.Invoke(eventData);
+                _collectionWatcher = GetCollectionWatcher(collection);
+                _isWatching = true;
             }
+
+            Task.Run(() =>
+            {
+                _collectionWatcher.Watch(x => _eventReceivedHandler?.Invoke(x.Data));
+            });
+        }
+
+        private MongoCollectionWatcherBase<EventRecord> GetCollectionWatcher(IMongoCollection<EventRecord> collection)
+        {
+            if (IsReplicaSetEnabled(collection))
+                return new MongoCollectionChangesStreamWatcher(collection);
+
+            return new MongoCollectionPollingWatcher(collection, TimeSpan.FromMilliseconds(200));
+        }
+
+        private bool IsReplicaSetEnabled(IMongoCollection<EventRecord> collection)
+        {
+            //TODO: return !string.IsNullOrEmpty(collection.Database.Client.Settings.ReplicaSetName);
+            return false;
         }
     }
 }

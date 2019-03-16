@@ -33,11 +33,12 @@ namespace Godzilla.Mongo.FunctionalTests.Commands
                 using (context.Documents.SubscribeDocument(root.Id, callback))
                 {
                     await root.UpdateField(x => x.Val2, "val2");
+                    await root.UpdateField(x => x.Val2, "val3");
 
                     Thread.Sleep(500);
                 }
                 
-                Assert.Single(callbacks);
+                Assert.Equal(2, callbacks.Count);
 
                 await root.Delete();
             }

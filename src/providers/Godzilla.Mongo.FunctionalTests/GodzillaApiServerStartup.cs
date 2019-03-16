@@ -40,7 +40,8 @@ namespace Godzilla.Mongo.FunctionalTests
                 {
                     opt.UseMongoDb(
                             _runner.ConnectionString, 
-                            Configuration["Godzilla:Database"]);
+                            Configuration["Godzilla:Database"],
+                            EventQueueType.Mongo);
                 });
         }
 
