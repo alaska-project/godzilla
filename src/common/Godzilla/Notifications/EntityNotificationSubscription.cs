@@ -1,10 +1,11 @@
-﻿using System;
+﻿using Godzilla.Abstractions;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace Godzilla.Notifications
 {
-    internal class EntityNotificationSubscription<TContext> : IDisposable
+    internal class EntityNotificationSubscription<TContext> : IEntitySubscription
         where TContext : EntityContext
     {
         private readonly EntityNotificationService<TContext> _notificationService;

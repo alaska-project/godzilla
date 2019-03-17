@@ -25,7 +25,7 @@ namespace Godzilla.Notifications
             _eventQueueSubscription = eventQueue.SubscribeEvent(EventNotificationsCategory, ProcessEvent);
         }
 
-        public IDisposable SubscribeEntityEvent(Guid entityId, Action callback)
+        public IEntitySubscription SubscribeEntityEvent(Guid entityId, Action callback)
         {
             var subscription = new EntityNotificationSubscription<TContext>(entityId, this, callback);
             _subscriptions.AddSubscription(subscription);

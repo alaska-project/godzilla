@@ -1,4 +1,5 @@
-﻿using Godzilla.DomainModels;
+﻿using Godzilla.Abstractions;
+using Godzilla.DomainModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -208,6 +209,20 @@ namespace Godzilla
         {
             var children = await _context.Query.GetChildren<T>(_entity, ids);
             return CreateDocuments(children);
+        }
+
+        #endregion
+
+        #region Subscription
+        
+        public IEntitySubscription SubscribeChanges(Action<DocumentResult<TEntity>> callback)
+        {
+            return Context.Documents.SubscribeDocument(Id, callback);
+        }
+
+        public IEntitySubscription SubscribeChanges(Func<DocumentResult<TEntity>, Task> callback)
+        {
+            return Context.Documents.SubscribeDocument(Id, callback);
         }
 
         #endregion

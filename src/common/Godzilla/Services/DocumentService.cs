@@ -89,12 +89,12 @@ namespace Godzilla.Services
 
         #region Document Subscribe
 
-        public IDisposable SubscribeDocument<TItem>(Guid entityId, Action<DocumentResult<TItem>> callback)
+        public IEntitySubscription SubscribeDocument<TItem>(Guid entityId, Action<DocumentResult<TItem>> callback)
         {
             return SubscribeDocument(entityId, callback, false);
         }
 
-        public IDisposable SubscribeDocument<TItem>(Guid entityId, Action<DocumentResult<TItem>> callback, bool getInitialValue)
+        public IEntitySubscription SubscribeDocument<TItem>(Guid entityId, Action<DocumentResult<TItem>> callback, bool getInitialValue)
         {
             if (getInitialValue)
             {
@@ -113,12 +113,12 @@ namespace Godzilla.Services
             });
         }
 
-        public IDisposable SubscribeDocument<TItem>(Guid entityId, Func<DocumentResult<TItem>, Task> callback)
+        public IEntitySubscription SubscribeDocument<TItem>(Guid entityId, Func<DocumentResult<TItem>, Task> callback)
         {
             return SubscribeDocument(entityId, callback, false);
         }
 
-        public IDisposable SubscribeDocument<TItem>(Guid entityId, Func<DocumentResult<TItem>, Task> callback, bool getInitialValue)
+        public IEntitySubscription SubscribeDocument<TItem>(Guid entityId, Func<DocumentResult<TItem>, Task> callback, bool getInitialValue)
         {
             if (getInitialValue)
             {
