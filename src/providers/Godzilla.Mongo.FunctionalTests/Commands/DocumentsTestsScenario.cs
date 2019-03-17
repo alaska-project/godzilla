@@ -12,16 +12,22 @@ namespace Godzilla.Mongo.FunctionalTests.Commands
     public class DocumentsTestsScenario : MongoGodzillaScenarioBase
     {
         [Fact]
-        public async Task SubscribeDocument()
+        public async Task ManageDocuments()
         {
             using (var server = CreateServer())
             {
+                #region Init
+
                 var context = GetEntityContext<TestEntityContext>(server);
 
                 var root = await context.Documents.CreateDocument(new TestEntity
                 {
                     Name = "doc-root"
                 });
+
+                #endregion
+
+                #region Subscribe Document
 
                 var callbacks = new List<DocumentResult<TestEntity>>();
                 var callback = new Action<DocumentResult<TestEntity>>(x =>
@@ -37,8 +43,12 @@ namespace Godzilla.Mongo.FunctionalTests.Commands
 
                     Thread.Sleep(500);
                 }
-                
+
                 Assert.Equal(2, callbacks.Count);
+
+                #endregion
+                
+                #region Subscibe Document with initial value
 
                 callbacks.Clear();
 
@@ -49,10 +59,22 @@ namespace Godzilla.Mongo.FunctionalTests.Commands
                     await root.UpdateField(x => x.Val2, "val2");
                     await root.UpdateField(x => x.Val2, "val3");
 
-                    Thread.Sleep(500);
+                    Thread.Sleep(1000);
                 }
 
                 Assert.Equal(3, callbacks.Count);
+
+                #endregion
+
+                #region Add Child
+
+                await root.AddChild("child", new TestEntity { Val2 = "vattelappesca" });
+
+                var child = await root.GetChild<TestEntity>("child");
+
+                Assert.NotNull(child);
+
+                #endregion
 
                 await root.Delete();
             }

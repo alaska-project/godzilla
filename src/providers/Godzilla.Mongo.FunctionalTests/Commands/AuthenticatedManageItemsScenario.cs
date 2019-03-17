@@ -41,19 +41,7 @@ namespace Godzilla.Mongo.FunctionalTests.Commands
                 Assert.NotEqual(Guid.Empty, item.Id);
 
                 #endregion
-
-                //#region AsQueryable retreive
-
-                //var foundItem = context.Query
-                //    .AsQueryable<TestEntity>()
-                //    .FirstOrDefault(x => x.Id == item.Id);
-
-                //Assert.NotNull(foundItem);
-                //Assert.Equal(item.Id, foundItem.Id);
-                //Assert.Equal(item.Name, foundItem.Name);
-
-                //#endregion
-
+                
                 #region GetItem retreive
 
                 var foundItem = await context.Query.GetItem<TestEntity>(item.Id);
@@ -126,7 +114,7 @@ namespace Godzilla.Mongo.FunctionalTests.Commands
 
                 #endregion
 
-                #region Move
+                #region move
 
                 var rootItem2 = await context.Commands.Add(new TestEntity
                 {

@@ -123,6 +123,12 @@ namespace Godzilla.Queries
             return await parentCollection.GetItem(filteredNodes.First());
         }
 
+        public async Task<TChild> GetChild<TChild>(object entity, string name)
+        {
+            return (await GetChildren<TChild>(entity, name))
+                .FirstOrDefault();
+        }
+
         public async Task<TChild> GetChild<TChild>(object entity)
         {
             return (await GetChildren<TChild>(entity))
@@ -168,7 +174,17 @@ namespace Godzilla.Queries
             return await childrenCollection.GetItems(filteredChildNodes);
         }
 
+        public async Task<IEnumerable<TChild>> GetChildren<TChild>(object entity, string name)
+        {
+            return await GetChildren<TChild>(entity, null, name);
+        }
+
         public async Task<IEnumerable<TChild>> GetChildren<TChild>(object entity, Expression<Func<TChild, bool>> filter)
+        {
+            return await GetChildren<TChild>(entity, filter, null);
+        }
+
+        public async Task<IEnumerable<TChild>> GetChildren<TChild>(object entity, Expression<Func<TChild, bool>> filter, string name)
         {
             if (entity == null)
                 throw new ArgumentNullException(nameof(entity));
@@ -177,11 +193,16 @@ namespace Godzilla.Queries
             var childrenCollection = GetCollection<TChild>();
             var childrenCollectionId = childrenCollection.CollectionId;
 
-            var childrenNodes = GetEntityNodesCollection()
+            var queryableEntityNodes = GetEntityNodesCollection()
                 .AsQueryable()
                 .Where(x =>
                     x.ParentId == parentId &&
-                    x.CollectionId == childrenCollectionId)
+                    x.CollectionId == childrenCollectionId);
+
+            if (!string.IsNullOrEmpty(name))
+                queryableEntityNodes = queryableEntityNodes.Where(x => x.NodeName.ToLower() == name.ToLower());
+
+            var childrenNodes = queryableEntityNodes
                 .Select(x => x.EntityId)
                 .ToList();
 

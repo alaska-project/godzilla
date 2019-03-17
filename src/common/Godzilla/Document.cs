@@ -94,9 +94,18 @@ namespace Godzilla
 
         public async Task<Document<TChild>> AddChild<TChild>(TChild child)
         {
+            return await AddChild(null, child);
+        }
+
+        public async Task<Document<TChild>> AddChild<TChild>(string name, TChild child)
+        {
             ChekId(_entity);
 
             var entity = await _context.Commands.Add(child, _entity);
+
+            if (!string.IsNullOrEmpty(name))
+                await _context.Commands.Rename(entity, name);
+
             return CreateDocument(entity);
         }
 
@@ -133,6 +142,16 @@ namespace Godzilla
                 CreateDocument(parent);
         }
 
+        public async Task<Document<T>> GetOrCreateChild<T>(string name, Func<T> childCreator)
+        {
+            var child = await GetChild<T>(name);
+            if (child != null)
+                return child;
+
+            var childValue = childCreator();
+            return await AddChild(name, childValue);
+        }
+
         public async Task<Document<T>> GetOrCreateChild<T>(Func<T> childCreator)
         {
             var child = await GetChild<T>();
@@ -142,10 +161,16 @@ namespace Godzilla
             var childValue = childCreator();
             return await AddChild(childValue);
         }
-
+        
         public async Task<Document<T>> GetChild<T>()
         {
             var children = await GetChildren<T>();
+            return children.FirstOrDefault();
+        }
+
+        public async Task<Document<T>> GetChild<T>(string name)
+        {
+            var children = await GetChildren<T>(name);
             return children.FirstOrDefault();
         }
 
@@ -159,6 +184,12 @@ namespace Godzilla
         {
             var children = await GetChildren<T>(new List<Guid> { entityId });
             return children.FirstOrDefault();
+        }
+
+        public async Task<IEnumerable<Document<T>>> GetChildren<T>(string name)
+        {
+            var children = await _context.Query.GetChildren<T>(_entity, name);
+            return CreateDocuments(children);
         }
 
         public async Task<IEnumerable<Document<T>>> GetChildren<T>()
