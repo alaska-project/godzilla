@@ -25,5 +25,9 @@ namespace Godzilla.Abstractions
         Task<IEnumerable<TChild>> GetChildren<TChild>(object entity, string name);
         Task<IEnumerable<TChild>> GetChildren<TChild>(object entity, Expression<Func<TChild, bool>> filter);
         Task<IEnumerable<TChild>> GetChildren<TChild>(object entity, IEnumerable<Guid> id);
+
+        Task<long> GetChildrenCount<TChild>(object entity);
+        Task<long> GetChildrenCount(object entity);
+
     }
 }

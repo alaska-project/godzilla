@@ -211,10 +211,20 @@ namespace Godzilla
             return CreateDocuments(children);
         }
 
+        public async Task<long> GetChildrenCount<T>()
+        {
+            return await _context.Query.GetChildrenCount<T>(_entity);
+        }
+
+        public async Task<long> GetChildrenCount()
+        {
+            return await _context.Query.GetChildrenCount(_entity);
+        }
+
         #endregion
 
         #region Subscription
-        
+
         public IEntitySubscription SubscribeChanges(Action<DocumentResult<TEntity>> callback)
         {
             return Context.Documents.SubscribeDocument(Id, callback);

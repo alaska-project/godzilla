@@ -213,6 +213,33 @@ namespace Godzilla.Queries
                 childrenCollection.GetItems(filteredChildNodes, filter));
         }
 
+        public async Task<long> GetChildrenCount<TChild>(object entity)
+        {
+            var childrenCollection = GetCollection<TChild>();
+            var childrenCollectionId = childrenCollection.CollectionId;
+            return await GetChildrenCount(entity, childrenCollectionId);
+        }
+
+        public async Task<long> GetChildrenCount(object entity)
+        {
+            return await GetChildrenCount(entity, null);
+        }
+
+        private async Task<long> GetChildrenCount(object entity, string childrenCollectionId)
+        {
+            var parentId = _propertyResolver.GetEntityId(entity);
+            
+            var queryableEntityNodes = GetEntityNodesCollection()
+                .AsQueryable()
+                .Where(x => x.ParentId == parentId);
+
+            if (!string.IsNullOrEmpty(childrenCollectionId))
+                queryableEntityNodes = queryableEntityNodes
+                    .Where(x => x.CollectionId == childrenCollectionId);
+
+            return await Task.FromResult(queryableEntityNodes.LongCount());
+        }
+
         private async Task<IEnumerable<TEntity>> FilterAllowedNodes<TEntity>(IEnumerable<TEntity> entities)
         {
             var entitiesId = entities

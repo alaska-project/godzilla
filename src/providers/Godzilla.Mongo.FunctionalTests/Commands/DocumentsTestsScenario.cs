@@ -76,6 +76,19 @@ namespace Godzilla.Mongo.FunctionalTests.Commands
 
                 #endregion
 
+                #region Children Count
+
+                await root.AddChild("child2", new TestEntity { Val2 = "vattelappesca" });
+                await root.AddChild("child3", new TestEntity { Val2 = "vattelappesca" });
+
+                var count = await root.GetChildrenCount();
+                Assert.Equal(3, count);
+
+                count = await root.GetChildrenCount<TestEntity>();
+                Assert.Equal(3, count);
+
+                #endregion
+
                 await root.Delete();
             }
         }
