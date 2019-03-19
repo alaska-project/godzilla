@@ -49,7 +49,7 @@ namespace Godzilla.Internal
                 .AddTransient<ITransactionService<TContext>, TransactionService<TContext>>()
                 .AddScoped<IEntityContextServices<TContext>, EntityContextServices<TContext>>()
                 .AddScoped<IEntityCommandsHelper<TContext>, CommandHandlerHelper<TContext>>()
-                .AddScoped<IEntityNotificationService<TContext>, EntityNotificationService<TContext>>()
+                .AddSingleton<IEntityNotificationService<TContext>, EntityNotificationService<TContext>>()
                 .AddScoped<TContext>();
         }
 
