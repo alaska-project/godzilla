@@ -26,6 +26,12 @@ namespace Godzilla.Mongo.Infrastructure
         {
             var collection = _factory.GetMongoCollection<TItem, TBaseItem>(collectionId);
             return new MongoDatabaseCollection<TContext, TItem>(_propertyResolver, collection, collectionId);
-        }        
+        }
+
+        public IDatabaseCollection GetCollection(string collectionId)
+        {
+            var collection = _factory.GetMongoCollection(collectionId);
+            return new MongoDatabaseRawCollection(collection, collectionId);
+        }
     }
 }

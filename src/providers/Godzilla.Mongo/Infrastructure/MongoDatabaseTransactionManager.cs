@@ -66,5 +66,18 @@ namespace Godzilla.Mongo.Infrastructure
 
             return new MongoDatabaseCollection<TContext, TItem>(_propertyResolver, collection, collectionId);
         }
+
+        public IDatabaseCollection GetCollection(string collectionId)
+        {
+            if (_session == null)
+            {
+                throw new InvalidOperationException("No active transactions");
+            }
+
+            var database = _session.Client.GetDatabase(_factory.DatabaseName);
+            var collection = _factory.GetMongoCollection(collectionId, database);
+
+            return new MongoDatabaseRawCollection(collection, collectionId);
+        }
     }
 }

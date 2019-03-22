@@ -7,6 +7,12 @@ using System.Threading.Tasks;
 
 namespace Godzilla.Abstractions.Infrastructure
 {
+    public interface IDatabaseCollection
+    {
+        string CollectionId { get; }
+        Task<string> GetRawItem(Guid id);
+    }
+
     public interface IDatabaseCollection<TItem>
     {
         string CollectionId { get; }

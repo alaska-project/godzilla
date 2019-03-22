@@ -1,4 +1,5 @@
 ﻿using Godzilla.Mongo.Settings;
+using MongoDB.Bson;
 using MongoDB.Driver;
 using System;
 using System.Collections.Generic;
@@ -30,6 +31,17 @@ namespace Godzilla.Mongo.Services
         public IMongoCollection<TItem> GetMongoCollection<TItem>(string collectionId)
         {
             return GetMongoCollection<TItem, TItem>(collectionId);
+        }
+
+        public IMongoCollection<BsonDocument> GetMongoCollection(string collectionId)
+        {
+            var database = GetDatabase();
+            return GetMongoCollection(collectionId, database);
+        }
+
+        public IMongoCollection<BsonDocument> GetMongoCollection(string collectionId, IMongoDatabase database)
+        {
+            return database.GetCollection<BsonDocument>(collectionId);
         }
 
         public IMongoCollection<TItem> GetMongoCollection<TItem, TBaseItem>(string collectionId)

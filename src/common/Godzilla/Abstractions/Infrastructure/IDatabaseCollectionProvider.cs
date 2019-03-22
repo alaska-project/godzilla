@@ -8,5 +8,6 @@ namespace Godzilla.Abstractions.Infrastructure
         where TContext : EntityContext
     {
         IDatabaseCollection<TItem> GetCollection<TItem, TBaseItem>(string collectionId) where TItem : TBaseItem;
+        IDatabaseCollection GetCollection(string collectionId);
     }
 }
