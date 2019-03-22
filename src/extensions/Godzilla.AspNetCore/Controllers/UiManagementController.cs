@@ -10,7 +10,7 @@ using System.Text;
 
 namespace Godzilla.AspNetCore.Controllers
 {
-    [Route("godzilla/api/management")]
+    [Route("godzilla/api/[controller]/[action]")]
     public class UiManagementController : Controller
     {
         private readonly IServiceProvider _serviceProvider;
@@ -22,15 +22,25 @@ namespace Godzilla.AspNetCore.Controllers
             _serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
         }
 
+        [HttpGet]
         [Produces(typeof(IEnumerable<UiEntityContextReference>))]
         public IActionResult GetContexts()
         {
             var contexts = _contextResolver.GetContextReferences();
-            return Ok(contexts);
+            var convertedContexts = contexts
+                .Select(x => new UiEntityContextReference
+                {
+                    Id = x.ContextId,
+                    Name = x.ContextType.Name
+                })
+                .ToList();
+
+            return Ok(convertedContexts);
         }
 
+        [HttpGet]
         [Produces(typeof(IEnumerable<UiNodeReference>))]
-        public IActionResult GetRootNodes(string contextId)
+        public IActionResult GetRootNodes([FromQuery]string contextId)
         {
             var nodesCollection = GetEntityNodesCollection(contextId);
             var nodes = nodesCollection

@@ -22,13 +22,17 @@ namespace Godzilla
             return services;
         }
 
-        //public static IEntityContextServiceCollection<TContext> AddUi<TContext>(this IEntityContextServiceCollection<TContext> services)
-        //    where TContext : EntityContext
-        //{
-        //    services.Services
-        //        .AddTransient<IUiQuery, UiQuery>();
+        public static IEntityContextServiceCollection<TContext> AddUi<TContext>(this IEntityContextServiceCollection<TContext> services)
+            where TContext : EntityContext
+        {
+            services.Services
+                .AddTransient<IUiQuery, UiQuery>();
 
-        //    return services;
-        //}
+            services.Services
+                .AddMvcCore()
+                .AddApplicationPart(typeof(AspNetCoreDependencyInjectionExtensions).Assembly);
+
+            return services;
+        }
     }
 }

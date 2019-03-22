@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json.Serialization;
@@ -33,7 +35,8 @@ namespace Godzilla.Mongo.FunctionalTests
                             Configuration["Godzilla:Database"]);
                     opt.UseAuthorization();
                 })
-                .AddMvcAuthentication();
+                .AddMvcAuthentication()
+                .AddUi();
         }
     }
 }

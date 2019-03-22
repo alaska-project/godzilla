@@ -42,13 +42,19 @@ namespace Godzilla.Mongo.FunctionalTests
                             _runner.ConnectionString, 
                             Configuration["Godzilla:Database"],
                             EventQueueType.Mongo);
-                });
+                })
+                .AddUi();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public virtual void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
-            
+            app.UseMvc(routes =>
+            {
+                routes.MapRoute(
+                    name: "default",
+                    template: "{controller}/{action=Index}/{id?}");
+            });
         }
     }
 }

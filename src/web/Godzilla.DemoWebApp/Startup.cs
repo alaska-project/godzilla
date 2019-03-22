@@ -7,6 +7,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json.Serialization;
 using Godzilla.Mongo;
+using Swashbuckle.AspNetCore.Swagger;
 
 namespace Godzilla.DemoWebApp
 {
@@ -36,6 +37,12 @@ namespace Godzilla.DemoWebApp
                 })
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
+            services.AddSwaggerGen(c =>
+            {
+                c.DescribeAllEnumsAsStrings();
+                c.SwaggerDoc("v1", new Info { Title = "GodzillaApi", Version = "v1" });
+            });
+
             services
                 .AddGodzilla()
                 .AddEntityContext<DemoEntityContext>(opt => 
@@ -49,6 +56,13 @@ namespace Godzilla.DemoWebApp
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
+            app
+                .UseSwagger()
+                .UseSwaggerUI(c =>
+                {
+                    c.SwaggerEndpoint("/swagger/v1/swagger.json", "ShhApi V1");
+                });
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
