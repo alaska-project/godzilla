@@ -42,10 +42,17 @@ namespace Godzilla.AspNetCore.Controllers
         [Produces(typeof(IEnumerable<UiNodeReference>))]
         public IActionResult GetRootNodes([FromQuery]string contextId)
         {
+            return GetChildNodes(contextId, Guid.Empty);
+        }
+
+        [HttpGet]
+        [Produces(typeof(IEnumerable<UiNodeReference>))]
+        public IActionResult GetChildNodes([FromQuery]string contextId, [FromQuery]Guid parentId)
+        {
             var nodesCollection = GetEntityNodesCollection(contextId);
             var nodes = nodesCollection
                 .AsQueryable()
-                .Where(x => x.ParentId == Guid.Empty)
+                .Where(x => x.ParentId == parentId)
                 .Select(x => new { x.EntityId, x.NodeName, x.ParentId })
                 .ToList();
 

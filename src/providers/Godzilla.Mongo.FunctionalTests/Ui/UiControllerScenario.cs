@@ -26,6 +26,8 @@ namespace Godzilla.Mongo.FunctionalTests.Ui
                 var rootNodes = await client.GetJsonAsync<List<UiEntityContextReference>>($"{UiManagementApi}/GetRootNodes?contextId={contextId}");
 
                 Assert.NotEmpty(rootNodes);
+
+                var childNodes = await client.GetJsonAsync<List<UiEntityContextReference>>($"{UiManagementApi}/GetChildNodes?contextId={contextId}&parentId={rootNodes[0].Id}");
             }
         }
     }
