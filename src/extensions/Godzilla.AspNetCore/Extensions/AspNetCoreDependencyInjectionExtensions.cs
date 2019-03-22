@@ -1,5 +1,7 @@
 ﻿using Godzilla.Abstractions;
 using Godzilla.AspNetCore.Security;
+using Godzilla.AspNetCore.Ui.Abstractions;
+using Godzilla.AspNetCore.Ui.Query;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -19,5 +21,14 @@ namespace Godzilla
 
             return services;
         }
+
+        //public static IEntityContextServiceCollection<TContext> AddUi<TContext>(this IEntityContextServiceCollection<TContext> services)
+        //    where TContext : EntityContext
+        //{
+        //    services.Services
+        //        .AddTransient<IUiQuery, UiQuery>();
+
+        //    return services;
+        //}
     }
 }

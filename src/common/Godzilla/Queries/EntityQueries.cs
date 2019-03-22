@@ -15,12 +15,12 @@ namespace Godzilla.Queries
     internal class EntityQueries<TContext> : IEntityQueries
         where TContext : EntityContext
     {
-        private readonly ICollectionService<TContext> _collectionService;
+        private readonly IEntityCollectionsService<TContext> _collectionService;
         private readonly IEntityPropertyResolver<TContext> _propertyResolver;
         private readonly IPathBuilder<TContext> _pathBuilder;
         private readonly ISecurityRuleEvaluator<TContext> _securityEvaluator;
 
-        public EntityQueries(ICollectionService<TContext> collectionService,
+        public EntityQueries(IEntityCollectionsService<TContext> collectionService,
             IEntityPropertyResolver<TContext> propertyResolver,
             IPathBuilder<TContext> pathBuilder,
             ISecurityRuleEvaluator<TContext> securityEvaluator)
@@ -30,8 +30,8 @@ namespace Godzilla.Queries
             _pathBuilder = pathBuilder ?? throw new ArgumentNullException(nameof(pathBuilder));
             _securityEvaluator = securityEvaluator ?? throw new ArgumentNullException(nameof(securityEvaluator));
         }
-        
-        //public IQueryable<TEntity> AsQueryable<TEntity>()
+
+        //internal IQueryable<TEntity> AsQueryable<TEntity>()
         //{
         //    return GetCollection<TEntity>()
         //        .AsQueryable();
@@ -263,18 +263,14 @@ namespace Godzilla.Queries
                 .ToList();
         }
 
-        private EntityNodesCollection GetEntityNodesCollection()
+        internal EntityNodesCollection GetEntityNodesCollection()
         {
-            return _collectionService.GetCollection<EntityNode, EntityNodesCollection>();
+            return _collectionService.GetEntityNodesCollection();
         }
 
-        private IGodzillaCollection<TEntity> GetCollection<TEntity>()
+        internal IGodzillaCollection<TEntity> GetCollection<TEntity>()
         {
-            var collection = _collectionService.GetCollection<TEntity>();
-            if (collection == null)
-                throw new CollectionNotFoundException($"No collections found for type {typeof(TEntity).FullName}");
-
-            return collection;
+            return _collectionService.GetCollection<TEntity>();
         }
     }
 }

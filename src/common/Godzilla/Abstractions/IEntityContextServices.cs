@@ -12,6 +12,7 @@ namespace Godzilla.Abstractions
 
     public interface IEntityContextServices
     {
+        ICollectionService Collections { get; }
         IEntityCommands Commands { get; }
         IEntityQueries Queries { get; }
         IEntityPropertyResolver PropertyResolver { get; }

@@ -53,6 +53,7 @@ namespace Godzilla.Internal
                 .AddScoped<IEntityContextServices<TContext>, EntityContextServices<TContext>>()
                 .AddScoped<IEntityCommandsHelper<TContext>, CommandHandlerHelper<TContext>>()
                 .AddSingleton<IEntityNotificationService<TContext>, EntityNotificationService<TContext>>()
+                .AddScoped<IEntityCollectionsService<TContext>, EntityCollectionsService<TContext>>()
                 .AddScoped<TContext>();
         }
 

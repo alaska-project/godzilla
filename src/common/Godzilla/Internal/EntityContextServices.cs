@@ -14,6 +14,7 @@ namespace Godzilla.Internal
         where TContext : EntityContext
     {
         public EntityContextServices(
+            ICollectionService<TContext> collectionsService, 
             EntityQueries<TContext> queries,
             EntityCommands<TContext> commands,
             EntityConfigurator<TContext> configurator,
@@ -21,6 +22,7 @@ namespace Godzilla.Internal
             EntityContextInitializer<TContext> initializer,
             IEntityNotificationService<TContext> notificationService)
         {
+            Collections = collectionsService ?? throw new ArgumentException(nameof(collectionsService));
             Queries = queries ?? throw new ArgumentNullException(nameof(queries));
             Commands = commands ?? throw new ArgumentNullException(nameof(commands));
             Configurator = configurator ?? throw new ArgumentNullException(nameof(configurator));
@@ -28,6 +30,8 @@ namespace Godzilla.Internal
             Initializer = initializer ?? throw new ArgumentNullException(nameof(initializer));
             NotificationService = notificationService ?? throw new ArgumentNullException(nameof(notificationService));
         }
+
+        public ICollectionService Collections { get; }
 
         public IEntityCommands Commands { get; }
 
