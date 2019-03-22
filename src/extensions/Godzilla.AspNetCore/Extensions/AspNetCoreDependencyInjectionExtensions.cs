@@ -1,7 +1,5 @@
 ﻿using Godzilla.Abstractions;
 using Godzilla.AspNetCore.Security;
-using Godzilla.Internal;
-using Godzilla.Settings;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using System;

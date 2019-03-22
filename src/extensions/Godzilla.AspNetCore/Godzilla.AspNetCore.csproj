@@ -7,10 +7,16 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.ViewFeatures" Version="2.2.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\common\Godzilla\Godzilla.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Ui\Middlewares\" />
+    <Folder Include="Ui\Settings\" />
   </ItemGroup>
 
 </Project>

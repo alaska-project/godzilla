@@ -17,6 +17,8 @@ namespace Godzilla.Internal
     internal class EntityContextServiceBuilder<TContext>
         where TContext : EntityContext
     {
+        private static readonly EntityContextResolver _EntityContextResolver = new EntityContextResolver();
+
         private readonly IGodzillaServiceBuilder _builder;
         private readonly SecurityOptions<TContext> _securityOptions;
 
@@ -30,6 +32,7 @@ namespace Godzilla.Internal
         {
             AddLibraries();
             AddCoreServices();
+            AddContextRegistry();
             AddCommandHandlers();
             AddInternalServices();
             AddSecurityServices();
@@ -82,6 +85,16 @@ namespace Godzilla.Internal
                 .AddScoped<EntityConfigurator<TContext>>()
                 .AddScoped<EntityQueries<TContext>>()
                 .AddScoped<EntityCommands<TContext>>();
+        }
+
+        private void AddContextRegistry()
+        {
+            _EntityContextResolver.RegisterContext<TContext>();
+
+            if (!_builder.Services.Contains(new ServiceDescriptor(typeof(IEntityContextResolver), _EntityContextResolver)))
+            {
+                _builder.Services.AddSingleton(typeof(IEntityContextResolver), _EntityContextResolver);
+            }
         }
 
         private void AddLibraries()
