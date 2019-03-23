@@ -1,5 +1,7 @@
 ﻿using Godzilla.Abstractions.Infrastructure;
+using Godzilla.Mongo.Utils;
 using MongoDB.Bson;
+using MongoDB.Bson.IO;
 using MongoDB.Driver;
 using System;
 using System.Collections.Generic;
@@ -23,9 +25,18 @@ namespace Godzilla.Mongo.Infrastructure
 
         public string CollectionId { get; }
 
-        public Task<string> GetRawItem(Guid id)
+        public async Task<string> GetRawItem(Guid id)
         {
-            throw new NotImplementedException();
+            var document = await _collection
+                .Find(GetEntityIdFilter(id))
+                .FirstOrDefaultAsync();
+
+            return BsonUtil.SerializeToJson(document);
+        }
+
+        private FilterDefinition<BsonDocument> GetEntityIdFilter(Guid entityId)
+        {
+            return Builders<BsonDocument>.Filter.Eq(IdField, entityId);
         }
     }
 }

@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Godzilla.AspNetCore.Controllers
 {
@@ -68,9 +69,41 @@ namespace Godzilla.AspNetCore.Controllers
             return Ok(convertedNodes);
         }
 
+        [HttpGet]
+        [Produces(typeof(UiNodeValue))]
+        public async Task<IActionResult> GetNode([FromQuery]string contextId, [FromQuery]Guid nodeId)
+        {
+            var nodesCollection = GetEntityNodesCollection(contextId);
+            var node = nodesCollection.GetNode(nodeId);
+            if (node == null)
+                return NotFound();
+
+            var collection = GetCollectionService(contextId).GetRawCollection(node.CollectionId);
+            var item = await collection.GetRawItem(nodeId);
+
+            return Ok(new UiNodeValue
+            {
+                Id = nodeId,
+                SerializedValue = item
+            });
+        }
+
         private EntityNodesCollection GetEntityNodesCollection(string contextId)
         {
             return GetContext(contextId).Collections.GetCollection<EntityNode, EntityNodesCollection>();
+        }
+
+        private ICollectionService GetCollectionService(string contextId)
+        {
+            var context = GetContext(contextId);
+            return GetContextService<ICollectionService>(contextId, typeof(ICollectionService<>));
+        }
+
+        private TService GetContextService<TService>(string contextId, Type serviceGenericType)
+        {
+            var contextType = _contextResolver.GetContextReference(contextId).ContextType;
+            var serviceImplementedType = serviceGenericType.MakeGenericType(new Type[] { contextType });
+            return (TService)_serviceProvider.GetService(serviceImplementedType);
         }
 
         private EntityContext GetContext(string contextId)

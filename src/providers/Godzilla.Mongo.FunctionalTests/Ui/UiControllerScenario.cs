@@ -17,17 +17,36 @@ namespace Godzilla.Mongo.FunctionalTests.Ui
             using (var server = CreateServer())
             using (var client = server.CreateClient())
             {
+                #region Init
+
+                var context = GetEntityContext<TestEntityContext>(server);
+                var root = await context.Documents.CreateDocument(new TestEntity
+                {
+                    Name = "ui-doc-root"
+                });
+
+                #endregion
+
                 var contexts = await client.GetJsonAsync<List<UiEntityContextReference>>($"{UiManagementApi}/GetContexts");
 
                 Assert.Single(contexts);
 
                 var contextId = contexts.First().Id;
 
-                var rootNodes = await client.GetJsonAsync<List<UiEntityContextReference>>($"{UiManagementApi}/GetRootNodes?contextId={contextId}");
+                var rootNodes = await client.GetJsonAsync<List<UiNodeReference>>($"{UiManagementApi}/GetRootNodes?contextId={contextId}");
 
                 Assert.NotEmpty(rootNodes);
 
-                var childNodes = await client.GetJsonAsync<List<UiEntityContextReference>>($"{UiManagementApi}/GetChildNodes?contextId={contextId}&parentId={rootNodes[0].Id}");
+                var uiRootNode = rootNodes
+                    .FirstOrDefault(x => x.Id == root.Id);
+
+                Assert.NotNull(uiRootNode);
+
+                var rootNodeValue = await client.GetJsonAsync<UiNodeValue>($"{UiManagementApi}/GetNode?contextId={contextId}&nodeId={uiRootNode.Id}");
+
+                var childNodes = await client.GetJsonAsync<List<UiEntityContextReference>>($"{UiManagementApi}/GetChildNodes?contextId={contextId}&parentId={uiRootNode.Id}");
+
+                await root.Delete();
             }
         }
     }

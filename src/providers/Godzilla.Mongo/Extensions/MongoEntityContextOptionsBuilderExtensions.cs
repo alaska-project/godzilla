@@ -78,7 +78,8 @@ namespace Godzilla.Mongo
             var conventions = new ConventionPack
             {
                 //new GuidAsStringRepresentationConvention(new List<System.Reflection.Assembly>()),
-                new IgnoreExtraElementsConvention(true)
+                new IgnoreExtraElementsConvention(true),
+                new CamelCaseElementNameConvention(),
             };
             ConventionRegistry.Register("customConventions", conventions, x => true);
         }

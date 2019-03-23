@@ -1,7 +1,5 @@
-﻿using Godzilla.Abstractions;
-using Godzilla.Abstractions.Infrastructure;
+﻿using Godzilla.Abstractions.Infrastructure;
 using Godzilla.Abstractions.Services;
-using Godzilla.Collections.Internal;
 using Godzilla.Utils;
 using System;
 using System.Collections.Generic;
@@ -45,6 +43,11 @@ namespace Godzilla.Services
         {
             var collection = _resolver.GetCollection<TItem>(_provider);
             return _initializer.CreateCollection<TItem, TCollection>(collection);
+        }
+
+        public IDatabaseCollection GetRawCollection(string collectionId)
+        {
+            return _provider.GetCollection(collectionId);
         }
     }
 }
