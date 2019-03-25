@@ -92,20 +92,17 @@ namespace Godzilla
         #endregion
     }
 
-    public abstract class DocumentRepository<TContext, TEntity>
+    public abstract class DocumentRepository<TContext, TEntity> :
+        EntityRepository<TContext, TEntity>
         where TContext : EntityContext
     {
         #region Init
 
         public DocumentRepository(TContext context)
-        {
-            Context = context;
-        }
-
-        protected TContext Context { get; }
+            : base(context)
+        { }
 
         #endregion
-
 
         #region Document
 
