@@ -13,7 +13,9 @@ namespace Godzilla
     {
         public static IGodzillaServiceBuilder AddGodzilla(this IServiceCollection services)
         {
-            services.AddScoped<ISecurityImpersonationService, SecurityImpersonationService>();
+            services
+                .AddScoped<ISecurityImpersonationService, SecurityImpersonationService>()
+                .AddScoped<ISecurityDisablerService, SecurityDisablerService>();
 
             return new GodzillaServiceBuilder(services);
         }

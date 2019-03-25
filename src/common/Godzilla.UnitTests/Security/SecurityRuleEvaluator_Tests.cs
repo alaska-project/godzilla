@@ -17,6 +17,7 @@ namespace Godzilla.UnitTests.Security
     public class SecurityRuleEvaluator_Tests
     {
         private SecurityRuleEvaluator<FakeEntityContext> _evaluator;
+        private Mock<ISecurityDisablerService> _securityDisablerService = new Mock<ISecurityDisablerService>();
         private Mock<ISecurityRulesFinder<FakeEntityContext>> _rulesFinder = new Mock<ISecurityRulesFinder<FakeEntityContext>>();
         private Mock<ISecurityRuleMatcher<FakeEntityContext>> _rulesMatcher = new Mock<ISecurityRuleMatcher<FakeEntityContext>>();
         private Mock<ISecurityContext<FakeEntityContext>> _securityContext = new Mock<ISecurityContext<FakeEntityContext>>();
@@ -25,6 +26,7 @@ namespace Godzilla.UnitTests.Security
         public SecurityRuleEvaluator_Tests()
         {
             _evaluator = new SecurityRuleEvaluator<FakeEntityContext>(
+                _securityDisablerService.Object,
                 _rulesFinder.Object,
                 _rulesMatcher.Object,
                 _securityContext.Object,
@@ -50,6 +52,10 @@ namespace Godzilla.UnitTests.Security
         [Fact]
         public async Task EvaluateRootDefaultDeny()
         {
+            _securityDisablerService
+                .Setup(x => x.IsSecurityDisabled())
+                .Returns(false);
+
             _securityOptions
                 .Setup(x => x.UseAuthorization)
                 .Returns(true);
@@ -66,6 +72,10 @@ namespace Godzilla.UnitTests.Security
         [Fact]
         public async Task EvaluateWithDisabledAuthentication()
         {
+            _securityDisablerService
+                .Setup(x => x.IsSecurityDisabled())
+                .Returns(false);
+
             _securityOptions
                 .Setup(x => x.UseAuthorization)
                 .Returns(false);
@@ -81,6 +91,10 @@ namespace Godzilla.UnitTests.Security
         [Fact]
         public async Task EvaluateForAdmin()
         {
+            _securityDisablerService
+                .Setup(x => x.IsSecurityDisabled())
+                .Returns(false);
+
             _securityOptions
                 .Setup(x => x.UseAuthorization)
                 .Returns(true);
@@ -100,6 +114,10 @@ namespace Godzilla.UnitTests.Security
         [Fact]
         public async Task EvaluateForUser_ReturnsAllow()
         {
+            _securityDisablerService
+                .Setup(x => x.IsSecurityDisabled())
+                .Returns(false);
+
             _securityOptions
                 .Setup(x => x.UseAuthorization)
                 .Returns(true);
@@ -134,6 +152,10 @@ namespace Godzilla.UnitTests.Security
         [Fact]
         public async Task EvaluateForUser_ReturnsDeny()
         {
+            _securityDisablerService
+                .Setup(x => x.IsSecurityDisabled())
+                .Returns(false);
+
             _securityOptions
                 .Setup(x => x.UseAuthorization)
                 .Returns(true);

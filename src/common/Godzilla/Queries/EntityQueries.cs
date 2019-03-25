@@ -2,7 +2,6 @@
 using Godzilla.Abstractions.Services;
 using Godzilla.Collections.Internal;
 using Godzilla.DomainModels;
-using Godzilla.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -31,11 +30,14 @@ namespace Godzilla.Queries
             _securityEvaluator = securityEvaluator ?? throw new ArgumentNullException(nameof(securityEvaluator));
         }
 
-        //internal IQueryable<TEntity> AsQueryable<TEntity>()
-        //{
-        //    return GetCollection<TEntity>()
-        //        .AsQueryable();
-        //}
+        public IQueryable<TEntity> AsQueryable<TEntity>()
+        {
+            if (_securityEvaluator.IsAuthEnabled())
+                throw new NotSupportedException($"AsQueryable not allowed for contexts with security authentication enabled. You can explicitly disable outhentication for scope using {nameof(ISecurityDisablerService)}");
+
+            return GetCollection<TEntity>()
+                .AsQueryable();
+        }
 
         public async Task<TEntity> GetItem<TEntity>(string path)
         {

@@ -9,6 +9,7 @@ namespace Godzilla.Abstractions.Services
     internal interface ISecurityRuleEvaluator<TContext>
         where TContext : EntityContext
     {
+        bool IsAuthEnabled();
         Task<EvaluateResult> EvaluateRoot(Guid permission);
         Task<IEnumerable<EvaluateResult>> Evaluate(IEnumerable<Guid> entitiesId, Guid permission);
     }

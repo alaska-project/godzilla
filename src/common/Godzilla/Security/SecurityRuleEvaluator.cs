@@ -13,24 +13,38 @@ namespace Godzilla.Security
     internal class SecurityRuleEvaluator<TContext> : ISecurityRuleEvaluator<TContext>
         where TContext : EntityContext
     {
+        private readonly ISecurityDisablerService _securityDisabler;
         private readonly ISecurityRulesFinder<TContext> _rulesFinder;
         private readonly ISecurityRuleMatcher<TContext> _rulesMatcher;
         private readonly ISecurityContext<TContext> _securityContext;
         private readonly ISecurityOptions<TContext> _securityOptions;
 
         public SecurityRuleEvaluator(
+            ISecurityDisablerService securityDisabler,
             ISecurityRulesFinder<TContext> rulesFinder,
             ISecurityRuleMatcher<TContext> rulesMatcher,
             ISecurityContext<TContext> securityContext,
             ISecurityOptions<TContext> securityOptions)
         {
+            _securityDisabler = securityDisabler ?? throw new ArgumentNullException(nameof(securityDisabler));
             _rulesFinder = rulesFinder ?? throw new ArgumentNullException(nameof(rulesFinder));
             _rulesMatcher = rulesMatcher ?? throw new ArgumentNullException(nameof(rulesMatcher));
             _securityContext = securityContext ?? throw new ArgumentNullException(nameof(securityContext));
             _securityOptions = securityOptions ?? throw new ArgumentNullException(nameof(securityOptions));
         }
 
-        private bool UseAuthorization => _securityOptions?.UseAuthorization ?? false;
+        private bool UseAuthorization
+        {
+            get
+            {
+                if (_securityDisabler.IsSecurityDisabled())
+                    return false;
+
+                return _securityOptions?.UseAuthorization ?? false;
+            }
+        }
+
+        public bool IsAuthEnabled() => UseAuthorization;
 
         public Task<EvaluateResult> EvaluateRoot(Guid permission)
         {

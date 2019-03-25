@@ -9,7 +9,7 @@ namespace Godzilla.Abstractions
 {
     public interface IEntityQueries
     {
-        //IQueryable<TEntity> AsQueryable<TEntity>();
+        IQueryable<TEntity> AsQueryable<TEntity>();
         Task<TItem> GetItem<TItem>(Guid id);
         Task<TItem> GetItem<TItem>(string path);
         Task<TItem> GetItem<TItem>(Expression<Func<TItem, bool>> filter);
@@ -28,6 +28,5 @@ namespace Godzilla.Abstractions
 
         Task<long> GetChildrenCount<TChild>(object entity);
         Task<long> GetChildrenCount(object entity);
-
     }
 }
