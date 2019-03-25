@@ -7,18 +7,16 @@ using System.Threading.Tasks;
 
 namespace Godzilla
 {
-    public abstract class DocumentRepository<TContext, TEntity, TAggregate>
+    public abstract class DocumentRepository<TContext, TEntity, TAggregate> :
+        DocumentRepository<TContext, TEntity>
         where TContext : EntityContext
         where TAggregate : DocumentAggregate<TEntity>
     {
         #region Init
 
         public DocumentRepository(TContext context)
-        {
-            Context = context;
-        }
-
-        protected TContext Context { get; }
+            : base(context)
+        { }
 
         #endregion
 
@@ -92,6 +90,22 @@ namespace Godzilla
         }
 
         #endregion
+    }
+
+    public abstract class DocumentRepository<TContext, TEntity>
+        where TContext : EntityContext
+    {
+        #region Init
+
+        public DocumentRepository(TContext context)
+        {
+            Context = context;
+        }
+
+        protected TContext Context { get; }
+
+        #endregion
+
 
         #region Document
 
@@ -123,40 +137,6 @@ namespace Godzilla
         protected virtual async Task<IEnumerable<Document<TEntity>>> GetDocuments(Expression<Func<TEntity, bool>> filter)
         {
             return await Context.Documents.GetDocuments(filter);
-        }
-        
-        #endregion
-
-        #region Entity
-
-        protected virtual async Task<TEntity> GetEntity(Guid id)
-        {
-            return await Context.Query.GetItem<TEntity>(id);
-        }
-
-        protected virtual async Task<TEntity> GetEntity(string path)
-        {
-            return await Context.Query.GetItem<TEntity>(path);
-        }
-
-        protected virtual async Task<TEntity> GetEntity(Expression<Func<TEntity, bool>> filter)
-        {
-            return await Context.Query.GetItem(filter);
-        }
-
-        protected virtual async Task<IEnumerable<TEntity>> GetEntities()
-        {
-            return await Context.Query.GetItems<TEntity>(x => true);
-        }
-
-        protected virtual async Task<IEnumerable<TEntity>> GetEntities(IEnumerable<Guid> id)
-        {
-            return await Context.Query.GetItems<TEntity>(id);
-        }
-
-        protected virtual async Task<IEnumerable<TEntity>> GetEntities(Expression<Func<TEntity, bool>> filter)
-        {
-            return await Context.Query.GetItems(filter);
         }
 
         #endregion
