@@ -130,6 +130,45 @@ namespace Godzilla
             return new DocumentContainer(_context, container);
         }
 
+        public async Task<Document<T>> Container<T>(string path)
+        {
+            return await Container<T>(path, () => Activator.CreateInstance<T>());
+        }
+
+        public async Task<Document<T>> Container<T>(string path, Func<T> valueFactory)
+        {
+            var segments = Context.PathBuilder.GetSegments(path);
+            if (!segments.Any())
+                throw new ArgumentException("Empty path not allowed");
+
+            // Container with subcontainers
+            if (segments.Count() > 1)
+            {
+                Document<T> container = null;
+                foreach (var segment in segments)
+                {
+                    if (container == null)
+                        container = await Container<T>(segment, valueFactory);
+                    else
+                        container = await container.Container<T>(segment, valueFactory);
+                }
+                return container;
+            }
+            else
+            {
+                var name = segments.First();
+                var container = await _context.Query.GetChild<T>(_entity, name);
+                if (container == null)
+                {
+                    var value = valueFactory();
+                    container = await _context.Commands.Add(value, _entity);
+                    await _context.Commands.Rename(container, name);
+                }
+
+                return new Document<T>(_context, container);
+            }
+        }
+
         #endregion
 
         #region Query

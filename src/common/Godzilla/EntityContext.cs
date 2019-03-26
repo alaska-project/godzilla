@@ -41,6 +41,7 @@ namespace Godzilla
 
         internal IEntityNotificationService NotificationService => _entityContextServices.NotificationService;
         internal IEntityPropertyResolver Resolver => _entityContextServices.PropertyResolver;
+        internal IPathBuilder PathBuilder => _entityContextServices.PathBuilder;
         internal ICollectionService Collections => _entityContextServices.Collections;
         public IEntityCommands Commands => _entityContextServices.Commands;
         public IEntityQueries Query => _entityContextServices.Queries;

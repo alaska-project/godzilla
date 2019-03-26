@@ -5,8 +5,11 @@ using System.Text.RegularExpressions;
 
 namespace Godzilla.Abstractions.Services
 {
-    internal interface IPathBuilder<TContext>
+    public interface IPathBuilder<TContext> : IPathBuilder
         where TContext : EntityContext
+    { }
+
+    public interface IPathBuilder
     {
         string PathSeparator { get; }
         string RootPath { get; }

@@ -19,6 +19,7 @@ namespace Godzilla.Internal
             EntityCommands<TContext> commands,
             EntityConfigurator<TContext> configurator,
             IEntityPropertyResolver<TContext> propertyResolver,
+            IPathBuilder<TContext> pathBuilder,
             EntityContextInitializer<TContext> initializer,
             IEntityNotificationService<TContext> notificationService)
         {
@@ -27,6 +28,7 @@ namespace Godzilla.Internal
             Commands = commands ?? throw new ArgumentNullException(nameof(commands));
             Configurator = configurator ?? throw new ArgumentNullException(nameof(configurator));
             PropertyResolver = propertyResolver ?? throw new ArgumentNullException(nameof(propertyResolver));
+            PathBuilder = pathBuilder ?? throw new ArgumentNullException(nameof(pathBuilder));
             Initializer = initializer ?? throw new ArgumentNullException(nameof(initializer));
             NotificationService = notificationService ?? throw new ArgumentNullException(nameof(notificationService));
         }
@@ -44,5 +46,7 @@ namespace Godzilla.Internal
         public IEntityNotificationService NotificationService { get; }
 
         public IEntityPropertyResolver PropertyResolver { get; }
+
+        public IPathBuilder PathBuilder { get; }
     }
 }
