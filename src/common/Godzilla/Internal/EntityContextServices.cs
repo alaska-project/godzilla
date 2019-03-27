@@ -15,7 +15,7 @@ namespace Godzilla.Internal
         where TContext : EntityContext
     {
         public EntityContextServices(
-            ILogger logger,
+            ILogger<TContext> logger,
             ICollectionService<TContext> collectionsService, 
             EntityQueries<TContext> queries,
             EntityCommands<TContext> commands,
