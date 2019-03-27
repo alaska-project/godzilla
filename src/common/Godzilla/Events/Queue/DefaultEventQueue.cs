@@ -53,8 +53,15 @@ namespace Godzilla.Events.Queue
             _logger.LogDebug($"Invoke callback for event -> {@event.EventCategory} {@event.EventType} {@event.EventId}");
             Task.Run(() =>
             {
-                _logger.LogDebug($"Invoking callback for event -> {@event.EventCategory} {@event.EventType} {@event.EventId}");
-                subscription.Callback(@event);
+                try
+                {
+                    _logger.LogDebug($"Invoking callback for event -> {@event.EventCategory} {@event.EventType} {@event.EventId}");
+                    subscription.Callback(@event);
+                }
+                catch (Exception e)
+                {
+                    _logger.LogError(e, $"Error invoking callback for event -> {@event.EventCategory} {@event.EventType} {@event.EventId}");
+                }
             })
             .ConfigureAwait(false);
         }

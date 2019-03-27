@@ -30,7 +30,8 @@ namespace Godzilla
         internal EntityContext(IEntityContextServices entityContextServices)
         {
             _documentService = new DocumentService(
-                this, 
+                entityContextServices.Logger,
+                this,
                 entityContextServices.Queries,
                 entityContextServices.Commands);
 

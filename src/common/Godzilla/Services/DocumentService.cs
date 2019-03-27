@@ -1,5 +1,6 @@
 ﻿using Godzilla.Abstractions;
 using Godzilla.DomainModels;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,15 +14,18 @@ namespace Godzilla.Services
     {
         #region Init
 
+        private readonly ILogger _logger;
         private readonly EntityContext _context;
         private readonly IEntityQueries _queries;
         private readonly IEntityCommands _commands;
 
         public DocumentService(
+            ILogger logger,
             EntityContext context,
             IEntityQueries queries,
             IEntityCommands commands)
         {
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _context = context ?? throw new ArgumentNullException(nameof(context));
             _queries = queries ?? throw new ArgumentNullException(nameof(queries));
             _commands = commands ?? throw new ArgumentNullException(nameof(commands));
@@ -100,8 +104,15 @@ namespace Godzilla.Services
             {
                 Task.Run(async () =>
                 {
-                    var documentResult = await CreateDocumentResult<TItem>(entityId);
-                    callback.Invoke(documentResult);
+                    try
+                    {
+                        var documentResult = await CreateDocumentResult<TItem>(entityId);
+                        callback.Invoke(documentResult);
+                    }
+                    catch (Exception e)
+                    {
+                        _logger.LogError(e, $"Error invoking document subscription callback for entity {entityId}");
+                    }
                 })
                 .ConfigureAwait(false);
             }
@@ -124,8 +135,15 @@ namespace Godzilla.Services
             {
                 Task.Run(async () => 
                 {
-                    var documentResult = await CreateDocumentResult<TItem>(entityId);
-                    await callback.Invoke(documentResult);
+                    try
+                    {
+                        var documentResult = await CreateDocumentResult<TItem>(entityId);
+                        await callback.Invoke(documentResult);
+                    }
+                    catch (Exception e)
+                    {
+                        _logger.LogError(e, $"Error invoking document subscription callback for entity {entityId}");
+                    }
                 })
                 .ConfigureAwait(false);
             }

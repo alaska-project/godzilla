@@ -2,6 +2,7 @@
 using Godzilla.Abstractions.Services;
 using Godzilla.Queries;
 using Godzilla.Services;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -14,6 +15,7 @@ namespace Godzilla.Internal
         where TContext : EntityContext
     {
         public EntityContextServices(
+            ILogger logger,
             ICollectionService<TContext> collectionsService, 
             EntityQueries<TContext> queries,
             EntityCommands<TContext> commands,
@@ -23,6 +25,7 @@ namespace Godzilla.Internal
             EntityContextInitializer<TContext> initializer,
             IEntityNotificationService<TContext> notificationService)
         {
+            Logger = logger;
             Collections = collectionsService ?? throw new ArgumentException(nameof(collectionsService));
             Queries = queries ?? throw new ArgumentNullException(nameof(queries));
             Commands = commands ?? throw new ArgumentNullException(nameof(commands));
@@ -32,6 +35,8 @@ namespace Godzilla.Internal
             Initializer = initializer ?? throw new ArgumentNullException(nameof(initializer));
             NotificationService = notificationService ?? throw new ArgumentNullException(nameof(notificationService));
         }
+
+        public ILogger Logger { get; }
 
         public ICollectionService Collections { get; }
 

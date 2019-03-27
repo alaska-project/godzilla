@@ -1,4 +1,5 @@
 ﻿using Godzilla.Abstractions.Services;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -12,6 +13,7 @@ namespace Godzilla.Abstractions
 
     public interface IEntityContextServices
     {
+        ILogger Logger { get; }
         ICollectionService Collections { get; }
         IEntityCommands Commands { get; }
         IEntityQueries Queries { get; }
