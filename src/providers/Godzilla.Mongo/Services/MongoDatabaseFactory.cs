@@ -10,16 +10,16 @@ namespace Godzilla.Mongo.Services
     internal class MongoDatabaseFactory<TContext>
         where TContext : EntityContext
     {
-        private readonly MongoEntityContextOptions<TContext> _options;
+        private readonly MongoClientFactory<TContext> _mongoClientFactory;
 
-        public MongoDatabaseFactory(MongoEntityContextOptions<TContext> options)
+        public MongoDatabaseFactory(MongoClientFactory<TContext> mongoClientFactory)
         {
-            _options = options ?? throw new ArgumentNullException(nameof(options));
+            _mongoClientFactory = mongoClientFactory ?? throw new ArgumentNullException(nameof(mongoClientFactory));
         }
 
         public MongoClient GetMongoClient()
         {
-            return new MongoClient(new MongoUrl(_options.ConnectionString));
+            return _mongoClientFactory.GetMongoClient();
         }
 
         public IMongoDatabase GetDatabase()
@@ -61,6 +61,6 @@ namespace Godzilla.Mongo.Services
                 .OfType<TItem>();
         }
 
-        public string DatabaseName => _options.DatabaseName;
+        public string DatabaseName => _mongoClientFactory.DatabaseName;
     }
 }

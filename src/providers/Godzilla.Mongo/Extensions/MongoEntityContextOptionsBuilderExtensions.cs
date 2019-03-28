@@ -37,6 +37,7 @@ namespace Godzilla.Mongo
                 .AddTransient<IDatabaseTransactionManager<TContext>, MongoDatabaseTransactionManager<TContext>>()
                 .AddScoped<IDatabaseCollectionProvider<TContext>, MongoDatabaseCollectionProvider<TContext>>()
                 .AddScoped<MongoDatabaseFactory<TContext>>()
+                .AddSingleton<MongoClientFactory<TContext>>()
                 .AddEventQueue<TContext>(eventQueueType);
         }
 
