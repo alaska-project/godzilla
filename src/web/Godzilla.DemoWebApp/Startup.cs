@@ -63,6 +63,12 @@ namespace Godzilla.DemoWebApp
                     c.SwaggerEndpoint("/swagger/v1/swagger.json", "ShhApi V1");
                 });
 
+            app.UseCors(x => x
+                .AllowAnyOrigin()
+                .AllowAnyMethod()
+                .AllowAnyHeader()
+                .AllowCredentials());
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
