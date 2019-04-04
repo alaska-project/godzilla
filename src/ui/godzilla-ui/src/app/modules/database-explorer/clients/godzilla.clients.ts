@@ -1,10 +1,5 @@
 import { EndpointService } from '../services/endpoint/endpoint.service';
 import { ClientBase } from './client-base';
-import { Injectable } from '@angular/core';
-
-@Injectable({
-    providedIn: 'root'
-})
 
 /* tslint:disable */
 /* eslint-disable */
@@ -15,100 +10,138 @@ import { Injectable } from '@angular/core';
 //----------------------
 // ReSharper disable InconsistentNaming
 
+import { mergeMap as _observableMergeMap, catchError as _observableCatch } from 'rxjs/operators';
+import { Observable, throwError as _observableThrow, of as _observableOf } from 'rxjs';
+import { Injectable, Inject, Optional, InjectionToken } from '@angular/core';
+import { HttpClient, HttpHeaders, HttpResponse, HttpResponseBase } from '@angular/common/http';
+
+export const GODZILLA_API_BASE_URL = new InjectionToken<string>('GODZILLA_API_BASE_URL');
+
+@Injectable({
+    providedIn: 'root'
+})
 export class UiManagementClient extends ClientBase {
-    private http: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> };
+    private http: HttpClient;
     private baseUrl: string;
     protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
 
-    constructor(configuration: EndpointService, baseUrl?: string, http?: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> }) {
+    constructor(@Inject(EndpointService) configuration: EndpointService, @Inject(HttpClient) http: HttpClient, @Optional() @Inject(GODZILLA_API_BASE_URL) baseUrl?: string) {
         super(configuration);
-        this.http = http ? http : <any>window;
+        this.http = http;
         this.baseUrl = baseUrl ? baseUrl : this.getBaseUrl("");
     }
 
     /**
      * @return Success
      */
-    getContexts(): Promise<UiEntityContextReference[]> {
+    getContexts(): Observable<UiEntityContextReference[]> {
         let url_ = this.baseUrl + "/godzilla/api/UiManagement/GetContexts";
         url_ = url_.replace(/[?&]$/, "");
 
-        let options_ = <RequestInit>{
-            method: "GET",
-            headers: {
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
                 "Accept": "application/json"
-            }
+            })
         };
 
-        return this.http.fetch(url_, options_).then((_response: Response) => {
-            return this.processGetContexts(_response);
-        });
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetContexts(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetContexts(<any>response_);
+                } catch (e) {
+                    return <Observable<UiEntityContextReference[]>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<UiEntityContextReference[]>><any>_observableThrow(response_);
+        }));
     }
 
-    protected processGetContexts(response: Response): Promise<UiEntityContextReference[]> {
+    protected processGetContexts(response: HttpResponseBase): Observable<UiEntityContextReference[]> {
         const status = response.status;
-        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        const responseBlob = 
+            response instanceof HttpResponse ? response.body : 
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
         if (status === 200) {
-            return response.text().then((_responseText) => {
-                let result200: any = null;
-                let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-                if (resultData200 && resultData200.constructor === Array) {
-                    result200 = [] as any;
-                    for (let item of resultData200)
-                        result200!.push(UiEntityContextReference.fromJS(item));
-                }
-                return result200;
-            });
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (resultData200 && resultData200.constructor === Array) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200!.push(UiEntityContextReference.fromJS(item));
+            }
+            return _observableOf(result200);
+            }));
         } else if (status !== 200 && status !== 204) {
-            return response.text().then((_responseText) => {
-                return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            });
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
         }
-        return Promise.resolve<UiEntityContextReference[]>(<any>null);
+        return _observableOf<UiEntityContextReference[]>(<any>null);
     }
 
     /**
      * @param contextId (optional) 
      * @return Success
      */
-    getRootNodes(contextId: string | null | undefined): Promise<UiNodeReference[]> {
+    getRootNodes(contextId: string | null | undefined): Observable<UiNodeReference[]> {
         let url_ = this.baseUrl + "/godzilla/api/UiManagement/GetRootNodes?";
         if (contextId !== undefined)
-            url_ += "contextId=" + encodeURIComponent("" + contextId) + "&";
+            url_ += "contextId=" + encodeURIComponent("" + contextId) + "&"; 
         url_ = url_.replace(/[?&]$/, "");
 
-        let options_ = <RequestInit>{
-            method: "GET",
-            headers: {
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
                 "Accept": "application/json"
-            }
+            })
         };
 
-        return this.http.fetch(url_, options_).then((_response: Response) => {
-            return this.processGetRootNodes(_response);
-        });
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetRootNodes(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetRootNodes(<any>response_);
+                } catch (e) {
+                    return <Observable<UiNodeReference[]>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<UiNodeReference[]>><any>_observableThrow(response_);
+        }));
     }
 
-    protected processGetRootNodes(response: Response): Promise<UiNodeReference[]> {
+    protected processGetRootNodes(response: HttpResponseBase): Observable<UiNodeReference[]> {
         const status = response.status;
-        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        const responseBlob = 
+            response instanceof HttpResponse ? response.body : 
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
         if (status === 200) {
-            return response.text().then((_responseText) => {
-                let result200: any = null;
-                let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-                if (resultData200 && resultData200.constructor === Array) {
-                    result200 = [] as any;
-                    for (let item of resultData200)
-                        result200!.push(UiNodeReference.fromJS(item));
-                }
-                return result200;
-            });
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (resultData200 && resultData200.constructor === Array) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200!.push(UiNodeReference.fromJS(item));
+            }
+            return _observableOf(result200);
+            }));
         } else if (status !== 200 && status !== 204) {
-            return response.text().then((_responseText) => {
-                return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            });
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
         }
-        return Promise.resolve<UiNodeReference[]>(<any>null);
+        return _observableOf<UiNodeReference[]>(<any>null);
     }
 
     /**
@@ -116,46 +149,60 @@ export class UiManagementClient extends ClientBase {
      * @param parentId (optional) 
      * @return Success
      */
-    getChildNodes(contextId: string | null | undefined, parentId: string | null | undefined): Promise<UiNodeReference[]> {
+    getChildNodes(contextId: string | null | undefined, parentId: string | null | undefined): Observable<UiNodeReference[]> {
         let url_ = this.baseUrl + "/godzilla/api/UiManagement/GetChildNodes?";
         if (contextId !== undefined)
-            url_ += "contextId=" + encodeURIComponent("" + contextId) + "&";
+            url_ += "contextId=" + encodeURIComponent("" + contextId) + "&"; 
         if (parentId !== undefined)
-            url_ += "parentId=" + encodeURIComponent("" + parentId) + "&";
+            url_ += "parentId=" + encodeURIComponent("" + parentId) + "&"; 
         url_ = url_.replace(/[?&]$/, "");
 
-        let options_ = <RequestInit>{
-            method: "GET",
-            headers: {
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
                 "Accept": "application/json"
-            }
+            })
         };
 
-        return this.http.fetch(url_, options_).then((_response: Response) => {
-            return this.processGetChildNodes(_response);
-        });
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetChildNodes(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetChildNodes(<any>response_);
+                } catch (e) {
+                    return <Observable<UiNodeReference[]>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<UiNodeReference[]>><any>_observableThrow(response_);
+        }));
     }
 
-    protected processGetChildNodes(response: Response): Promise<UiNodeReference[]> {
+    protected processGetChildNodes(response: HttpResponseBase): Observable<UiNodeReference[]> {
         const status = response.status;
-        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        const responseBlob = 
+            response instanceof HttpResponse ? response.body : 
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
         if (status === 200) {
-            return response.text().then((_responseText) => {
-                let result200: any = null;
-                let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-                if (resultData200 && resultData200.constructor === Array) {
-                    result200 = [] as any;
-                    for (let item of resultData200)
-                        result200!.push(UiNodeReference.fromJS(item));
-                }
-                return result200;
-            });
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (resultData200 && resultData200.constructor === Array) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200!.push(UiNodeReference.fromJS(item));
+            }
+            return _observableOf(result200);
+            }));
         } else if (status !== 200 && status !== 204) {
-            return response.text().then((_responseText) => {
-                return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            });
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
         }
-        return Promise.resolve<UiNodeReference[]>(<any>null);
+        return _observableOf<UiNodeReference[]>(<any>null);
     }
 
     /**
@@ -163,42 +210,56 @@ export class UiManagementClient extends ClientBase {
      * @param nodeId (optional) 
      * @return Success
      */
-    getNode(contextId: string | null | undefined, nodeId: string | null | undefined): Promise<UiNodeValue> {
+    getNode(contextId: string | null | undefined, nodeId: string | null | undefined): Observable<UiNodeValue> {
         let url_ = this.baseUrl + "/godzilla/api/UiManagement/GetNode?";
         if (contextId !== undefined)
-            url_ += "contextId=" + encodeURIComponent("" + contextId) + "&";
+            url_ += "contextId=" + encodeURIComponent("" + contextId) + "&"; 
         if (nodeId !== undefined)
-            url_ += "nodeId=" + encodeURIComponent("" + nodeId) + "&";
+            url_ += "nodeId=" + encodeURIComponent("" + nodeId) + "&"; 
         url_ = url_.replace(/[?&]$/, "");
 
-        let options_ = <RequestInit>{
-            method: "GET",
-            headers: {
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
                 "Accept": "application/json"
-            }
+            })
         };
 
-        return this.http.fetch(url_, options_).then((_response: Response) => {
-            return this.processGetNode(_response);
-        });
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetNode(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetNode(<any>response_);
+                } catch (e) {
+                    return <Observable<UiNodeValue>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<UiNodeValue>><any>_observableThrow(response_);
+        }));
     }
 
-    protected processGetNode(response: Response): Promise<UiNodeValue> {
+    protected processGetNode(response: HttpResponseBase): Observable<UiNodeValue> {
         const status = response.status;
-        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        const responseBlob = 
+            response instanceof HttpResponse ? response.body : 
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
         if (status === 200) {
-            return response.text().then((_responseText) => {
-                let result200: any = null;
-                let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-                result200 = resultData200 ? UiNodeValue.fromJS(resultData200) : new UiNodeValue();
-                return result200;
-            });
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = resultData200 ? UiNodeValue.fromJS(resultData200) : new UiNodeValue();
+            return _observableOf(result200);
+            }));
         } else if (status !== 200 && status !== 204) {
-            return response.text().then((_responseText) => {
-                return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            });
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
         }
-        return Promise.resolve<UiNodeValue>(<any>null);
+        return _observableOf<UiNodeValue>(<any>null);
     }
 }
 
@@ -233,7 +294,7 @@ export class UiEntityContextReference implements IUiEntityContextReference {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
         data["name"] = this.name;
-        return data;
+        return data; 
     }
 }
 
@@ -276,7 +337,7 @@ export class UiNodeReference implements IUiNodeReference {
         data["id"] = this.id;
         data["parentId"] = this.parentId;
         data["name"] = this.name;
-        return data;
+        return data; 
     }
 }
 
@@ -317,7 +378,7 @@ export class UiNodeValue implements IUiNodeValue {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
         data["serializedValue"] = this.serializedValue;
-        return data;
+        return data; 
     }
 }
 
@@ -328,10 +389,10 @@ export interface IUiNodeValue {
 
 export class SwaggerException extends Error {
     message: string;
-    status: number;
-    response: string;
+    status: number; 
+    response: string; 
     headers: { [key: string]: any; };
-    result: any;
+    result: any; 
 
     constructor(message: string, status: number, response: string, headers: { [key: string]: any; }, result: any) {
         super();
@@ -350,9 +411,25 @@ export class SwaggerException extends Error {
     }
 }
 
-function throwException(message: string, status: number, response: string, headers: { [key: string]: any; }, result?: any): any {
-    if (result !== null && result !== undefined)
-        throw result;
+function throwException(message: string, status: number, response: string, headers: { [key: string]: any; }, result?: any): Observable<any> {
+    if(result !== null && result !== undefined)
+        return _observableThrow(result);
     else
-        throw new SwaggerException(message, status, response, headers, null);
+        return _observableThrow(new SwaggerException(message, status, response, headers, null));
+}
+
+function blobToText(blob: any): Observable<string> {
+    return new Observable<string>((observer: any) => {
+        if (!blob) {
+            observer.next("");
+            observer.complete();
+        } else {
+            let reader = new FileReader(); 
+            reader.onload = event => { 
+                observer.next((<any>event.target).result);
+                observer.complete();
+            };
+            reader.readAsText(blob); 
+        }
+    });
 }

@@ -5,6 +5,8 @@ import { MaterialModule } from '../material/material.module';
 import { DatabaseExplorerComponent } from './database-explorer.component';
 import { DatabaseTreeExplorerComponent } from './components/database-tree-explorer/database-tree-explorer.component';
 import { DatabaseItemEditorComponent } from './components/database-item-editor/database-item-editor.component';
+import { DatabaseContextService } from './services/database-context/database-context.service';
+import { UiManagementClient } from './clients/godzilla.clients';
 
 @NgModule({
   imports: [
@@ -19,6 +21,10 @@ import { DatabaseItemEditorComponent } from './components/database-item-editor/d
   ],
   exports: [
     DatabaseExplorerComponent
+  ], 
+  providers: [
+    UiManagementClient,
+    DatabaseContextService
   ]
 })
 export class DatabaseExplorerModule { }
