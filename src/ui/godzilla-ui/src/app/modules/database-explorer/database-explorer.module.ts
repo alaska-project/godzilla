@@ -7,6 +7,8 @@ import { DatabaseTreeExplorerComponent } from './components/database-tree-explor
 import { DatabaseItemEditorComponent } from './components/database-item-editor/database-item-editor.component';
 import { DatabaseContextService } from './services/database-context/database-context.service';
 import { UiManagementClient } from './clients/godzilla.clients';
+import { DatabaseContextSelectorComponent } from './components/database-tree-explorer/components/database-context-selector/database-context-selector.component';
+import { DatabaseContextSettingsComponent } from './components/database-tree-explorer/components/database-context-settings/database-context-settings.component';
 
 @NgModule({
   imports: [
@@ -17,7 +19,9 @@ import { UiManagementClient } from './clients/godzilla.clients';
   declarations: [
     DatabaseExplorerComponent,
     DatabaseTreeExplorerComponent,
-    DatabaseItemEditorComponent
+    DatabaseItemEditorComponent,
+    DatabaseContextSelectorComponent,
+    DatabaseContextSettingsComponent
   ],
   exports: [
     DatabaseExplorerComponent

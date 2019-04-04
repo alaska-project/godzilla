@@ -1,0 +1,8 @@
+.context-menu {
+    display: flex;
+    flex-direction: row;
+
+    .context-selector {
+        flex: 1;
+    }
+}
