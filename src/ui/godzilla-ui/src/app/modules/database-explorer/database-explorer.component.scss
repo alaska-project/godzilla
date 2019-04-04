@@ -1,0 +1,13 @@
+.database-explorer-container {
+    display: flex;
+    flex-direction: row;
+    height: 100%;
+
+    god-database-tree-explorer {
+        flex: 1;
+    }
+
+    god-database-item-editor {
+        flex: 3;
+    }
+}
