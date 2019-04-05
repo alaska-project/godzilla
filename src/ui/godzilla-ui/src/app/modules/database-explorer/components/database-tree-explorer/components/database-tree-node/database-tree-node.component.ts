@@ -1,6 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { EntityNode } from '../../models/database-tree.models';
-import { Router } from '@angular/router';
+import { DatabaseRouterService } from 'src/app/modules/database-explorer/services/database-router/database-router.service';
 
 @Component({
   selector: 'god-database-tree-node',
@@ -12,12 +12,12 @@ export class DatabaseTreeNodeComponent implements OnInit {
   @Input()
   node: EntityNode;
 
-  constructor(private router: Router) { }
+  constructor(private databaseRouter: DatabaseRouterService) { }
 
   ngOnInit() {
   }
 
   selectNode() {
-    this.router.navigate(['/item', this.node.item.id]);
+    this.databaseRouter.navigateToItem(this.node.item);
   }
 }
