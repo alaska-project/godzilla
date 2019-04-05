@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { DatabaseContextService } from 'src/app/modules/database-explorer/services/database-context/database-context.service';
+import { Observable } from 'rxjs';
+import { UiEntityContextReference } from 'src/app/modules/database-explorer/clients/godzilla.clients';
 
 @Component({
   selector: 'god-database-context-selector',
@@ -7,9 +10,12 @@ import { Component, OnInit } from '@angular/core';
 })
 export class DatabaseContextSelectorComponent implements OnInit {
 
-  constructor() { }
+  dartabaseContexts: Observable<UiEntityContextReference[]>;
+
+  constructor(private databaseContext: DatabaseContextService) { }
 
   ngOnInit() {
+    this.dartabaseContexts = this.databaseContext.availableContexts();
   }
 
 }

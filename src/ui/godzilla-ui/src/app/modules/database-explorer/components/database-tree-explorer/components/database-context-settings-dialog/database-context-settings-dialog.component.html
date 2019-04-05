@@ -1,0 +1,12 @@
+<h1 mat-dialog-title>Settings</h1>
+<div mat-dialog-content>
+    <div class="endpoint-selector">
+        <mat-form-field class="endpoint-control">
+            <input matInput placeholder="Endpoint" [(ngModel)]="endpoint">
+            <button mat-button matSuffix mat-icon-button aria-label="Save" (click)="saveEndpoint()">
+                <mat-icon color="primary">save</mat-icon>
+            </button>
+        </mat-form-field>
+    </div>
+
+</div>

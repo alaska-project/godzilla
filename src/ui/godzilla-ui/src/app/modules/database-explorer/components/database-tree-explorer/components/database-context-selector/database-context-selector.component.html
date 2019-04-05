@@ -3,8 +3,6 @@
     Dropdown button
   </button>
   <div class="dropdown-menu" aria-labelledby="entityContextSelector">
-    <a class="dropdown-item" href="#">Action</a>
-    <a class="dropdown-item" href="#">Another action</a>
-    <a class="dropdown-item" href="#">Something else here</a>
+    <a *ngFor="let context of dartabaseContexts | async" class="dropdown-item" href="#">{{context}}</a>
   </div>
 </div>
