@@ -3,5 +3,5 @@
   <god-database-context-settings class="m-1"></god-database-context-settings>
 </div>
 <div class="tree-explorer">
-  <god-database-tree></god-database-tree>
+  <god-database-tree *ngIf="context" [context]="context"></god-database-tree>
 </div>

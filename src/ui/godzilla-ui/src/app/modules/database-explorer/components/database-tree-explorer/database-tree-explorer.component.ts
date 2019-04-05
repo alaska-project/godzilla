@@ -11,10 +11,12 @@ import { UiEntityContextReference } from '../../clients/godzilla.clients';
 export class DatabaseTreeExplorerComponent implements OnInit {
 
   contexts: Observable<UiEntityContextReference[]>;
+  context: UiEntityContextReference;
 
   constructor(private databaseContextService: DatabaseContextService) { }
 
   ngOnInit() {
     this.contexts = this.databaseContextService.availableContexts();
+    this.databaseContextService.currentContext().subscribe(x => this.context = x);
   }
 }

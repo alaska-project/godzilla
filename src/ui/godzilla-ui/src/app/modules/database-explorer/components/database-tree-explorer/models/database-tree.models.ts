@@ -1,5 +1,6 @@
 import { UiNodeReference } from '../../../clients/godzilla.clients';
 
+
 export class EntityNode {
     constructor(
         public item: UiNodeReference, 
