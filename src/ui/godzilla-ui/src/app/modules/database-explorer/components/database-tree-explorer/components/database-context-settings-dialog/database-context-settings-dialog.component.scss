@@ -1,9 +1,5 @@
-.endpoint-selector {
-    display: flex;
-    flex-direction: row;
-    align-items: flex-end;
-
-    .endpoint-control {
-        flex: 1;
-    }
+.close-button {
+    position: absolute;
+    top: -15px;
+    right: -15px;
 }

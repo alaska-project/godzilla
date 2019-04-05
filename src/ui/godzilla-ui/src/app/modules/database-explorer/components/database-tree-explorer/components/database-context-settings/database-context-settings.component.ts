@@ -16,8 +16,7 @@ export class DatabaseContextSettingsComponent implements OnInit {
 
   openSettingsDialog() {
     this.dialog.open(DatabaseContextSettingsDialogComponent, {
-      // width: '250px',
-      // height: '150px',
+      panelClass: 'rel-panel'
     });
   }
 }

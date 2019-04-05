@@ -16,7 +16,5 @@ export class DatabaseTreeExplorerComponent implements OnInit {
 
   ngOnInit() {
     this.contexts = this.databaseContextService.availableContexts();
-    this.databaseContextService.loadContexts();
   }
-
 }

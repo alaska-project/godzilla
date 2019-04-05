@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { EndpointService } from 'src/app/modules/database-explorer/services/endpoint/endpoint.service';
+import { MatDialogRef } from '@angular/material';
 
 @Component({
   selector: 'god-database-context-settings-dialog',
@@ -10,7 +11,9 @@ export class DatabaseContextSettingsDialogComponent implements OnInit {
 
   endpoint: string;
 
-  constructor(private endpointService: EndpointService) { }
+  constructor(
+    private dialogRef: MatDialogRef<DatabaseContextSettingsDialogComponent>,
+    private endpointService: EndpointService) { }
 
   ngOnInit() {
     this.endpoint = this.endpointService.getEndpoint();
@@ -18,5 +21,9 @@ export class DatabaseContextSettingsDialogComponent implements OnInit {
 
   saveEndpoint() {
     this.endpointService.setEndpoint(this.endpoint);
+  }
+
+  close() {
+    this.dialogRef.close();
   }
 }
