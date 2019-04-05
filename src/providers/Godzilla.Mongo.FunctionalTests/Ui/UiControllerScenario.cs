@@ -29,7 +29,7 @@ namespace Godzilla.Mongo.FunctionalTests.Ui
 
                 var contexts = await client.GetJsonAsync<List<UiEntityContextReference>>($"{UiManagementApi}/GetContexts");
 
-                Assert.Single(contexts);
+                Assert.Equal(2, contexts.Count);
 
                 var contextId = contexts.First().Id;
 

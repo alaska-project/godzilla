@@ -40,7 +40,18 @@ namespace Godzilla.Mongo.FunctionalTests
                 {
                     opt.UseMongoDb(
                             _runner.ConnectionString, 
-                            Configuration["Godzilla:Database"],
+                            Configuration["Godzilla:TestEntityContextDatabase"],
+                            EventQueueType.Mongo);
+                })
+                .AddUi();
+
+            services
+                .AddGodzilla()
+                .AddEntityContext<Test2EntityContext>(opt =>
+                {
+                    opt.UseMongoDb(
+                            _runner.ConnectionString,
+                            Configuration["Godzilla:Test2EntityContextDatabase"],
                             EventQueueType.Mongo);
                 })
                 .AddUi();

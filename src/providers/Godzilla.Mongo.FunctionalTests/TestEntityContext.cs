@@ -12,6 +12,13 @@ namespace Godzilla.Mongo.FunctionalTests
         { }
     }
 
+    public class Test2EntityContext : EntityContext<Test2EntityContext>
+    {
+        public Test2EntityContext(IEntityContextServices<Test2EntityContext> services)
+            : base(services)
+        { }
+    }
+
     public class TestEntity
     {
         public Guid Id { get; set; }

@@ -32,7 +32,7 @@ namespace Godzilla.Mongo.FunctionalTests
                 {
                     opt.UseMongoDb(
                             _runner.ConnectionString,
-                            Configuration["Godzilla:Database"]);
+                            Configuration["Godzilla:TestEntityContextDatabase"]);
                     opt.UseAuthorization();
                 })
                 .AddMvcAuthentication()

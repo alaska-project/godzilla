@@ -17,7 +17,7 @@ namespace Godzilla.Internal
     internal class EntityContextServiceBuilder<TContext>
         where TContext : EntityContext
     {
-        private static readonly EntityContextResolver _EntityContextResolver = new EntityContextResolver();
+        private EntityContextResolver _EntityContextResolver = EntityContextResolver.Instance;
 
         private readonly IGodzillaServiceBuilder _builder;
         private readonly SecurityOptions<TContext> _securityOptions;

@@ -10,6 +10,11 @@ namespace Godzilla.Services
     {
         private readonly Dictionary<string, EntityContextReference> _references = new Dictionary<string, EntityContextReference>();
 
+        private EntityContextResolver()
+        { }
+
+        public static EntityContextResolver Instance { get; } = new EntityContextResolver();
+
         public void RegisterContext<TContext>()
             where TContext : EntityContext
         {
