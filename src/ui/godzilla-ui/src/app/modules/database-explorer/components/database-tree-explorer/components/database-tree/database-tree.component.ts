@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, AfterContentInit } from '@angular/core';
+import { Component, OnInit, Input, AfterContentInit, OnChanges, SimpleChanges } from '@angular/core';
 import { FlatTreeControl } from '@angular/cdk/tree';
 import { EntityNode } from '../../models/database-tree.models';
 import { EntityDatabaseDatasource } from '../../services/entity-datatabase-datasource/entity-database-datasource.service';
@@ -10,7 +10,7 @@ import { UiEntityContextReference } from 'src/app/modules/database-explorer/clie
   templateUrl: './database-tree.component.html',
   styleUrls: ['./database-tree.component.scss']
 })
-export class DatabaseTreeComponent implements OnInit, AfterContentInit {
+export class DatabaseTreeComponent implements OnInit, OnChanges {
 
   @Input()
   context: UiEntityContextReference;
@@ -21,12 +21,17 @@ export class DatabaseTreeComponent implements OnInit, AfterContentInit {
   ngOnInit() {
   }
 
-  ngAfterContentInit(): void {
-    this.treeControl = new FlatTreeControl<EntityNode>(this.getLevel, this.isExpandable);
-    this.dataSource = new EntityDatabaseDatasource(this.context, this.databaseService, this.treeControl);
-    this.databaseService.loadRootNodes(this.context).then(nodes => {
-      this.dataSource.data = nodes.map(node => new EntityNode(node, 0, !node.isLeaf, false));
-    });
+  ngOnChanges(changes: SimpleChanges) {
+    if (this.context) {
+      this.treeControl = new FlatTreeControl<EntityNode>(this.getLevel, this.isExpandable);
+      this.dataSource = new EntityDatabaseDatasource(this.context, this.databaseService, this.treeControl);
+      this.databaseService.loadRootNodes(this.context).then(nodes => {
+        this.dataSource.data = nodes.map(node => new EntityNode(node, 0, !node.isLeaf, false));
+      });
+    } else {
+      this.treeControl = undefined;
+      this.dataSource = undefined;
+    }
   }
 
   treeControl: FlatTreeControl<EntityNode>;
