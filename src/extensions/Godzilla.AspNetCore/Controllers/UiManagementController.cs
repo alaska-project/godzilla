@@ -57,12 +57,24 @@ namespace Godzilla.AspNetCore.Controllers
                 .Select(x => new { x.EntityId, x.NodeName, x.ParentId })
                 .ToList();
 
+            var nodesId = nodes
+                .Select(x => x.EntityId)
+                .ToList();
+
+            var nodesIdWithChildren = nodesCollection
+                .AsQueryable()
+                .Where(x => nodesId.Contains(x.ParentId))
+                .GroupBy(x => x.ParentId)
+                .Select(x => x.First().ParentId)
+                .ToList();
+
             var convertedNodes = nodes
                 .Select(x => new UiNodeReference
                 {
                     Id = x.EntityId,
                     Name = x.NodeName,
                     ParentId = x.ParentId,
+                    IsLeaf = !nodesIdWithChildren.Contains(x.EntityId),
                 })
                 .ToList();
 

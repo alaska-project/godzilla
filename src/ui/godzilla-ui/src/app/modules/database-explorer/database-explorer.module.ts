@@ -10,6 +10,8 @@ import { UiManagementClient } from './clients/godzilla.clients';
 import { DatabaseContextSelectorComponent } from './components/database-tree-explorer/components/database-context-selector/database-context-selector.component';
 import { DatabaseContextSettingsComponent } from './components/database-tree-explorer/components/database-context-settings/database-context-settings.component';
 import { DatabaseContextSettingsDialogComponent } from './components/database-tree-explorer/components/database-context-settings-dialog/database-context-settings-dialog.component';
+import { DatabaseTreeComponent } from './components/database-tree-explorer/components/database-tree/database-tree.component';
+import { DatabaseTreeNodeComponent } from './components/database-tree-explorer/components/database-tree-node/database-tree-node.component';
 
 @NgModule({
   imports: [
@@ -23,7 +25,9 @@ import { DatabaseContextSettingsDialogComponent } from './components/database-tr
     DatabaseItemEditorComponent,
     DatabaseContextSelectorComponent,
     DatabaseContextSettingsComponent,
-    DatabaseContextSettingsDialogComponent
+    DatabaseContextSettingsDialogComponent,
+    DatabaseTreeComponent,
+    DatabaseTreeNodeComponent
   ],
   exports: [
     DatabaseExplorerComponent

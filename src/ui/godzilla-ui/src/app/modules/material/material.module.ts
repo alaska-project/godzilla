@@ -7,6 +7,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
+import { MatTreeModule } from '@angular/material/tree';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 
 @NgModule({
   declarations: [],
@@ -18,7 +20,9 @@ import { MatIconModule } from '@angular/material/icon';
     MatButtonModule,
     MatInputModule,
     MatDialogModule,
-    MatIconModule
+    MatIconModule,
+    MatTreeModule,
+    MatProgressBarModule
   ],
   exports: [
     BrowserAnimationsModule,
@@ -27,7 +31,9 @@ import { MatIconModule } from '@angular/material/icon';
     MatButtonModule,
     MatInputModule,
     MatDialogModule,
-    MatIconModule
+    MatIconModule,
+    MatTreeModule,
+    MatProgressBarModule
   ]
 })
 export class MaterialModule { }
