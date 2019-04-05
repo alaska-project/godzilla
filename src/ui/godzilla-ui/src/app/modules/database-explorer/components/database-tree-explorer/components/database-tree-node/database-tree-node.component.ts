@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
+import { EntityNode } from '../../models/database-tree.models';
 
 @Component({
   selector: 'god-database-tree-node',
@@ -7,6 +8,9 @@ import { Component, OnInit } from '@angular/core';
 })
 export class DatabaseTreeNodeComponent implements OnInit {
 
+  @Input()
+  node: EntityNode;
+  
   constructor() { }
 
   ngOnInit() {

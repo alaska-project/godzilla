@@ -1,7 +1,7 @@
 <mat-tree *ngIf="context" [dataSource]="dataSource" [treeControl]="treeControl">
   <mat-tree-node *matTreeNodeDef="let node" matTreeNodePadding>
     <button mat-icon-button disabled></button>
-    {{node.item.name}}
+    <god-database-tree-node [node]="node"></god-database-tree-node>
   </mat-tree-node>
   <mat-tree-node *matTreeNodeDef="let node; when: hasChild" matTreeNodePadding>
     <button mat-icon-button [attr.aria-label]="'toggle ' + node.filename" matTreeNodeToggle>
@@ -9,7 +9,7 @@
         {{treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
       </mat-icon>
     </button>
-    {{node.item.name}}
+    <god-database-tree-node [node]="node"></god-database-tree-node>
     <mat-progress-bar *ngIf="node.isLoading" mode="indeterminate" class="example-tree-progress-bar"></mat-progress-bar>
   </mat-tree-node>
 </mat-tree>
