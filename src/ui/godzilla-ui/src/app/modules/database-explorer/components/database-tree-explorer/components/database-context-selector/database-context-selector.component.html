@@ -1,8 +1,10 @@
 <div class="dropdown">
-  <button class="btn btn-secondary dropdown-toggle w-100" type="button" id="entityContextSelector" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-    Dropdown button
+  <button class="btn btn-secondary dropdown-toggle w-100" type="button" id="entityContextSelector"
+    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+    [disabled]="!currentContext">
+    {{currentContext ? currentContext.name : 'No contexts'}}
   </button>
   <div class="dropdown-menu" aria-labelledby="entityContextSelector">
-    <a *ngFor="let context of dartabaseContexts | async" class="dropdown-item" href="#">{{context}}</a>
+    <a *ngFor="let context of dartabaseContexts | async" class="dropdown-item clickable" (click)="selectContext(context)">{{context.name}}</a>
   </div>
 </div>
