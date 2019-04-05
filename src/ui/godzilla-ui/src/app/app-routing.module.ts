@@ -4,7 +4,7 @@ import { DatabaseExplorerComponent } from './modules/database-explorer/database-
 
 const routes: Routes = [
   {
-    path: '',
+    path: '**',
     component: DatabaseExplorerComponent
   }
 ];

@@ -3,6 +3,7 @@ import { UiManagementClient, UiEntityContextReference } from '../../clients/godz
 import { OperationsService } from 'src/app/modules/common/services/operations/operations.service';
 import { BehaviorSubject } from 'rxjs';
 import { EndpointService } from '../endpoint/endpoint.service';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
@@ -13,6 +14,7 @@ export class DatabaseContextService {
   private availableContextsSubject = new BehaviorSubject<UiEntityContextReference[]>([]);
 
   constructor(
+    private router: Router,
     private endpointService: EndpointService,
     private operation: OperationsService,
     private databaseClient: UiManagementClient) {
@@ -33,6 +35,7 @@ export class DatabaseContextService {
 
   selectContext(context: UiEntityContextReference) {
     this.currentContextSubject.next(context);
+    this.router.navigate([context.name]);
   }
 
   private loadContexts() {
@@ -46,7 +49,7 @@ export class DatabaseContextService {
   private setContexts(contexts: UiEntityContextReference[]) {
     this.availableContextsSubject.next(contexts);
     if (contexts.length > 0) {
-      this.currentContextSubject.next(contexts[0]);
+      this.selectContext(contexts[0]);
     }
   }
 }
