@@ -3,12 +3,13 @@ using Godzilla.Exceptions;
 using Godzilla.Utils;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using System.Text;
 
 namespace Godzilla.Services
 {
-    public class EntityPropertyResolver<TContext> : 
+    public class EntityPropertyResolver<TContext> :
         IEntityPropertyResolver<TContext>
         where TContext : EntityContext
     {
@@ -23,7 +24,7 @@ namespace Godzilla.Services
         public Guid GetEntityId(object entity, bool generateIfEmpty)
         {
             var idProperty = _idPropertyCache.Retreive(
-                entity.GetType(), 
+                entity.GetType(),
                 () => GetIdProperty(entity));
 
             var value = (Guid)idProperty.GetValue(entity);
@@ -55,7 +56,20 @@ namespace Godzilla.Services
             if (id == Guid.Empty)
                 throw new MissingIdException();
 
-            return id.ToString();
+            return GenerateIdHash(id);
+        }
+
+        public string GenerateIdHash(Guid id)
+        {
+            using (var sha1 = new System.Security.Cryptography.SHA1Managed())
+            {
+                var hash = sha1.ComputeHash(Encoding.UTF8.GetBytes(id.ToString()));
+
+                return string.Concat(
+                    Convert.ToBase64String(hash)
+                        .ToCharArray()
+                        .Where(x => char.IsLetterOrDigit(x)).Take(10));
+            }
         }
 
         private PropertyInfo GetIdProperty(object entity)
@@ -69,7 +83,7 @@ namespace Godzilla.Services
 
                 return idProperty;
             }
-            
+
             throw new MissingIdPropertyException();
         }
 

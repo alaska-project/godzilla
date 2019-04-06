@@ -6,6 +6,7 @@ using Godzilla.Mongo.Infrastructure;
 using Godzilla.Mongo.Services;
 using Godzilla.Mongo.Settings;
 using Microsoft.Extensions.DependencyInjection;
+using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Conventions;
 using MongoDB.Driver;
 using System;
@@ -18,8 +19,8 @@ namespace Godzilla.Mongo
 
     public static class MongoEntityContextOptionsBuilderExtensions
     {
-        public static void UseMongoDb<TContext>(this EntityContextOptionsBuilder<TContext> builder, 
-            string connectionString, 
+        public static void UseMongoDb<TContext>(this EntityContextOptionsBuilder<TContext> builder,
+            string connectionString,
             string database,
             EventQueueType eventQueueType = EventQueueType.InMemory)
             where TContext : EntityContext
@@ -82,6 +83,7 @@ namespace Godzilla.Mongo
                 new IgnoreExtraElementsConvention(true),
                 new CamelCaseElementNameConvention(),
             };
+            
             ConventionRegistry.Register("customConventions", conventions, x => true);
         }
     }

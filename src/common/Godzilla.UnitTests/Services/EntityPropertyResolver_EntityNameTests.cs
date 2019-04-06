@@ -10,6 +10,14 @@ namespace Godzilla.UnitTests.Services
     public class EntityPropertyResolver_EntityNameTests
     {
         [Fact]
+        public void Generate_id_hash()
+        {
+            var resolver = new EntityPropertyResolver<FakeEntityContext>();
+
+            var hash = resolver.GenerateIdHash(new Guid("ef6f8868-6f09-4f54-b23f-5e616cca4f1c"));
+        }
+
+        [Fact]
         public void Missing_name_property_and_with_empty_id()
         {
             var resolver = new EntityPropertyResolver<FakeEntityContext>();
@@ -29,7 +37,8 @@ namespace Godzilla.UnitTests.Services
                 Id = entityId
             });
 
-            Assert.Equal(entityId.ToString(), entityName);
+            var hash = resolver.GenerateIdHash(entityId);
+            Assert.Equal(hash, entityName);
         }
 
         [Fact]
@@ -44,7 +53,8 @@ namespace Godzilla.UnitTests.Services
                 Id = entityId
             });
 
-            Assert.Equal(entityId.ToString(), entityName);
+            var hash = resolver.GenerateIdHash(entityId);
+            Assert.Equal(hash, entityName);
         }
 
         [Fact]
@@ -59,7 +69,8 @@ namespace Godzilla.UnitTests.Services
                 Id = entityId
             });
 
-            Assert.Equal(entityId.ToString(), entityName);
+            var hash = resolver.GenerateIdHash(entityId);
+            Assert.Equal(hash, entityName);
         }
 
         public class EntityWithoutName

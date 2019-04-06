@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { NgJsonEditorModule } from 'ang-jsoneditor';
 import { AppCommonModule } from '../common/common.module';
 import { MaterialModule } from '../material/material.module';
 import { DatabaseExplorerComponent } from './database-explorer.component';
@@ -19,7 +20,8 @@ import { DatabaseItemJsonEditorComponent } from './components/database-item-edit
   imports: [
     CommonModule,
     AppCommonModule,
-    MaterialModule
+    MaterialModule,
+    NgJsonEditorModule
   ],
   declarations: [
     DatabaseExplorerComponent,
