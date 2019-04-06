@@ -5,6 +5,7 @@ import { EntityDatabaseService } from '../entity-database/entity-database.servic
 import { ActivatedRoute } from '@angular/router';
 import { DatabaseRouterService } from '../database-router/database-router.service';
 import { BehaviorSubject } from 'rxjs';
+import { OperationsService } from 'src/app/modules/common/services/operations/operations.service';
 
 @Injectable({
   providedIn: 'root'
@@ -15,6 +16,7 @@ export class DatabaseItemService {
   private currentItem = new BehaviorSubject<UiNodeValue>(undefined);
 
   constructor(
+    private operation: OperationsService,
     private route: ActivatedRoute,
     private databaseRouter: DatabaseRouterService,
     private databaseContextService: DatabaseContextService,
@@ -36,8 +38,11 @@ export class DatabaseItemService {
     if (!itemId || !this.context) {
       return;
     }
-    this.entityDatabase.getItem(this.context, itemId).then(item => {
-      this.currentItem.next(item);
+
+    this.operation.run({
+      operation: this.entityDatabase.getItem(this.context, itemId),
+      callback: item => this.currentItem.next(item),
+      errorMessage: `Error loading item ${itemId}`,
     });
   }
 }

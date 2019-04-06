@@ -24,6 +24,7 @@ namespace Godzilla.Mongo.FunctionalTests
         public Guid Id { get; set; }
         public string Name { get; set; }
         public string Val2 { get; set; }
+        public List<string> Values { get; set; }
     }
 
     public class DerivedTestEntity : TestEntity

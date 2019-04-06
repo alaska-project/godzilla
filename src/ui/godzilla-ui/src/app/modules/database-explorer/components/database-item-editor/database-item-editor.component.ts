@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { DatabaseItemService } from '../../services/database-item/database-item.service';
-import { Observable } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { UiNodeValue } from '../../clients/godzilla.clients';
 
 @Component({
@@ -8,14 +8,18 @@ import { UiNodeValue } from '../../clients/godzilla.clients';
   templateUrl: './database-item-editor.component.html',
   styleUrls: ['./database-item-editor.component.scss']
 })
-export class DatabaseItemEditorComponent implements OnInit {
+export class DatabaseItemEditorComponent implements OnInit, OnDestroy {
 
-  item: Observable<UiNodeValue>;
+  private itemSubscription: Subscription;
+  item: UiNodeValue;
 
   constructor(private databaseItemService: DatabaseItemService) { }
 
   ngOnInit() {
-    this.item = this.databaseItemService.getItem();
+    this.itemSubscription = this.databaseItemService.getItem().subscribe(x => this.item = x);
   }
 
+  ngOnDestroy(): void {
+    this.itemSubscription.unsubscribe();
+  }
 }
