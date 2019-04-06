@@ -15,4 +15,8 @@ export class EntityDatabaseService {
   getNodeChildren(context: UiEntityContextReference, node: UiNodeReference) {
     return this.uiManagement.getChildNodes(context.id, node.id);
   }
+
+  getItem(context: UiEntityContextReference, nodeId: string) {
+    return this.uiManagement.getNode(context.id, nodeId).toPromise();
+  }
 }

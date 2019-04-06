@@ -96,6 +96,13 @@ namespace Godzilla.AspNetCore.Controllers
             return Ok(new UiNodeValue
             {
                 Id = nodeId,
+                Info = new UiNodeInfo
+                {
+                    Name = node.NodeName,
+                    Path = node.Path,
+                    IdPath = node.IdPath,
+                    CollectionId = node.CollectionId,
+                },
                 SerializedValue = item
             });
         }

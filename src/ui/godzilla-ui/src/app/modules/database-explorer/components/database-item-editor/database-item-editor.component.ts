@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { DatabaseItemService } from '../../services/database-item/database-item.service';
 
 @Component({
   selector: 'god-database-item-editor',
@@ -7,7 +8,7 @@ import { Component, OnInit } from '@angular/core';
 })
 export class DatabaseItemEditorComponent implements OnInit {
 
-  constructor() { }
+  constructor(private databaseItemService: DatabaseItemService) { }
 
   ngOnInit() {
   }

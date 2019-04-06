@@ -7,6 +7,7 @@ namespace Godzilla.AspNetCore.Ui.Model
     public class UiNodeValue
     {
         public Guid Id { get; set; }
+        public UiNodeInfo Info { get; set; }
         public string SerializedValue { get; set; }
     }
 }

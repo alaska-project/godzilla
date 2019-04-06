@@ -3,7 +3,6 @@ import { UiManagementClient, UiEntityContextReference } from '../../clients/godz
 import { OperationsService } from 'src/app/modules/common/services/operations/operations.service';
 import { BehaviorSubject } from 'rxjs';
 import { EndpointService } from '../endpoint/endpoint.service';
-import { Router, ActivatedRoute } from '@angular/router';
 import { DatabaseRouterService } from '../database-router/database-router.service';
 
 @Injectable({
