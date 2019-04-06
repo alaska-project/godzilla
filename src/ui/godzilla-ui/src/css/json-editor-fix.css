@@ -1,0 +1,16 @@
+div.jsoneditor-tree button.jsoneditor-button,
+div.jsoneditor-tree button.jsoneditor-dragarea,
+div.jsoneditor-tree .jsoneditor-button.jsoneditor-schema-error,
+.jsoneditor-text-errors tr .jsoneditor-schema-error,
+.jsoneditor-text-errors tr.parse-error .jsoneditor-schema-error,
+div.jsoneditor-contextmenu div.jsoneditor-icon,
+div.jsoneditor-contextmenu ul li button div.jsoneditor-expand,
+div.jsoneditor-menu > button,
+table.jsoneditor-search button,
+div.jsoneditor-statusbar > .jsoneditor-validation-error-icon,
+div.jsoneditor-statusbar > .jsoneditor-parse-error-icon {
+    background-image: url("godzilla/assets/img/jsoneditor-icons.svg") !important;
+}
+div.jsoneditor-menu > div.jsoneditor-modes > button {
+  background-image: none !important;
+}
