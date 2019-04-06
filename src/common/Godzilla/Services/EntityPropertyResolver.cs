@@ -66,9 +66,10 @@ namespace Godzilla.Services
                 var hash = sha1.ComputeHash(Encoding.UTF8.GetBytes(id.ToString()));
 
                 return string.Concat(
-                    Convert.ToBase64String(hash)
+                    Convert.ToBase64String(hash).ToLower()
                         .ToCharArray()
-                        .Where(x => char.IsLetterOrDigit(x)).Take(10));
+                        .Where(x => char.IsLetterOrDigit(x)).Take(10)
+                        );
             }
         }
 
