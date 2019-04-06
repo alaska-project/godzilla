@@ -1,4 +1,5 @@
 ﻿using Godzilla.AspNetCore.Ui.Middlewares;
+using Godzilla.AspNetCore.Ui.Model;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -14,6 +15,11 @@ namespace Godzilla.AspNetCore.Ui.Settings
         public bool Rewrite404ToIndexHtml { get; set; } = true;
 
         public List<string> ExcludedRoutes { get; set; } = new List<string> { "api" };
+
+        public List<IRedirect> StaticRedirects { get; set; } = new List<IRedirect>
+        {
+            new StaticRedirect("/jsoneditor-icons.d961fdfabbe512d2675d.svg", "/godzilla/jsoneditor-icons.d961fdfabbe512d2675d.svg"),
+        };
 
         public string ManifestResourceBasePath { get; set; } = "Godzilla.AspNetCore.Ui.Assets";
 

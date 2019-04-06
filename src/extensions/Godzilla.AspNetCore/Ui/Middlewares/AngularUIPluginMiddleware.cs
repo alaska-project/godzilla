@@ -44,8 +44,21 @@ namespace Godzilla.AspNetCore.Ui.Middlewares
                 return;
             }
 
+            var redirect = GetRedirect(path);
+            if (redirect != null)
+            {
+                RespondWithRedirect(httpContext.Response, redirect.To);
+                return;
+            }
+
             await _next(httpContext);
             return;
+        }
+
+        private IRedirect GetRedirect(string path)
+        {
+            //todo: optimize
+            return _options.StaticRedirects.FirstOrDefault(x => x.From.Equals(path, StringComparison.InvariantCultureIgnoreCase));
         }
 
         private bool IsIndexHtml(string path)
@@ -194,6 +207,7 @@ namespace Godzilla.AspNetCore.Ui.Middlewares
         string RoutePrefix { get; }
         bool Rewrite404ToIndexHtml { get; }
         List<string> ExcludedRoutes { get; }
+        List<IRedirect> StaticRedirects { get; }
         string ManifestResourceBasePath { get; }
         Assembly ManifestResourceAssembly { get; }
         List<string> Endpoints { get; }
@@ -201,5 +215,11 @@ namespace Godzilla.AspNetCore.Ui.Middlewares
         string HeadContent { get; }
         JObject ConfigObject { get; }
         JObject OAuthConfigObject { get; }
+    }
+
+    public interface IRedirect
+    {
+        string From { get; }
+        string To { get; }
     }
 }
