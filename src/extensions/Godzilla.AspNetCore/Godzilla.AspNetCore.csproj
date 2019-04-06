@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.2</TargetFramework>
@@ -11,12 +11,15 @@
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="Ui/Assets/**/*" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\..\common\Godzilla\Godzilla.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Ui\Middlewares\" />
-    <Folder Include="Ui\Settings\" />
+    <Folder Include="Ui\Assets\" />
   </ItemGroup>
 
 </Project>
