@@ -33,22 +33,27 @@ export class DatabaseItemJsonEditorComponent implements OnInit, OnChanges {
   }
 
   private cleanJson(value: string) {
-    const searchString = 'UUID("';
-    const guidLength = 36;
+    value = this.cleanFunctionFromJsonJson(value, 'UUID', 36);
+    value = this.cleanFunctionFromJsonJson(value, 'ISODate', 24);
+    return value;
+  }
+
+  private cleanFunctionFromJsonJson(value: string, functionName: string, contentLength: number) {
+    const searchString = `${functionName}("`;
     let cleanedValue = value;
 
     if (cleanedValue.indexOf(searchString) >= 0) {
-      const uuidIndex = value.indexOf(searchString);
-      const guidStartIndex = uuidIndex + searchString.length - 1;
-      const guidEndIndex = uuidIndex + searchString.length + guidLength + 1;
+      const functionStartIndex = value.indexOf(searchString);
+      const contentStartIndex = functionStartIndex + searchString.length - 1;
+      const contentEndIndex = functionStartIndex + searchString.length + contentLength + 1;
       cleanedValue = 
-        cleanedValue.substring(0, uuidIndex) +
-        cleanedValue.substring(guidStartIndex, guidEndIndex) +
-        cleanedValue.substring(guidEndIndex + 1);
+        cleanedValue.substring(0, functionStartIndex) +
+        cleanedValue.substring(contentStartIndex, contentEndIndex) +
+        cleanedValue.substring(contentEndIndex + 1);
     }
 
     if (cleanedValue.indexOf(searchString) >= 0) { 
-      cleanedValue = this.cleanJson(cleanedValue);
+      cleanedValue = this.cleanFunctionFromJsonJson(cleanedValue, functionName, contentLength);
     }
 
     return cleanedValue;
