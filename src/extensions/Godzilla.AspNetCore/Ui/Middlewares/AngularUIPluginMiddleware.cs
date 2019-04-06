@@ -43,14 +43,7 @@ namespace Godzilla.AspNetCore.Ui.Middlewares
                 await RespondWithEmbeddedContent(httpContext.Response, relativeContentPath);
                 return;
             }
-
-            //var redirect = GetRedirect(path);
-            //if (redirect != null)
-            //{
-            //    RespondWithRedirect(httpContext.Response, redirect.To);
-            //    return;
-            //}
-
+            
             await _next(httpContext);
             return;
         }

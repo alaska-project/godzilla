@@ -24,7 +24,7 @@ export class DatabaseItemService {
 
     this.databaseContextService.currentContext().subscribe(x => {
       this.context = x;
-      this.selectItem();
+      setTimeout(() => this.selectItem());
     });
     this.route.queryParams.subscribe(() => this.selectItem());
   }
@@ -36,6 +36,7 @@ export class DatabaseItemService {
   private selectItem() {
     const itemId = this.databaseRouter.getItemIdFromRoute();
     if (!itemId || !this.context) {
+      this.currentItem.next(undefined);
       return;
     }
 
