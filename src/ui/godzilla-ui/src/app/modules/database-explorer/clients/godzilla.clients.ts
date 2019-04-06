@@ -353,6 +353,7 @@ export interface IUiNodeReference {
 
 export class UiNodeValue implements IUiNodeValue {
     id?: string | undefined;
+    info?: UiNodeInfo | undefined;
     serializedValue?: string | undefined;
 
     constructor(data?: IUiNodeValue) {
@@ -367,6 +368,7 @@ export class UiNodeValue implements IUiNodeValue {
     init(data?: any) {
         if (data) {
             this.id = data["id"];
+            this.info = data["info"] ? UiNodeInfo.fromJS(data["info"]) : <any>undefined;
             this.serializedValue = data["serializedValue"];
         }
     }
@@ -381,6 +383,7 @@ export class UiNodeValue implements IUiNodeValue {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
+        data["info"] = this.info ? this.info.toJSON() : <any>undefined;
         data["serializedValue"] = this.serializedValue;
         return data; 
     }
@@ -388,7 +391,56 @@ export class UiNodeValue implements IUiNodeValue {
 
 export interface IUiNodeValue {
     id?: string | undefined;
+    info?: UiNodeInfo | undefined;
     serializedValue?: string | undefined;
+}
+
+export class UiNodeInfo implements IUiNodeInfo {
+    name?: string | undefined;
+    path?: string | undefined;
+    idPath?: string | undefined;
+    collectionId?: string | undefined;
+
+    constructor(data?: IUiNodeInfo) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(data?: any) {
+        if (data) {
+            this.name = data["name"];
+            this.path = data["path"];
+            this.idPath = data["idPath"];
+            this.collectionId = data["collectionId"];
+        }
+    }
+
+    static fromJS(data: any): UiNodeInfo {
+        data = typeof data === 'object' ? data : {};
+        let result = new UiNodeInfo();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["name"] = this.name;
+        data["path"] = this.path;
+        data["idPath"] = this.idPath;
+        data["collectionId"] = this.collectionId;
+        return data; 
+    }
+}
+
+export interface IUiNodeInfo {
+    name?: string | undefined;
+    path?: string | undefined;
+    idPath?: string | undefined;
+    collectionId?: string | undefined;
 }
 
 export class SwaggerException extends Error {
