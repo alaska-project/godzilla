@@ -12,6 +12,8 @@ import { DatabaseContextSettingsComponent } from './components/database-tree-exp
 import { DatabaseContextSettingsDialogComponent } from './components/database-tree-explorer/components/database-context-settings-dialog/database-context-settings-dialog.component';
 import { DatabaseTreeComponent } from './components/database-tree-explorer/components/database-tree/database-tree.component';
 import { DatabaseTreeNodeComponent } from './components/database-tree-explorer/components/database-tree-node/database-tree-node.component';
+import { DatabaseItemInfoComponent } from './components/database-item-editor/components/database-item-info/database-item-info.component';
+import { DatabaseItemJsonEditorComponent } from './components/database-item-editor/components/database-item-json-editor/database-item-json-editor.component';
 
 @NgModule({
   imports: [
@@ -27,7 +29,9 @@ import { DatabaseTreeNodeComponent } from './components/database-tree-explorer/c
     DatabaseContextSettingsComponent,
     DatabaseContextSettingsDialogComponent,
     DatabaseTreeComponent,
-    DatabaseTreeNodeComponent
+    DatabaseTreeNodeComponent,
+    DatabaseItemInfoComponent,
+    DatabaseItemJsonEditorComponent
   ],
   exports: [
     DatabaseExplorerComponent

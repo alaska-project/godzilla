@@ -25,6 +25,10 @@ export class DatabaseRouterService {
   }
 
   navigateToContext(context: UiEntityContextReference) {
+    const currentContextRoute = this.getContextNameFromRoute();
+    if (context.name === currentContextRoute) {
+      return;
+    }
     this.router.navigate([this.contextRootName, context.name]);
   }
 
