@@ -4,6 +4,7 @@ import { OperationsService } from 'src/app/modules/common/services/operations/op
 import { BehaviorSubject } from 'rxjs';
 import { EndpointService } from '../endpoint/endpoint.service';
 import { DatabaseRouterService } from '../database-router/database-router.service';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
@@ -14,6 +15,7 @@ export class DatabaseContextService {
   private availableContextsSubject = new BehaviorSubject<UiEntityContextReference[]>([]);
 
   constructor(
+    private router: Router,
     private databaseRouterService: DatabaseRouterService,
     private endpointService: EndpointService,
     private operation: OperationsService,
@@ -21,6 +23,7 @@ export class DatabaseContextService {
 
     this.loadContexts();
     this.endpointService.endpointChanged().subscribe(() => {
+      this.router.navigate(['']);
       this.loadContexts();
     });
   }

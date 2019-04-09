@@ -1,5 +1,6 @@
 ﻿using Godzilla.Abstractions.Services;
 using Godzilla.AspNetCore.Ui.Model;
+using Godzilla.AspNetCore.Ui.Services;
 using Godzilla.Collections.Internal;
 using Godzilla.DomainModels;
 using Microsoft.AspNetCore.Mvc;
@@ -15,12 +16,17 @@ namespace Godzilla.AspNetCore.Controllers
     public class UiManagementController : Controller
     {
         private readonly IServiceProvider _serviceProvider;
+        private readonly UiNodeConverter _converter;
         private readonly IEntityContextResolver _contextResolver;
 
-        public UiManagementController(IEntityContextResolver contextResolver, IServiceProvider serviceProvider)
+        public UiManagementController(
+            IEntityContextResolver contextResolver, 
+            IServiceProvider serviceProvider,
+            UiNodeConverter converter)
         {
             _contextResolver = contextResolver ?? throw new ArgumentNullException(nameof(contextResolver));
             _serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
+            this._converter = converter;
         }
 
         [HttpGet]
@@ -54,7 +60,13 @@ namespace Godzilla.AspNetCore.Controllers
             var nodes = nodesCollection
                 .AsQueryable()
                 .Where(x => x.ParentId == parentId)
-                .Select(x => new { x.EntityId, x.NodeName, x.ParentId })
+                .Select(x => new
+                {
+                    x.EntityId,
+                    x.NodeName,
+                    x.ParentId,
+                    x.CollectionId,
+                })
                 .ToList();
 
             var nodesId = nodes
@@ -74,6 +86,7 @@ namespace Godzilla.AspNetCore.Controllers
                     Id = x.EntityId,
                     Name = x.NodeName,
                     ParentId = x.ParentId,
+                    ItemType = _converter.GetItemType(x.CollectionId),
                     IsLeaf = !nodesIdWithChildren.Contains(x.EntityId),
                 })
                 .ToList();

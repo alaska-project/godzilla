@@ -307,6 +307,7 @@ export class UiNodeReference implements IUiNodeReference {
     id?: string | undefined;
     parentId?: string | undefined;
     name?: string | undefined;
+    itemType?: string | undefined;
     isLeaf?: boolean | undefined;
 
     constructor(data?: IUiNodeReference) {
@@ -323,6 +324,7 @@ export class UiNodeReference implements IUiNodeReference {
             this.id = data["id"];
             this.parentId = data["parentId"];
             this.name = data["name"];
+            this.itemType = data["itemType"];
             this.isLeaf = data["isLeaf"];
         }
     }
@@ -339,6 +341,7 @@ export class UiNodeReference implements IUiNodeReference {
         data["id"] = this.id;
         data["parentId"] = this.parentId;
         data["name"] = this.name;
+        data["itemType"] = this.itemType;
         data["isLeaf"] = this.isLeaf;
         return data; 
     }
@@ -348,6 +351,7 @@ export interface IUiNodeReference {
     id?: string | undefined;
     parentId?: string | undefined;
     name?: string | undefined;
+    itemType?: string | undefined;
     isLeaf?: boolean | undefined;
 }
 

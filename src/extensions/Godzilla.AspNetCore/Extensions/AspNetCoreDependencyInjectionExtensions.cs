@@ -2,6 +2,7 @@
 using Godzilla.AspNetCore.Security;
 using Godzilla.AspNetCore.Ui.Abstractions;
 using Godzilla.AspNetCore.Ui.Query;
+using Godzilla.AspNetCore.Ui.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -26,6 +27,7 @@ namespace Godzilla
             where TContext : EntityContext
         {
             services.Services
+                .AddScoped<UiNodeConverter>()
                 .AddTransient<IUiQuery, UiQuery>();
 
             services.Services
