@@ -22,5 +22,6 @@ namespace Godzilla.Abstractions
         IEntityConfigurator Configurator { get; }
         IEntityContextInitializer Initializer { get; }
         IEntityNotificationService NotificationService { get; }
+        ISecurityDisablerService SecurityDisablerService { get; }
     }
 }

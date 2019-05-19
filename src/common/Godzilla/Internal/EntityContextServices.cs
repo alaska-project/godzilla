@@ -9,21 +9,22 @@ using System.Text;
 
 namespace Godzilla.Internal
 {
-    internal class EntityContextServices<TContext> : 
+    internal class EntityContextServices<TContext> :
         IEntityContextServices,
         IEntityContextServices<TContext>
         where TContext : EntityContext
     {
         public EntityContextServices(
             ILogger<TContext> logger,
-            ICollectionService<TContext> collectionsService, 
+            ICollectionService<TContext> collectionsService,
             EntityQueries<TContext> queries,
             EntityCommands<TContext> commands,
             EntityConfigurator<TContext> configurator,
             IEntityPropertyResolver<TContext> propertyResolver,
             IPathBuilder<TContext> pathBuilder,
             EntityContextInitializer<TContext> initializer,
-            IEntityNotificationService<TContext> notificationService)
+            IEntityNotificationService<TContext> notificationService,
+            ISecurityDisablerService securityDisablerService)
         {
             Logger = logger;
             Collections = collectionsService ?? throw new ArgumentException(nameof(collectionsService));
@@ -34,6 +35,7 @@ namespace Godzilla.Internal
             PathBuilder = pathBuilder ?? throw new ArgumentNullException(nameof(pathBuilder));
             Initializer = initializer ?? throw new ArgumentNullException(nameof(initializer));
             NotificationService = notificationService ?? throw new ArgumentNullException(nameof(notificationService));
+            SecurityDisablerService = securityDisablerService ?? throw new ArgumentNullException(nameof(securityDisablerService));
         }
 
         public ILogger Logger { get; }
@@ -53,5 +55,7 @@ namespace Godzilla.Internal
         public IEntityPropertyResolver PropertyResolver { get; }
 
         public IPathBuilder PathBuilder { get; }
+
+        public ISecurityDisablerService SecurityDisablerService { get; }
     }
 }

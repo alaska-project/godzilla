@@ -33,7 +33,8 @@ namespace Godzilla
                 entityContextServices.Logger,
                 this,
                 entityContextServices.Queries,
-                entityContextServices.Commands);
+                entityContextServices.Commands,
+                entityContextServices.SecurityDisablerService);
 
             _entityContextServices = entityContextServices;
 

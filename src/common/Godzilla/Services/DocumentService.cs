@@ -18,17 +18,20 @@ namespace Godzilla.Services
         private readonly EntityContext _context;
         private readonly IEntityQueries _queries;
         private readonly IEntityCommands _commands;
+        private readonly ISecurityDisablerService _securityDisabler;
 
         public DocumentService(
             ILogger logger,
             EntityContext context,
             IEntityQueries queries,
-            IEntityCommands commands)
+            IEntityCommands commands,
+            ISecurityDisablerService securityDisabler)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _context = context ?? throw new ArgumentNullException(nameof(context));
             _queries = queries ?? throw new ArgumentNullException(nameof(queries));
             _commands = commands ?? throw new ArgumentNullException(nameof(commands));
+            _securityDisabler = securityDisabler;
         }
 
         #endregion
@@ -133,8 +136,9 @@ namespace Godzilla.Services
         {
             if (getInitialValue)
             {
-                Task.Run(async () => 
+                Task.Run(async () =>
                 {
+
                     try
                     {
                         var documentResult = await CreateDocumentResult<TItem>(entityId);
@@ -148,7 +152,7 @@ namespace Godzilla.Services
                 .ConfigureAwait(false);
             }
 
-            return _context.NotificationService.SubscribeEntityEvent(entityId, async () => 
+            return _context.NotificationService.SubscribeEntityEvent(entityId, async () =>
             {
                 var documentResult = await CreateDocumentResult<TItem>(entityId);
                 await callback.Invoke(documentResult);
@@ -157,10 +161,13 @@ namespace Godzilla.Services
 
         private async Task<DocumentResult<TItem>> CreateDocumentResult<TItem>(Guid entityId)
         {
-            var document = await GetDocument<TItem>(entityId);
-            return new DocumentResult<TItem>(document != null, document);
+            using (_securityDisabler.DisableSecurity())
+            {
+                var document = await GetDocument<TItem>(entityId);
+                return new DocumentResult<TItem>(document != null, document);
+            }
         }
-        
+
         #endregion
 
         #region Conversions
@@ -179,7 +186,7 @@ namespace Godzilla.Services
                 null :
                 new Document<T>(_context, value);
         }
-        
+
         #endregion
     }
 }
